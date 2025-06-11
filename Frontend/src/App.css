@@ -1,1 +1,65 @@
 @import "tailwindcss";
+
+:root {
+    /* Gradients */
+    --gradient-1: linear-gradient(
+        90deg,
+        #1b1a1f 21.64%,
+        rgba(37, 37, 38, 0) 100%
+    );
+    --gradient-2: linear-gradient(90deg, #352868 0%, rgba(37, 37, 38, 0) 100%);
+
+    /* Backgrounds */
+    --bg-primary: #0d0d0f;
+    --bg-secondary: #6274f7;
+    --bg-variant-3: rgba(24, 23, 27, 0.69);
+
+    /* Borders */
+    --border-1: 0.746886px solid #26262b;
+    --border-2: 1.75px solid #4a3e6e;
+    --border-3: 0.866935px solid #26262b;
+
+    /* Effects */
+    --drop-shadow-2: drop-shadow(0px 0px 9px #322760);
+    --blur-2: blur(23px);
+
+    /* Common */
+    --border-radius: 5.2282px;
+    --box-sizing: border-box;
+}
+
+body {
+    background: var(--bg-primary);
+    color: white;
+}
+
+.card-variant-1 {
+    background: var(--gradient-1);
+    border: var(--border-1);
+    border-radius: var(--border-radius);
+    box-sizing: var(--box-sizing);
+}
+
+.card-variant-2 {
+    background: var(--gradient-2);
+    border: var(--border-2);
+    filter: var(--drop-shadow-2);
+    backdrop-filter: var(--blur-2);
+    border-radius: var(--border-radius);
+    box-sizing: var(--box-sizing);
+}
+
+.card-variant-3 {
+    background: var(--bg-variant-3);
+    border: var(--border-3);
+    border-radius: var(--border-radius);
+    box-sizing: var(--box-sizing);
+}
+
+.bg-primary {
+    background: var(--bg-primary);
+}
+
+.bg-secondary {
+    background: var(--bg-secondary);
+}
