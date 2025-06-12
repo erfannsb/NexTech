@@ -6,7 +6,7 @@ import RightSidebar from "./components/right_sidebar";
 
 function App() {
   return (
-    <div className="h-lvh w-lvw grid grid-cols-[minmax(200px,20vw)_minmax(0,1fr)_minmax(200px,25vw)] grid-rows-[50px_1fr]">
+    <div className="bg-[var(--bg-primary)] h-lvh w-lvw grid grid-cols-[minmax(200px,20vw)_minmax(0,1fr)_minmax(200px,25vw)] grid-rows-[70px_1fr]">
       <Header />
       <LeftSidebar />
       <RightSidebar />

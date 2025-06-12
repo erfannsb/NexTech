@@ -1,7 +1,7 @@
 import React from "react";
 
 function Explore() {
-  return <div>Explore Page Content</div>;
+  return <div></div>;
 }
 
 export default React.memo(Explore);

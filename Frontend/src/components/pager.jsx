@@ -12,11 +12,11 @@ const pages = {
 
 export default function Pager() {
   const activePage = useUIStore((state) => state.currentUserPage);
-  
+
   const ActivePage = pages[activePage] ?? (() => <div>Invalid page</div>);
 
   return (
-    <div className="col-start-2 col-end-3 row-start-2 row-end-3 bg-blue-300 p-4">
+    <div className="col-start-2 col-end-3 row-start-2 row-end-3 p-4">
       <Suspense fallback={<div>Loading...</div>}>
         <ActivePage />
       </Suspense>
