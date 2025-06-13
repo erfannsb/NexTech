@@ -1,34 +1,68 @@
 import useUIStore from "../ui_storage";
-import { Bookmark, LifeBuoy, Settings, Sparkles } from "lucide-react";
+import { useState } from "react";
+import { Bookmark, Cross, LifeBuoy, Settings, Sparkles, X } from "lucide-react";
 export default function LeftSidebar() {
+  const currentPage = useUIStore((state) => state.currentUserPage);
   const setCurrentPage = useUIStore((state) => state.setCurrentUserPage);
-
+  const [showAd, setShowAd] = useState(true);
   const handleItemClick = (page) => {
     setCurrentPage(page);
   };
 
   return (
-    <div className="sidebar col-start-1 col-end-2 row-start-2 row-end-3 ">
-      <ul className="flex flex-col py-4 px-6 text-lg">
-        <li
-          onClick={() => handleItemClick("ExplorePage")}
-          className="flex mb-5"
-        >
-          <Sparkles className="mr-2" /> Explore
-        </li>
-        <li
-          onClick={() => handleItemClick("ProductPage")}
-          className="flex mb-5"
-        >
-          <Bookmark className="mr-2" /> Wish List
-        </li>
-        <li onClick={() => handleItemClick("page3")} className="flex mb-5">
-          <LifeBuoy className="mr-2" /> Help
-        </li>
-        <li onClick={() => handleItemClick("page4")} className="flex">
-          <Settings className="mr-2" /> Settings
-        </li>
+    <div className="flex flex-col justify-between items-start py-4 px-4 border-r border-[#26262B] sidebar col-start-1 col-end-2 row-start-2 row-end-3 ">
+      {/* Menu */}
+      <ul className="flex flex-col text-lg">
+        {
+          // Pages
+          ["ExplorePage", "ProductPage", "HelpPage", "SettingsPage"].map(
+            (page, i) => (
+              <li
+                key={i}
+                onClick={() => handleItemClick(page)}
+                className={`text-[#545356] px-3 py-2 flex items-center mb-3 rounded-md ${currentPage === page ? "border-l-3 border-[#A3B5F9] bg-[linear-gradient(90deg,_rgba(80,104,198,0.63)_0%,_rgba(127,144,208,0)_60.58%)] text-[#A3B5F9] font-medium " : "hover:text-white/50"}`}
+              >
+                {i === 0 ? (
+                  <Sparkles className="mr-2" />
+                ) : i === 1 ? (
+                  <Bookmark className="mr-2" />
+                ) : i === 2 ? (
+                  <LifeBuoy className="mr-2" />
+                ) : (
+                  <Settings className="mr-2" />
+                )}{" "}
+                {page}
+              </li>
+            ),
+          )
+        }
       </ul>
+
+      {/* Advertisement */}
+      <div
+        className={`card-variant-1 rounded-md px-3 py-2 ${showAd ? "block" : "hidden"}`}
+      >
+        <div className="flex items-center justify-between ">
+          <h3 className="font-bold">Advertisement</h3>
+          <button className="cursor-pointer" onClick={() => setShowAd(false)}>
+            <X size={15} />
+          </button>
+        </div>
+        <p className="text-sm text-gray-500 my-1">
+          Lorem ipsum dolor sit amet komm tanzen ich will nicht komm
+          spatzirieren ich will nicht stoppen sie jetzt
+        </p>
+
+        <button
+          className="text-md text-gray-500 hover:text-gray-300 cursor-pointer"
+          onClick={() => setShowAd(false)}
+        >
+          Dismiss
+        </button>
+        <button className="text-md font-medium text-[#6274f7] ml-3 cursor-pointer">
+          Explore
+        </button>
+      </div>
     </div>
   );
 }
