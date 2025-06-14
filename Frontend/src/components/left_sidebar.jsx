@@ -1,40 +1,42 @@
 import useUIStore from "../ui_storage";
 import { useState } from "react";
-import { Bookmark, Cross, LifeBuoy, Settings, Sparkles, X } from "lucide-react";
+import { Bookmark, LifeBuoy, Settings, Sparkles, X } from "lucide-react";
 export default function LeftSidebar() {
   const currentPage = useUIStore((state) => state.currentUserPage);
   const setCurrentPage = useUIStore((state) => state.setCurrentUserPage);
+  const leftSidebarOpen = useUIStore((state) => state.leftSidebarOpen);
+
   const [showAd, setShowAd] = useState(true);
   const handleItemClick = (page) => {
     setCurrentPage(page);
   };
 
   return (
-    <div className="flex flex-col justify-between items-start py-4 px-4 border-r border-[#26262B] sidebar col-start-1 col-end-2 row-start-2 row-end-3 ">
+    <div
+      className={`${leftSidebarOpen ? "block" : "hidden"} flex flex-col justify-between items-start py-4 px-4 border-r border-[#26262B] sidebar col-start-1 col-end-2 row-start-2 row-end-3 `}
+    >
       {/* Menu */}
       <ul className="flex flex-col text-lg">
         {
           // Pages
-          ["ExplorePage", "ProductPage", "HelpPage", "SettingsPage"].map(
-            (page, i) => (
-              <li
-                key={i}
-                onClick={() => handleItemClick(page)}
-                className={`text-[#545356] px-3 py-2 flex items-center mb-3 rounded-md ${currentPage === page ? "border-l-3 border-[#A3B5F9] bg-[linear-gradient(90deg,_rgba(80,104,198,0.63)_0%,_rgba(127,144,208,0)_60.58%)] text-[#A3B5F9] font-medium " : "hover:text-white/50"}`}
-              >
-                {i === 0 ? (
-                  <Sparkles className="mr-2" />
-                ) : i === 1 ? (
-                  <Bookmark className="mr-2" />
-                ) : i === 2 ? (
-                  <LifeBuoy className="mr-2" />
-                ) : (
-                  <Settings className="mr-2" />
-                )}{" "}
-                {page}
-              </li>
-            ),
-          )
+          ["Explore", "Product", "Help", "Settings"].map((page, i) => (
+            <li
+              key={i}
+              onClick={() => handleItemClick(page)}
+              className={`text-[#545356] px-3 py-2 flex items-center mb-3 rounded-md ${currentPage === page ? "border-l-3 border-[#A3B5F9] bg-[linear-gradient(90deg,_rgba(80,104,198,0.63)_0%,_rgba(127,144,208,0)_60.58%)] text-[#A3B5F9] font-medium " : "hover:text-white/50"}`}
+            >
+              {i === 0 ? (
+                <Sparkles className="mr-2" />
+              ) : i === 1 ? (
+                <Bookmark className="mr-2" />
+              ) : i === 2 ? (
+                <LifeBuoy className="mr-2" />
+              ) : (
+                <Settings className="mr-2" />
+              )}{" "}
+              {page}
+            </li>
+          ))
         }
       </ul>
 
@@ -48,7 +50,7 @@ export default function LeftSidebar() {
             <X size={15} />
           </button>
         </div>
-        <p className="text-sm text-gray-500 my-1">
+        <p className="text-sm text-gray-500 mt-1 mb-5">
           Lorem ipsum dolor sit amet komm tanzen ich will nicht komm
           spatzirieren ich will nicht stoppen sie jetzt
         </p>

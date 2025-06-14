@@ -61,11 +61,11 @@ export function ButtonVariant3({ img, onClick, text, className }) {
   return (
     <button
       onClick={onClick}
-      className={`cursor-pointer flex items-center justify-around card-variant-1 rounded-[23px]
+      className={`h-[40px] w-fit cursor-pointer flex items-center justify-around card-variant-1 rounded-[23px]
         hover:scale-102 transition-transform duration-300 ${className}`}
     >
-      <div className="mx-3">{text}</div>
-      <div className="text-[#C5C3CA] card-variant-1 rounded-[23px] w-full aspect-square p-2 mr-[-2px]">
+      <div className="mx-3 whitespace-nowrap">{text}</div>
+      <div className="h-[40px] w-[40px] flex justify-center items-center text-[#C5C3CA] card-variant-1 rounded-[23px] aspect-square p-2 mr-[-2px]">
         {img}
       </div>
     </button>

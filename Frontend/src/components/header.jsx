@@ -1,14 +1,31 @@
-import { PanelLeft, Search, Bell, Settings, LifeBuoy } from "lucide-react";
+import {
+  PanelLeft,
+  Search,
+  Bell,
+  Settings,
+  LifeBuoy,
+  PanelRight,
+} from "lucide-react";
 import { ButtonVariant2 } from "./buttons";
 import { InputVariant1 } from "./inputs";
+import useUIStore from "../ui_storage";
 
 export default function Header() {
+  const isLeftSidebarOpen = useUIStore((state) => state.leftSidebarOpen);
+  const toggleLeftSideBar = useUIStore((state) => state.setLeftSidebarOpen);
+  const setRightSideBar = useUIStore((state) => state.setRightSidebarOpen);
+  const isRightSideBarOpen = useUIStore((state) => state.rightSidebarOpen);
+
   return (
     <>
       {/* Top Left Corner of The Header */}
       <header className="border-r border-b border-[#26262B] text-white p-4 col-start-1 col-end-2 row-start-1 row-end-2 flex items-center justify-between">
         <h1 className="text-2xl font-bold text-[#6274F7]">NexTech</h1>
-        <ButtonVariant2 img={<PanelLeft />} />
+        {/* toggle leftSideBar */}
+        <ButtonVariant2
+          img={<PanelLeft />}
+          onClick={() => toggleLeftSideBar(!isLeftSidebarOpen)}
+        />
       </header>
       {/* Top Right Corner of The Header */}
       <header className="border-b border-[#26262B] flex items-center justify-between text-white p-4 col-start-2 col-end-4 row-start-1 row-end-2">
@@ -42,6 +59,10 @@ export default function Header() {
           />
           <ButtonVariant2 img={<Settings strokeWidth={1.5} />} />
           <ButtonVariant2 img={<LifeBuoy strokeWidth={1.5} />} />
+          <ButtonVariant2
+            img={<PanelRight />}
+            onClick={() => setRightSideBar(!isRightSideBarOpen)}
+          />
         </div>
       </header>
     </>

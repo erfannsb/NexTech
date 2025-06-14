@@ -1,23 +1,29 @@
 import { lazy, Suspense } from "react";
 import useUIStore from "../ui_storage";
+import Loading from "../pages/loading.jsx";
 
 // Lazy load each page
 const ExplorePage = lazy(() => import("../pages/explore"));
 const ProductPage = lazy(() => import("../pages/product"));
-
+const Test = lazy(() => import("../pages/loading.jsx"));
 const pages = {
-  ExplorePage: ExplorePage,
-  ProductPage: ProductPage,
+  Explore: ExplorePage,
+  Product: ProductPage,
+  Test: Test,
 };
 
 export default function Pager() {
   const activePage = useUIStore((state) => state.currentUserPage);
+  const isLeftSidebarOpen = useUIStore((state) => state.leftSidebarOpen);
+  const isRightSidebarOpen = useUIStore((state) => state.rightSidebarOpen);
 
   const ActivePage = pages[activePage] ?? (() => <div>Invalid page</div>);
 
   return (
-    <div className="col-start-2 col-end-3 row-start-2 row-end-3 p-4">
-      <Suspense fallback={<div>Loading...</div>}>
+    <div
+      className={`${isLeftSidebarOpen ? "col-start-2 " : "col-start-1"} ${isRightSidebarOpen ? "col-end-2" : "col-end-3"} row-start-2 row-end-3 p-4 overflow-y-auto`}
+    >
+      <Suspense fallback={<Loading />}>
         <ActivePage />
       </Suspense>
     </div>

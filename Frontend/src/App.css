@@ -1,5 +1,9 @@
 @import "tailwindcss";
 
+* {
+    box-sizing: border-box;
+}
+
 :root {
     /* Gradients */
     --gradient-1: linear-gradient(
@@ -16,8 +20,8 @@
     --bg-variant-2: #6274f7;
 
     /* Borders */
-    --border-1: 2px solid #26262b;
-    --border-2: 2px solid #26262b;
+    --border-1: 1px solid #26262b;
+    --border-2: 1px solid #26262b;
     --border-3: 0.866935px solid #26262b;
 
     /* Effects */
@@ -56,8 +60,6 @@ body {
 .card-variant-3 {
     background: var(--bg-variant-3);
     border: var(--border-3);
-    border-radius: var(--border-radius);
-    box-sizing: var(--box-sizing);
 }
 
 .bg-primary {
@@ -65,14 +67,14 @@ body {
 }
 
 .card:hover {
-    border: #4a3e6e 2px solid;
+    border: #4a3e6e 1px solid;
     background: linear-gradient(90deg, #352868 0%, rgba(37, 37, 38, 0) 100%);
     filter: drop-shadow(0px 0px 9px #322760);
     backdrop-filter: blur(23px);
 }
 
 .card-active {
-    border: #4a3e6e 2px solid;
+    border: #4a3e6e 1px solid;
     background: linear-gradient(90deg, #352868 0%, rgba(37, 37, 38, 0) 100%);
     filter: drop-shadow(0px 0px 9px #322760);
     backdrop-filter: blur(23px);
@@ -80,4 +82,9 @@ body {
 
 .bg-secondary {
     background: var(--bg-secondary);
+}
+
+.swiper-wrapper {
+    align-items: center;
+    height: fit-content;
 }
