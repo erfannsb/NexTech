@@ -3,6 +3,8 @@ export default function Table({
   headerItems = [],
   list = [],
   footer = null,
+  px = 6,
+  py = 4,
 }) {
   if (list.length <= 0) {
     return <div>Invalid Table</div>;
@@ -19,7 +21,10 @@ export default function Table({
           <thead className="text-base font-semibold border-b-[2px] border-[#3C3D48]">
             <tr>
               {headerItems.map((item, i) => (
-                <th key={`header-${i}`} className="px-6 py-4 whitespace-nowrap">
+                <th
+                  key={`header-${i}`}
+                  className={`px-${px} py-${py} whitespace-nowrap`}
+                >
                   {item}
                 </th>
               ))}
@@ -38,7 +43,7 @@ export default function Table({
                 {row.map((cell, cellIndex) => (
                   <td
                     key={`cell-${rowIndex}-${cellIndex}`}
-                    className="px-6 py-4"
+                    className={`px-${px} py-${py}`}
                   >
                     {cell}
                   </td>

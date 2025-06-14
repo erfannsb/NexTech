@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { FreeMode, Navigation, Thumbs } from "swiper/modules";
 import Table from "./../components/tables";
 import { ShoppingBasket, Store } from "lucide-react";
-import { ButtonVariant2 } from "./../components/buttons";
+import { ButtonVariant2, ButtonVariant4 } from "./../components/buttons";
+import { Rating } from "@smastrom/react-rating";
 // Import Swiper styles
 import "swiper/css";
 import "swiper/css/free-mode";
@@ -111,14 +112,22 @@ function Product() {
         {/* Details Table */}
         <div className="mt-4">
           <Table
+            className="font-bold"
+            footer={TableFooter({
+              averageRate: 4.5,
+              ratedNum: 100,
+              price: 1000,
+            })}
             headerItems={[
               <div className="flex items-center">
-                <Store className="mr-2" /> Shop
+                <Store className="mr-2" size={16} /> Shop
               </div>,
               "Performance",
               "Price",
               "",
             ]}
+            px={3}
+            py={3}
             list={shops.map((e) => ShopItemGenerator(e[0], e[1], e[2]))}
           />
         </div>
@@ -177,6 +186,50 @@ export function ShopItemGenerator(shopName, performance, price) {
       className="rounded-xl"
     />,
   ];
+}
+
+export function TableFooter({ averageRate, ratedNum, price }) {
+  const ratingRef = useRef(null);
+  const [rating, setRating] = useState(0);
+
+  useEffect(() => {
+    const handleOutsideClick = (event) => {
+      if (!ratingRef.current.contains(event.target)) {
+        setRating(0);
+      }
+    };
+
+    document.addEventListener("click", handleOutsideClick);
+    return () => {
+      document.removeEventListener("click", handleOutsideClick);
+    };
+  }, []);
+  return (
+    <div>
+      {/* Review */}
+      <div className="flex w-full justify-between items-end border-b-[1px] border-[#26262B] pb-4 mb-4">
+        {/* Average Rate */}
+        <div className="flex flex-col items-center ">
+          <h1 className="text-[45px]">{averageRate}</h1>
+          <div className="flex h-[20px] w-[100px]">
+            <Rating value={rating} onChange={setRating} />
+          </div>
+        </div>
+        <h4 className="max-w-[100px] text-right text-gray-400 text-[12px] font-normal">
+          <span className="font-black">{ratedNum}</span> People Rated This
+          Product
+        </h4>
+      </div>
+      {/* Price */}
+      <div className="flex justify-between items-end">
+        <div>
+          <h1 className="font-bold text-2xl">{price}$</h1>
+          <h5>Selected From RTX WEX</h5>
+        </div>
+        <ButtonVariant4 text="Add" img={<ShoppingBasket />} className="h-fit" />
+      </div>
+    </div>
+  );
 }
 
 export default React.memo(Product);

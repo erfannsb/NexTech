@@ -157,7 +157,7 @@ export function WishListRowMaker(companyImg, productTilte, price, quantity) {
 
   return [
     <div className="p-2 bg-[rgb(24,23,27)] rounded-md aspect-auto w-10 flex justify-between items-center">
-      <img src={companyImg} alt="company" className="w-7 h-7" />
+      <img src={companyImg} alt="company" className="w-7 h-auto" />
     </div>,
     <h3>{productTilte}</h3>,
     <h3>{price}</h3>,
