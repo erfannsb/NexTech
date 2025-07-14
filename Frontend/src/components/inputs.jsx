@@ -15,7 +15,7 @@ export const InputVariant1 = React.forwardRef(
         />
       </div>
     );
-  },
+  }
 );
 
 export const InputVariant2 = React.forwardRef(
@@ -24,15 +24,15 @@ export const InputVariant2 = React.forwardRef(
       <div
         className={`h-fit card-variant-1 flex justify-between items-center py-2 px-3 rounded-lg max-w-fit ${className}`}
       >
-        <div className="text-[#7E7D81]">{placeholder}</div>
+        <div className="text-[#7E7D81] text-sm">{placeholder}</div>
         <input
           ref={ref}
-          className="ml-2 outline-0 border-none bg-none flex-1 min-w-0 text-right mr-2"
-          defaultValue={defaultValue}
+          className="ml-2 outline-0 border-none bg-none flex-1 min-w-0 text-right mr-2 max-w-fit w-[60px] text-sm "
+          value={defaultValue}
         />
       </div>
     );
-  },
+  }
 );
 
 export function InputVariant3({
