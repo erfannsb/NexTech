@@ -13,7 +13,9 @@ export default function LeftSidebar() {
 
   return (
     <div
-      className={`${leftSidebarOpen ? "block" : "hidden"} flex flex-col justify-between items-start py-4 px-4 border-r border-[#26262B] sidebar col-start-1 col-end-2 row-start-2 row-end-3 `}
+      className={`${
+        leftSidebarOpen ? "block" : "hidden"
+      } flex flex-col justify-between items-start py-4 px-4 border-r border-[#26262B] sidebar col-start-1 col-end-2 row-start-2 row-end-3 `}
     >
       {/* Menu */}
       <ul className="flex flex-col text-lg">
@@ -23,16 +25,20 @@ export default function LeftSidebar() {
             <li
               key={i}
               onClick={() => handleItemClick(page)}
-              className={`text-[#545356] px-3 py-2 flex items-center mb-3 rounded-md ${currentPage === page ? "border-l-3 border-[#A3B5F9] bg-[linear-gradient(90deg,_rgba(80,104,198,0.63)_0%,_rgba(127,144,208,0)_60.58%)] text-[#A3B5F9] font-medium " : "hover:text-white/50"}`}
+              className={`text-[#545356] px-3 py-2 flex items-center mb-2 rounded-md text-md ${
+                currentPage === page
+                  ? "border-l-3 border-[#A3B5F9] bg-[linear-gradient(90deg,_rgba(80,104,198,0.63)_0%,_rgba(127,144,208,0)_60.58%)] text-[#A3B5F9] font-medium  "
+                  : "hover:text-white/50"
+              }`}
             >
               {i === 0 ? (
-                <Sparkles className="mr-2" />
+                <Sparkles className="mr-2" size={20} />
               ) : i === 1 ? (
-                <Bookmark className="mr-2" />
+                <Bookmark className="mr-2" size={20} />
               ) : i === 2 ? (
-                <LifeBuoy className="mr-2" />
+                <LifeBuoy className="mr-2" size={20} />
               ) : (
-                <Settings className="mr-2" />
+                <Settings className="mr-2" size={20} />
               )}{" "}
               {page}
             </li>
@@ -42,7 +48,9 @@ export default function LeftSidebar() {
 
       {/* Advertisement */}
       <div
-        className={`card-variant-1 rounded-md px-3 py-2 ${showAd ? "block" : "hidden"}`}
+        className={`card-variant-1 rounded-md px-3 py-2 ${
+          showAd ? "block" : "hidden"
+        }`}
       >
         <div className="flex items-center justify-between ">
           <h3 className="font-bold">Advertisement</h3>

@@ -53,9 +53,9 @@ export default function RightSidebar() {
 
   const ListItems = [
     ["nvidia.png", "Nvidia RTX 5090Ti", 1000, 1],
+    ["nvidia.png", "Nvidia RTX 5090Ti", 1000, 4],
     ["nvidia.png", "Nvidia RTX 5090Ti", 1000, 1],
-    ["nvidia.png", "Nvidia RTX 5090Ti", 1000, 1],
-    ["nvidia.png", "Nvidia RTX 5090Ti", 1000, 1],
+    ["nvidia.png", "Nvidia RTX 5090Ti", 1000, 2],
   ];
 
   const ConvertedList = ListItems.map((e, i) => {
@@ -94,7 +94,7 @@ export default function RightSidebar() {
           </div>
           <p
             ref={deliveryRef}
-            className="text-[12px] text-gray-400 whitespace-nowrap ml-4"
+            className="text-[12px] w-[100px] text-gray-400 text-right mr-2"
           >
             Delivery within 10 days
           </p>
@@ -110,8 +110,8 @@ export default function RightSidebar() {
         <div className="flex items-end justify-between">
           {/* number of selected items */}
           <div className="">
-            <p className="font-black text-lg">N Selected Items</p>
-            <h3 className="font-black">3000$</h3>
+            <p className="font-black text-md ml-1 mt-2">N Selected Items</p>
+            <h3 className="font-black text-lg ml-1 mb-1 text-blue-300">3000$</h3>
           </div>
           <ButtonVariant3
             text="Show more"
@@ -129,8 +129,11 @@ export default function RightSidebar() {
         </button>
       </div>
       <Table
+        headerItems={["Company", "Product", "Price", "Quantity"]}
         list={ConvertedList}
-        className=" overflow-y-auto max-h-full"
+        className=" overflow-y-auto max-h-full text-sm"
+        py={3}
+        px={2}
         footer={
           <>
             <div className="flex items-end justify-between">
@@ -153,7 +156,6 @@ export default function RightSidebar() {
 }
 
 export function WishListRowMaker(companyImg, productTilte, price, quantity) {
-  const [currentQuantity, setQuantity] = useState(quantity);
 
   return [
     <div className="p-2 bg-[rgb(24,23,27)] rounded-md aspect-auto w-10 flex justify-between items-center">
@@ -161,14 +163,6 @@ export function WishListRowMaker(companyImg, productTilte, price, quantity) {
     </div>,
     <h3>{productTilte}</h3>,
     <h3>{price}</h3>,
-    <div className="flex">
-      <ButtonVariant3
-        img={<Plus />}
-        text={currentQuantity}
-        className={"mr-2"}
-        onClick={() => setQuantity(currentQuantity + 1)}
-      />
-      <ButtonVariant2 img={<Trash2 />} />
-    </div>,
+    <h4 className="w-full text-center">{quantity}</h4>,
   ];
 }

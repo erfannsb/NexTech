@@ -25,6 +25,8 @@ export function ButtonVariant1({
   color,
   onClick,
   className,
+  px=4,
+  py=2
 }) {
   const colors = GenerateColorPalette(10);
   console.log(colors);
@@ -32,14 +34,16 @@ export function ButtonVariant1({
   return (
     <button
       onClick={onClick}
-      className={`cursor-pointer flex items-center justify-around card-variant-1 py-2 px-4 rounded-md
+      className={`cursor-pointer flex items-center justify-around card-variant-1 py-${py} px-${px} rounded-md
         card hover:scale-102 transition-transform duration-300 ${active ? "card-active" : ""} ${className}`}
     >
       {img ? (
         <div className="mr-2">{img}</div>
       ) : (
-        <div className={`rounded-full w-2 h-2 mr-3 ${color}`}></div>
+        ""
       )}
+
+      {color ? (<div className={`rounded-full w-2 h-2 mr-3 ${color}`}></div>) : ""}
       {text}
     </button>
   );
@@ -61,7 +65,7 @@ export function ButtonVariant3({ img, onClick, text, className }) {
   return (
     <button
       onClick={onClick}
-      className={`h-[40px] w-fit cursor-pointer flex items-center justify-around card-variant-1 rounded-[23px]
+      className={`card h-[40px] w-fit cursor-pointer flex items-center justify-around card-variant-1 rounded-[23px]
         hover:scale-102 transition-transform duration-300 ${className}`}
     >
       <div className="mx-3 whitespace-nowrap">{text}</div>

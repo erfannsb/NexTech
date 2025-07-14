@@ -2,14 +2,14 @@ import { LucideShoppingBasket, Star } from "lucide-react";
 import { useEffect, useState } from "react";
 import { ButtonVariant3 } from "./buttons";
 
-export function CardVariant1({ header, text, color }) {
+export function CardVariant1({ header, text, color, className }) {
   return (
-    <div className="h-fit card-variant-1 px-3 py-2 rounded-lg">
-      <div className="flex items-center justify-around">
+    <div className={`h-fit card-variant-1 px-3 py-2 rounded-lg ${className}`}>
+      <div className="flex items-center">
         <div className={`rounded-full w-2 h-2 mr-3 ${color}`}></div>
-        <div className="card-header text-[#898989]">{header}</div>
+        <div className="card-header text-[#898989] text-sm">{header}</div>
       </div>
-      <div className="mt-1">{text}</div>
+      <div className="mt-1 font-md">{text}</div>
     </div>
   );
 }

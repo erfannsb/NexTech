@@ -5,7 +5,7 @@ export const InputVariant1 = React.forwardRef(
   ({ className = "", placeholder = "Type here...", img }, ref) => {
     return (
       <div
-        className={`h-fit card-variant-1 flex items-center py-2 px-3 rounded-lg max-w-fit ${className}`}
+        className={`h-fit card-variant-1 flex items-center rounded-lg max-w-fit ${className}`}
       >
         <div className="text-[#C5C3CA]">{img}</div>
         <input

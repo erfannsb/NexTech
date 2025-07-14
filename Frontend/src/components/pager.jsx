@@ -16,12 +16,15 @@ export default function Pager() {
   const activePage = useUIStore((state) => state.currentUserPage);
   const isLeftSidebarOpen = useUIStore((state) => state.leftSidebarOpen);
   const isRightSidebarOpen = useUIStore((state) => state.rightSidebarOpen);
+  const bothSideBarClosed = !isLeftSidebarOpen && !isRightSidebarOpen;
 
   const ActivePage = pages[activePage] ?? (() => <div>Invalid page</div>);
 
   return (
     <div
-      className={`${isLeftSidebarOpen ? "col-start-2 " : "col-start-1"} ${isRightSidebarOpen ? "col-end-2" : "col-end-3"} row-start-2 row-end-3 p-4 overflow-y-auto`}
+      className={` ${isLeftSidebarOpen ? "col-start-2 " : "col-start-1"} ${isRightSidebarOpen ? "col-end-3" : "col-end-4"} row-start-2 row-end-3 p-4 overflow-y-auto
+      ${bothSideBarClosed ? "w-full px-[10%]" : ""}
+      `}
     >
       <Suspense fallback={<Loading />}>
         <ActivePage />

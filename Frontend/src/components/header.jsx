@@ -23,7 +23,7 @@ export default function Header() {
         <h1 className="text-2xl font-bold text-[#6274F7]">NexTech</h1>
         {/* toggle leftSideBar */}
         <ButtonVariant2
-          img={<PanelLeft />}
+          img={<PanelLeft size={17}/>}
           onClick={() => toggleLeftSideBar(!isLeftSidebarOpen)}
         />
       </header>
@@ -43,24 +43,24 @@ export default function Header() {
         <div className="flex items-center gap-2">
           <InputVariant1
             placeholder="Search Here..."
-            className="w-[200px]"
-            img={<Search strokeWidth={1.5} />}
+            className="w-[200px] py-[4px] px-2"
+            img={<Search strokeWidth={1.5} size={17}/>}
           />
           <ButtonVariant2
             className="relative"
             img={
               <>
-                <Bell strokeWidth={1.5} />
+                <Bell strokeWidth={1.5} size={17}/>
                 <div className="bg-[#6274F7] w-5 h-5 rounded-full flex justify-center items-center text-sm absolute top-[-8px] right-[-8px]">
                   1
                 </div>
               </>
             }
           />
-          <ButtonVariant2 img={<Settings strokeWidth={1.5} />} />
-          <ButtonVariant2 img={<LifeBuoy strokeWidth={1.5} />} />
+          <ButtonVariant2 img={<Settings strokeWidth={1.5} size={17}/>} />
+          <ButtonVariant2 img={<LifeBuoy strokeWidth={1.5} size={17}/>} />
           <ButtonVariant2
-            img={<PanelRight />}
+            img={<PanelRight size={17} />}
             onClick={() => setRightSideBar(!isRightSideBarOpen)}
           />
         </div>
