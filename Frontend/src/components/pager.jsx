@@ -6,10 +6,12 @@ import Loading from "../pages/loading.jsx";
 const ExplorePage = lazy(() => import("../pages/explore"));
 const ProductPage = lazy(() => import("../pages/product"));
 const Test = lazy(() => import("../pages/loading.jsx"));
+const WishList = lazy(() => import("../pages/wishlist.jsx"));
 const pages = {
   Explore: ExplorePage,
   Product: ProductPage,
   Test: Test,
+  "Wish List": WishList,
 };
 
 export default function Pager() {
@@ -22,7 +24,9 @@ export default function Pager() {
 
   return (
     <div
-      className={` ${isLeftSidebarOpen ? "col-start-2 " : "col-start-1"} ${isRightSidebarOpen ? "col-end-3" : "col-end-4"} row-start-2 row-end-3 p-4 overflow-y-auto
+      className={` ${isLeftSidebarOpen ? "col-start-2 " : "col-start-1"} ${
+        isRightSidebarOpen ? "col-end-3" : "col-end-4"
+      } row-start-2 row-end-3 p-4 overflow-y-auto
       ${bothSideBarClosed ? "w-full px-[10%]" : ""}
       `}
     >

@@ -26,7 +26,7 @@ function Product() {
   ];
 
   return (
-    <div className="grid grid-cols-[40%_60%] grid-rows-1 gap-4">
+    <div className="grid grid-cols-[35%_65%] mx-4 grid-rows-1 gap-4 mb-20">
       {/* left column */}
       <div className="flex flex-col">
         {/* Main Image Slider */}
@@ -146,17 +146,19 @@ function Product() {
       {/* right column */}
       <div className="mx-5">
         {/* Category */}
-        <div className="text-[#959595]">Graphic Cards / MSI / Gaming GPUs</div>
+        <div className="text-[#959595] text-md">
+          Graphic Cards / MSI / Gaming GPUs
+        </div>
         {/* Product Title */}
-        <h1 className="my-2 font-black text-3xl">
+        <h1 className="my-2 font-black text-2xl">
           MSI GeForce RTX™ 5090 32G VENTUS 3X OC
         </h1>
         {/* Product Company */}
         <div className="flex items-center my-4">
-          <div className="p-2 bg-[rgb(24,23,27)] rounded-md aspect-auto w-10 flex justify-between items-center">
+          <div className="p-1 bg-[rgb(24,23,27)] rounded-md flex justify-between items-center">
             <img src={"./nvidia.png"} alt="company" className="w-6 h-auto" />
           </div>
-          <h3 className="ml-2 text-md">Company name</h3>
+          <h3 className="ml-2 text-[14px]">Company name</h3>
         </div>
         {/* Product Description */}
         <p className="text-[#E6E6E6] mt-2 text-md font-md">
@@ -166,7 +168,9 @@ function Product() {
         </p>
         {/* Colors */}
         <div>
-          <h3 className="text-[#E6E9FF] font-black text-3xl my-5">Colors</h3>
+          <h3 className="text-[#E6E9FF] font-black text-2xl mt-8 mb-4">
+            Colors
+          </h3>
           <ul className="flex gap-3 mb-3">
             <li className={`bg-red-200 w-8 h-8 rounded-full`}></li>
             <li className={`bg-blue-200 w-8 h-8 rounded-full`}></li>
@@ -176,7 +180,9 @@ function Product() {
         </div>
         {/* Product Details */}
         <div>
-          <h3 className="text-[#E6E9FF] font-black text-3xl my-5">Details</h3>
+          <h3 className="text-[#E6E9FF] font-black text-2xl mt-8 mb-4">
+            Details
+          </h3>
           <div className="flex flex-wrap gap-3">
             {Array(5)
               .fill({ key: "VRAM", value: "32GB" })
@@ -208,7 +214,9 @@ function Product() {
           />
         </div>
         {/* Comment */}
-        <div className="text-[#E6E9FF] font-black text-3xl my-5">Comment</div>
+        <div className="text-[#E6E9FF] font-black text-2xl mt-8 mb-4">
+          Comment
+        </div>
         <div className="flex flex-col items-end">
           <textarea
             placeholder="Write Your Comment"
@@ -266,7 +274,7 @@ export function Comment({ reply }) {
       </div>
       {/* reply */}
       {reply && (
-        <div className="ml-[19px] pl-5 my-3 border-l border-gray-400">
+        <div className="ml-[19px] pl-5 my-3 border-l border-gray-600">
           {reply}
         </div>
       )}

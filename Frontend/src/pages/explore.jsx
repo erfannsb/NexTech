@@ -17,45 +17,63 @@ function Explore() {
         {/* Search Input */}
         <InputVariant1
           placeholder="Search Here..."
-          className="w-[200px] py-[5px] px-2"
+          className="w-[300px] py-[5px] px-2"
           img={<Search strokeWidth={1.5} size={17} />}
         />
         {/* Filtering */}
         <ButtonVariant1
-          color={"bg-red-300"}
-          text="Most Viewed"
+          color={"bg-[#EA5151]"}
+          text="Most Relevant"
           className={"text-[12px]"}
-          py={"1"}
+          py={"2"}
         />
         <ButtonVariant1
-          color={"bg-red-300"}
+          color={"bg-[#EE6969]"}
           text="Most Viewed"
           className={"text-[12px]"}
-          py={"1"}
+          py={"2"}
         />{" "}
         <ButtonVariant1
-          color={"bg-red-300"}
-          text="Most Viewed"
+          color={"bg-[#EEBF69]"}
+          text="Newest"
           className={"text-[12px]"}
-          py={"1"}
+          py={"2"}
         />{" "}
         <ButtonVariant1
-          color={"bg-red-300"}
-          text="Most Viewed"
+          color={"bg-[#D8EE69]"}
+          text="Most Sells"
           className={"text-[12px]"}
-          py={"1"}
+          py={"2"}
         />{" "}
         <ButtonVariant1
-          color={"bg-red-300"}
-          text="Most Viewed"
+          color={"bg-[#95EE69]"}
+          text="Cheapest"
           className={"text-[12px]"}
-          py={"1"}
+          py={"2"}
         />
         <ButtonVariant1
-          color={"bg-red-300"}
-          text="Most Viewed"
+          color={"bg-[#69EEB4]"}
+          text="Most Expensive"
           className={"text-[12px]"}
-          py={"1"}
+          py={"2"}
+        />
+        <ButtonVariant1
+          color={"bg-[#69EEEE]"}
+          text="Fastest Delivery"
+          className={"text-[12px]"}
+          py={"2"}
+        />
+        <ButtonVariant1
+          color={"bg-[#6988EE]"}
+          text="Recommended"
+          className={"text-[12px]"}
+          py={"2"}
+        />
+        <ButtonVariant1
+          color={"bg-[#8C69EE]"}
+          text="Best"
+          className={"text-[12px]"}
+          py={"2"}
         />
         {/* Price Range */}
         <div className="flex items-center">
@@ -88,17 +106,21 @@ function Explore() {
         {/* General Categories */}
         <div className="flex gap-2">
           {[
-            { name: "Graphic Card", pic: "something.png" },
-            { name: "Motherboard" },
-            { name: "Motherboard" },
-            { name: "Motherboard" },
-            { name: "Motherboard" },
-            { name: "Motherboard" },
-            { name: "Motherboard" },
+            { name: "CPU", pic: "./Category Images/cpu.svg" },
+            { name: "Graphic Card", pic: "./Category Images/gc.svg" },
+            { name: "Motherboard", pic: "./Category Images/mb.svg" },
+            { name: "RAM", pic: "./Category Images/ram.svg" },
+            { name: "Storage Devices", pic: "./Category Images/sd.svg" },
+            { name: "Power Supply Unit", pic: "./Category Images/psu.svg" },
+            { name: "Cooling Systems", pic: "./Category Images/cs.svg" },
           ].map((e, i) => (
             <div className="card-variant-1 flex flex-col justify-center items-center flex-1 max-w-[150px] aspect-square rounded-md">
-              <img src={e.pic} alt="img" />
-              <p className="text-sm">{e.name}</p>
+              <img
+                src={e.pic}
+                alt="img"
+                className="w-[50%] min-w-[50px] mb-2 aspect-square select-none"
+              />
+              <p className="text-sm select-none">{e.name}</p>
             </div>
           ))}
         </div>
@@ -115,7 +137,7 @@ function Explore() {
         className="text-[#E6E9FF] font-black text-lg my-3 flex items-center cursor-pointer"
         onClick={() => setShowBrands(!showBrands)}
       >
-        Brands{" "}
+        Brands
         {showBrands ? (
           <ChevronUp size={15} className="ml-1" />
         ) : (
@@ -128,14 +150,14 @@ function Explore() {
           { pic: "./nvidia.png", name: "NVIDIA" },
         ].map((e, i) => (
           <ButtonVariant1
-            py={1}
             px={3}
+            py={2}
             text={
               <div className="flex items-center">
-                <div className="p-1 bg-[rgb(24,23,27)] rounded-md aspect-auto w-10 flex justify-between items-center">
+                <div className=" bg-[rgb(24,23,27)] rounded-md aspect-auto p-1 flex justify-center items-center">
                   <img src={e.pic} alt="company" className="w-5 h-auto" />
                 </div>
-                <p className="text-sm ml-1">{e.name}</p>
+                <p className="text-[12px] ml-1">{e.name}</p>
               </div>
             }
           />
@@ -143,7 +165,7 @@ function Explore() {
       </div>
 
       {/* Product Section */}
-      <div className="my-4 flex-wrap flex gap-3">
+      <div className="my-4 grid  grid-cols-4 gap-3">
         {[
           {
             companyImg: "./nvidia.png",

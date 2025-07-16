@@ -25,8 +25,8 @@ export function ButtonVariant1({
   color,
   onClick,
   className,
-  px=4,
-  py=2
+  px = 4,
+  py = 2,
 }) {
   const colors = GenerateColorPalette(10);
   console.log(colors);
@@ -35,15 +35,17 @@ export function ButtonVariant1({
     <button
       onClick={onClick}
       className={`cursor-pointer flex items-center justify-around card-variant-1 py-${py} px-${px} rounded-md
-        card hover:scale-102 transition-transform duration-300 ${active ? "card-active" : ""} ${className}`}
+        card hover:scale-102 transition-transform duration-300 ${
+          active ? "card-active" : ""
+        } ${className}`}
     >
-      {img ? (
-        <div className="mr-2">{img}</div>
+      {img ? <div className="mr-2">{img}</div> : ""}
+
+      {color ? (
+        <div className={`rounded-full w-2 h-2 mr-3 ${color}`}></div>
       ) : (
         ""
       )}
-
-      {color ? (<div className={`rounded-full w-2 h-2 mr-3 ${color}`}></div>) : ""}
       {text}
     </button>
   );
@@ -68,7 +70,7 @@ export function ButtonVariant3({ img, onClick, text, className }) {
       className={`card h-[40px] w-fit cursor-pointer flex items-center justify-around card-variant-1 rounded-[23px]
         hover:scale-102 transition-transform duration-300 ${className}`}
     >
-      <div className="mx-3 whitespace-nowrap">{text}</div>
+      <div className="mx-3 whitespace-nowrap text-[12px]">{text}</div>
       <div className="h-[40px] w-[40px] flex justify-center items-center text-[#C5C3CA] card-variant-1 rounded-[23px] aspect-square p-2 mr-[-2px]">
         {img}
       </div>
@@ -83,7 +85,7 @@ export function ButtonVariant4({ img, onClick, text, className }) {
       className={`cursor-pointer flex items-center justify-around card-variant-2 rounded-[23px]
         hover:scale-102 transition-transform duration-300 px-4 py-2  ${className}`}
     >
-      <div className="">{text}</div>
+      <div className="text-sm">{text}</div>
       <div className="ml-2">{img}</div>
     </button>
   );

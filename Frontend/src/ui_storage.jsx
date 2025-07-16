@@ -5,7 +5,7 @@ const useUIStore = create((set) => ({
   setCurrentUserPage: (page) => set({ currentUserPage: page }),
   leftSidebarOpen: true,
   setLeftSidebarOpen: (open) => set({ leftSidebarOpen: open }),
-  rightSidebarOpen: true,
+  rightSidebarOpen: false,
   setRightSidebarOpen: (open) => set({ rightSidebarOpen: open }),
 }));
 

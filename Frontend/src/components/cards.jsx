@@ -28,7 +28,7 @@ export function ShoppingCard({
     () => async () => {
       const img = `http://localhost:5173/${companyImg}`;
       const res = await fetch(
-        `/api/dominant-color/?url=${encodeURIComponent(img)}`,
+        `/api/dominant-color/?url=${encodeURIComponent(img)}`
       );
       const data = await res.json();
       if (!data.error) {
@@ -36,41 +36,50 @@ export function ShoppingCard({
       }
       console.log(data.color.join(","));
     },
-    [],
+    []
   );
 
   return (
-    <div className="py-3 bg-[rgba(24,23,27,0.69)] rounded-md max-w-[30%]">
+    <div className="py-3 border border-[#212121] rounded-lg">
       {/* header */}
       <div className="flex items-center justify-between">
         <div
           className={`flex items-center py-2 px-2 to-black w-full`}
           style={{
-            background: `linear-gradient(90deg, rgba(${colorBGForCompany || "255,255,255"}, 0.55) 0%, rgba(${colorBGForCompany || "255,255,255"}, 0) 35.58%)`,
+            background: `linear-gradient(90deg, rgba(${
+              colorBGForCompany || "255,255,255"
+            }, 0.55) 0%, rgba(${
+              colorBGForCompany || "255,255,255"
+            }, 0) 35.58%)`,
           }}
         >
-          <div className="p-2 bg-[rgb(24,23,27)] rounded-md aspect-square w-fit flex justify-between items-center">
+          <div className="p-1 bg-[rgb(24,23,27)] rounded-md w-fit flex justify-between items-center">
             <img src={companyImg} alt="company" className="w-7 h-auto" />
           </div>
-          <h4 className="ml-2 font-bold">{companyName}</h4>
+          <h4 className="ml-2 font-medium text-sm">{companyName}</h4>
         </div>
         {/* rating */}
-        <div className="flex pr-4  items-center text-[#898989]">
+        <div className="flex pr-4  items-center text-sm text-[#898989]">
           <Star size={17} className="mr-2" /> {rate}
         </div>
       </div>
       {/* middle */}
       <img
-        className="w-full max-w-[400px] p-6 h-max-[300px] object-contain"
+        className="w-full max-w-[300px] p-6 h-max-[300px] mx-auto object-contain"
         src={productImg}
         alt="product Image"
       />
       {/* footer */}
       <div className="flex justify-between flex-col px-4 ">
-        <h3 className="text-2xl font-extrabold">{title}</h3>
-        <div className="flex items-center justify-between mt-3">
-          <p className="font-bold text-xl text-[#6274F7]">{price}</p>
-          <ButtonVariant3 text="Add" img={<LucideShoppingBasket />} />
+        <p className="font-medium text-lg mb-2 text-[#ededed]">{price}</p>
+
+        <h3 className="text-lg font-extrabold">{title}</h3>
+        <div className="flex items-center justify-end">
+          <ButtonVariant3
+            text="Add"
+            img={<LucideShoppingBasket size={16} />}
+            className="text-sm"
+          />
         </div>
       </div>
     </div>

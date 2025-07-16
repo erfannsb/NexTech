@@ -21,28 +21,34 @@ export default function LeftSidebar() {
       <ul className="flex flex-col text-lg">
         {
           // Pages
-          ["Explore", "Product", "Help", "Settings"].map((page, i) => (
-            <li
-              key={i}
-              onClick={() => handleItemClick(page)}
-              className={`text-[#545356] px-3 py-2 flex items-center mb-2 rounded-md text-md ${
-                currentPage === page
-                  ? "border-l-3 border-[#A3B5F9] bg-[linear-gradient(90deg,_rgba(80,104,198,0.63)_0%,_rgba(127,144,208,0)_60.58%)] text-[#A3B5F9] font-medium  "
-                  : "hover:text-white/50"
-              }`}
-            >
-              {i === 0 ? (
-                <Sparkles className="mr-2" size={20} />
-              ) : i === 1 ? (
-                <Bookmark className="mr-2" size={20} />
-              ) : i === 2 ? (
-                <LifeBuoy className="mr-2" size={20} />
-              ) : (
-                <Settings className="mr-2" size={20} />
-              )}{" "}
-              {page}
-            </li>
-          ))
+          ["Explore", "Product", "Help", "Settings", "Wish List"].map(
+            (page, i) => (
+              <li
+                key={i}
+                onClick={() => handleItemClick(page)}
+                className={`text-[#545356] px-3 py-2 flex items-center mb-2 rounded-md text-[15px] ${
+                  currentPage === page
+                    ? "border-l-3 border-[#A3B5F9] bg-[linear-gradient(90deg,_rgba(80,104,198,0.63)_0%,_rgba(127,144,208,0)_60.58%)] text-[#A3B5F9] font-medium  "
+                    : "hover:text-white/50"
+                }`}
+              >
+                {i === 0 ? (
+                  <Sparkles className="mr-2" size={20} />
+                ) : i === 1 ? (
+                  <Bookmark className="mr-2" size={20} />
+                ) : i === 2 ? (
+                  <LifeBuoy className="mr-2" size={20} />
+                ) : i == 3 ? (
+                  <Settings className="mr-2" size={20} />
+                ) : i == 4 ? (
+                  <Bookmark className="mr-2" size={20} />
+                ) : (
+                  <></>
+                )}
+                {page}
+              </li>
+            )
+          )
         }
       </ul>
 
