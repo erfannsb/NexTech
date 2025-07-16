@@ -1,90 +1,102 @@
 @import "tailwindcss";
 
 * {
-    box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+/* Chrome, Safari, Edge, Opera */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type="number"] {
+  -moz-appearance: textfield;
 }
 
 :root {
-    /* Gradients */
-    --gradient-1: linear-gradient(
-        90deg,
-        #1b1a1f 21.64%,
-        rgba(37, 37, 38, 0) 100%
-    );
-    --gradient-2: linear-gradient(90deg, #352868 0%, rgba(37, 37, 38, 0) 100%);
+  /* Gradients */
+  --gradient-1: linear-gradient(
+    90deg,
+    #1b1a1f 21.64%,
+    rgba(37, 37, 38, 0) 100%
+  );
+  --gradient-2: linear-gradient(90deg, #352868 0%, rgba(37, 37, 38, 0) 100%);
 
-    /* Backgrounds */
-    --bg-primary: #0d0d0f;
-    --bg-secondary: #6274f7;
-    --bg-variant-3: rgba(24, 23, 27, 0.69);
-    --bg-variant-2: #6274f7;
+  /* Backgrounds */
+  --bg-primary: #0d0d0f;
+  --bg-secondary: #6274f7;
+  --bg-variant-3: rgba(24, 23, 27, 0.69);
+  --bg-variant-2: #6274f7;
 
-    /* Borders */
-    --border-1: 1px solid #26262b;
-    --border-2: 1px solid #26262b;
-    --border-3: 0.866935px solid #26262b;
+  /* Borders */
+  --border-1: 1px solid #26262b;
+  --border-2: 1px solid #26262b;
+  --border-3: 0.866935px solid #26262b;
 
-    /* Effects */
-    --drop-shadow-2: drop-shadow(0px 0px 9px #322760);
-    --blur-2: blur(23px);
+  /* Effects */
+  --drop-shadow-2: drop-shadow(0px 0px 9px #322760);
+  --blur-2: blur(23px);
 
-    /* Common */
-    --border-radius: 7px;
-    --box-sizing: border-box;
+  /* Common */
+  --border-radius: 7px;
+  --box-sizing: border-box;
 }
 
 @font-face {
-    font-family: "Space Grotesk";
-    src: url("../public/Font/Space_Grotesk/SpaceGrotesk-VariableFont_wght.ttf")
-        format("truetype");
-    font-weight: 100 700; /* Variable weight range */
-    font-style: normal;
-    font-display: swap;
+  font-family: "Space Grotesk";
+  src: url("../public/Font/Space_Grotesk/SpaceGrotesk-VariableFont_wght.ttf")
+    format("truetype");
+  font-weight: 100 700; /* Variable weight range */
+  font-style: normal;
+  font-display: swap;
 }
 
 body {
-    background: var(--bg-primary);
-    font-family: "Space Grotesk", "Inter";
-    color: white;
+  background: var(--bg-primary);
+  font-family: "Space Grotesk", "Inter";
+  color: white;
 }
 
 .card-variant-1 {
-    background: var(--gradient-1);
-    border: var(--border-1);
+  background: var(--gradient-1);
+  border: var(--border-1);
 }
 
 .card-variant-2 {
-    background: var(--bg-variant-2);
+  background: var(--bg-variant-2);
 }
 
 .card-variant-3 {
-    background: var(--bg-variant-3);
-    border: var(--border-3);
+  background: var(--bg-variant-3);
+  border: var(--border-3);
 }
 
 .bg-primary {
-    background: var(--bg-primary);
+  background: var(--bg-primary);
 }
 
 .card:hover {
-    border: #4a3e6e 1px solid;
-    background: linear-gradient(90deg, #352868 0%, rgba(37, 37, 38, 0) 100%);
-    filter: drop-shadow(0px 0px 9px #322760);
-    backdrop-filter: blur(23px);
+  border: #4a3e6e 1px solid;
+  background: linear-gradient(90deg, #352868 0%, rgba(37, 37, 38, 0) 100%);
+  filter: drop-shadow(0px 0px 9px #322760);
+  backdrop-filter: blur(23px);
 }
 
 .card-active {
-    border: #4a3e6e 1px solid;
-    background: linear-gradient(90deg, #352868 0%, rgba(37, 37, 38, 0) 100%);
-    filter: drop-shadow(0px 0px 9px #322760);
-    backdrop-filter: blur(23px);
+  border: #4a3e6e 1px solid;
+  background: linear-gradient(90deg, #352868 0%, rgba(37, 37, 38, 0) 100%);
+  filter: drop-shadow(0px 0px 9px #322760);
+  backdrop-filter: blur(23px);
 }
 
 .bg-secondary {
-    background: var(--bg-secondary);
+  background: var(--bg-secondary);
 }
 
 .swiper-wrapper {
-    align-items: center;
-    height: fit-content;
+  align-items: center;
+  height: fit-content;
 }

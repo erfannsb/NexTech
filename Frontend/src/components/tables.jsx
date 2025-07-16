@@ -19,11 +19,11 @@ export default function Table({
         {/* Header */}
         {headerItems.length > 0 && (
           <thead className="text-base font-semibold border-b-[2px] border-[#3C3D48]">
-            <tr>
+            <tr className="">
               {headerItems.map((item, i) => (
                 <th
                   key={`header-${i}`}
-                  className={`px-${px} py-${py} whitespace-nowrap`}
+                  className={`px-${px} py-${py + 1} whitespace-nowrap`}
                 >
                   {item}
                 </th>
