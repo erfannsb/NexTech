@@ -6,9 +6,14 @@ export default function Order() {
   return (
     <div>
       <h2 className="font-bold text-lg">Order List</h2>
-      <p className="font-light text-md text-[#B6B6B6] mb-3">
-        List of things you ordered recently
-      </p>
+      <div className="flex justify-between items-center">
+        <p className="font-light text-md text-[#B6B6B6] mb-3">
+          List of things you ordered recently
+        </p>
+        <button className="underline text-[#6274F7] cursor-pointer">
+          View Order History
+        </button>
+      </div>
 
       <Table
         className="max-h-[60vh]"
