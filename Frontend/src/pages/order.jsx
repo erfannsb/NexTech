@@ -1,19 +1,20 @@
 import Table from "../components/tables";
 import { ButtonVariant2, ButtonVariant3 } from "../components/buttons";
-import { Euro, EuroIcon, Hourglass } from "lucide-react";
+import {
+  ArrowBigRight,
+  ArrowUpRight,
+  Euro,
+  EuroIcon,
+  Hourglass,
+} from "lucide-react";
 import { CardVariant1 } from "../components/cards";
 export default function Order() {
   return (
     <div>
       <h2 className="font-bold text-lg">Order List</h2>
-      <div className="flex justify-between items-center">
-        <p className="font-light text-md text-[#B6B6B6] mb-3">
-          List of things you ordered recently
-        </p>
-        <button className="underline text-[#6274F7] cursor-pointer">
-          View Order History
-        </button>
-      </div>
+      <p className="font-light text-md text-[#B6B6B6] mb-3">
+        List of things you ordered recently
+      </p>
 
       <Table
         className="max-h-[60vh]"
@@ -113,6 +114,31 @@ export default function Order() {
           />
         </div>
       </div>
+
+      {/* Order History */}
+      <h2 className="font-bold text-lg mt-8">Order History</h2>
+      <p className="font-light text-sm text-[#B6B6B6] mb-4">
+        List of things you ordered recently
+      </p>
+
+      <Table
+        py={1}
+        headerItems={["OrderID", "Order Items", "Date", "Total Price", ""]}
+        list={[
+          OrderHistoryItem(
+            "123123123",
+            ["p1", "p2", "p3", "p4"],
+            "12/21/12",
+            "1200"
+          ),
+          OrderHistoryItem(
+            "123123123",
+            ["p1", "p2", "p3", "p4"],
+            "12/21/12",
+            "1200"
+          ),
+        ]}
+      />
     </div>
   );
 }
@@ -140,5 +166,15 @@ function OrderItem(
     <div className="flex items-center card-variant-1 p-[5px] w-8 h-8 rounded-full justify-center">
       <h3>{Quantity}</h3>
     </div>,
+  ];
+}
+
+function OrderHistoryItem(OrderID, OrderItems = [], Date, TotalPrice) {
+  return [
+    <h3 className="my-4">{OrderID}</h3>,
+    <h3>{OrderItems.slice(0, 3).join(",")}</h3>,
+    <h3>{Date}</h3>,
+    <h3>{TotalPrice}</h3>,
+    <ButtonVariant2 img={<ArrowUpRight size={15} />} />,
   ];
 }
