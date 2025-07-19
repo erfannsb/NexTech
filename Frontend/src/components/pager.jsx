@@ -8,12 +8,15 @@ const ProductPage = lazy(() => import("../pages/product"));
 const Test = lazy(() => import("../pages/loading.jsx"));
 const WishList = lazy(() => import("../pages/wishlist.jsx"));
 const Order = lazy(() => import("../pages/order.jsx"));
+const Settings = lazy(() => import("../pages/settings.jsx"));
+
 const pages = {
   Explore: ExplorePage,
   Product: ProductPage,
   Test: Test,
   "Wish List": WishList,
   Order: Order,
+  Settings: Settings,
 };
 
 export default function Pager() {
