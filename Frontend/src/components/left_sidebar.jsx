@@ -1,6 +1,6 @@
 import useUIStore from "../ui_storage";
 import { useState } from "react";
-import { Bookmark, LifeBuoy, Settings, Sparkles, X } from "lucide-react";
+import { Bookmark, Box, LifeBuoy, Settings, Sparkles, X } from "lucide-react";
 export default function LeftSidebar() {
   const currentPage = useUIStore((state) => state.currentUserPage);
   const setCurrentPage = useUIStore((state) => state.setCurrentUserPage);
@@ -21,7 +21,7 @@ export default function LeftSidebar() {
       <ul className="flex flex-col text-lg">
         {
           // Pages
-          ["Explore", "Product", "Help", "Settings", "Wish List"].map(
+          ["Explore", "Product", "Help", "Settings", "Wish List", "Order"].map(
             (page, i) => (
               <li
                 key={i}
@@ -42,6 +42,8 @@ export default function LeftSidebar() {
                   <Settings className="mr-2" size={20} />
                 ) : i == 4 ? (
                   <Bookmark className="mr-2" size={20} />
+                ) : i == 5 ? (
+                  <Box className="mr-2" size={20} />
                 ) : (
                   <></>
                 )}
