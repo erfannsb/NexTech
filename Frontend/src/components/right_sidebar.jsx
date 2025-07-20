@@ -66,7 +66,9 @@ export default function RightSidebar() {
 
   return (
     <div
-      className={`${isRightSideBarOpen ? "flex" : "hidden"} flex-col h-full overflow-hidden sidebar col-start-3 col-end-4 row-start-2 row-end-3 p-4`}
+      className={`${
+        isRightSideBarOpen ? "flex" : "hidden"
+      } flex-col h-full overflow-hidden sidebar col-start-3 col-end-4 row-start-2 row-end-3 p-4`}
     >
       {/* Header 1 */}
       <div className="flex justify-between items-center">
@@ -111,7 +113,9 @@ export default function RightSidebar() {
           {/* number of selected items */}
           <div className="">
             <p className="font-black text-md ml-1 mt-2">N Selected Items</p>
-            <h3 className="font-black text-lg ml-1 mb-1 text-blue-300">3000$</h3>
+            <h3 className="font-black text-lg ml-1 mb-1 text-blue-300">
+              3000$
+            </h3>
           </div>
           <ButtonVariant3
             text="Show more"
@@ -129,6 +133,8 @@ export default function RightSidebar() {
         </button>
       </div>
       <Table
+        headerFontWeight="medium"
+        headerFontSize="sm"
         headerItems={["Company", "Product", "Price", "Quantity"]}
         list={ConvertedList}
         className=" overflow-y-auto max-h-full text-sm"
@@ -156,13 +162,12 @@ export default function RightSidebar() {
 }
 
 export function WishListRowMaker(companyImg, productTilte, price, quantity) {
-
   return [
-    <div className="p-2 bg-[rgb(24,23,27)] rounded-md aspect-auto w-10 flex justify-between items-center">
-      <img src={companyImg} alt="company" className="w-7 h-auto" />
+    <div className=" bg-[rgb(24,23,27)] rounded-md w-fit p-1">
+      <img src={companyImg} alt="company" className="w-6" />
     </div>,
-    <h3>{productTilte}</h3>,
-    <h3>{price}</h3>,
-    <h4 className="w-full text-center">{quantity}</h4>,
+    <h3 className="text-[11px] font-light">{productTilte}</h3>,
+    <h3 className="text-[11px] font-light">{price}</h3>,
+    <h4 className="w-full text-center text-[11px] font-light">{quantity}</h4>,
   ];
 }

@@ -10,7 +10,7 @@ import {
 import { CardVariant1 } from "../components/cards";
 export default function Order() {
   return (
-    <div>
+    <div className="mx-10 ">
       <h2 className="font-bold text-lg">Order List</h2>
       <p className="font-light text-md text-[#B6B6B6] mb-3">
         List of things you ordered recently

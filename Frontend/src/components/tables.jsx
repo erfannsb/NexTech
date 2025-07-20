@@ -5,6 +5,8 @@ export default function Table({
   footer = null,
   px = 6,
   py = 4,
+  headerFontWeight = "semibold",
+  headerFontSize = "md",
 }) {
   if (list.length <= 0) {
     return <div>Invalid Table</div>;
@@ -18,12 +20,14 @@ export default function Table({
       <table className="min-w-full table-auto text-left text-sm">
         {/* Header */}
         {headerItems.length > 0 && (
-          <thead className="text-base font-semibold border-b-[2px] border-[#3C3D48]">
+          <thead className={`text-base  border-b-[2px] border-[#3C3D48]`}>
             <tr className="">
               {headerItems.map((item, i) => (
                 <th
                   key={`header-${i}`}
-                  className={`px-${px} py-${py + 1} whitespace-nowrap`}
+                  className={`px-${px} py-${
+                    py + 1
+                  } whitespace-nowrap font-${headerFontWeight} text-${headerFontSize}`}
                 >
                   {item}
                 </th>

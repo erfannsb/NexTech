@@ -1,11 +1,48 @@
-import React, { useState } from "react";
-import { ChevronDown, ChevronUp, Search } from "lucide-react";
+import React, { useEffect, useState } from "react";
+import {
+  ChevronDown,
+  ChevronUp,
+  Cross,
+  CrossIcon,
+  Delete,
+  Search,
+  X,
+} from "lucide-react";
 import { InputVariant1, InputVariant2 } from "../components/inputs";
-import { ButtonVariant1 } from "../components/buttons";
+import {
+  ButtonVariant1,
+  ButtonVariant2,
+  ButtonVariant3,
+} from "../components/buttons";
 import { ShoppingCard } from "../components/cards";
 function Explore() {
   const [showCategory, setShowCategory] = useState(true);
   const [showBrands, setShowBrands] = useState(true);
+  const [activeFilterButton, setActiveFilterButton] = useState("mostRelevant");
+  const [activeCategory, setActiveCategory] = useState(null);
+  const [activeSubCategory, setSubCategory] = useState(null);
+
+  // Fetch Categories
+
+  const Categories = [
+    { name: "CPU", pic: "./Category Images/cpu.svg" },
+    { name: "Graphic Card", pic: "./Category Images/gc.svg" },
+    { name: "Motherboard", pic: "./Category Images/mb.svg" },
+    { name: "RAM", pic: "./Category Images/ram.svg" },
+    { name: "Storage Devices", pic: "./Category Images/sd.svg" },
+    { name: "Power Supply Unit", pic: "./Category Images/psu.svg" },
+    { name: "Cooling Systems", pic: "./Category Images/cs.svg" },
+  ];
+
+  const subCategories = {
+    CPU: ["Dual-Core", "Quad-Core", "With iGPU", "12th Gen"],
+    "Graphic Card": ["Single Fan", "Full-size", "Mini ITX"],
+    Motherboard: ["DDR4", "DDR5", "PCIe x16"],
+    RAM: ["4GB", "16GB", "2666 MHz", "6000 MHz"],
+    "Storage Devices": ["HDD", " SATA SSD", "NVMe SSD"],
+    "Power Supply Unit": ["500W-650W", "Non-Modular", "Fully Modular"],
+    "Cooling Systems": ["Air Cooler", "AIO Liquid Cooler"],
+  };
 
   return (
     <div>
@@ -24,55 +61,82 @@ function Explore() {
         <ButtonVariant1
           color={"bg-[#EA5151]"}
           text="Most Relevant"
-          className={"text-[12px]"}
+          className={`text-[12px] ${
+            activeFilterButton == "mostRelevant" ? "card-active" : ""
+          }`}
+          onClick={() => setActiveFilterButton("mostRelevant")}
           py={"2"}
         />
         <ButtonVariant1
           color={"bg-[#EE6969]"}
           text="Most Viewed"
-          className={"text-[12px]"}
+          className={`text-[12px] ${
+            activeFilterButton == "mostViewed" ? "card-active" : ""
+          }`}
+          onClick={() => setActiveFilterButton("mostViewed")}
           py={"2"}
         />{" "}
         <ButtonVariant1
           color={"bg-[#EEBF69]"}
           text="Newest"
-          className={"text-[12px]"}
+          className={`text-[12px] ${
+            activeFilterButton == "newest" ? "card-active" : ""
+          }`}
+          onClick={() => setActiveFilterButton("newest")}
           py={"2"}
         />{" "}
         <ButtonVariant1
           color={"bg-[#D8EE69]"}
           text="Most Sells"
-          className={"text-[12px]"}
+          className={`text-[12px] ${
+            activeFilterButton == "mostSelles" ? "card-active" : ""
+          }`}
+          onClick={() => setActiveFilterButton("mostSelles")}
           py={"2"}
         />{" "}
         <ButtonVariant1
           color={"bg-[#95EE69]"}
           text="Cheapest"
-          className={"text-[12px]"}
+          className={`text-[12px] ${
+            activeFilterButton == "cheapest" ? "card-active" : ""
+          }`}
+          onClick={() => setActiveFilterButton("cheapest")}
           py={"2"}
         />
         <ButtonVariant1
           color={"bg-[#69EEB4]"}
           text="Most Expensive"
-          className={"text-[12px]"}
+          className={`text-[12px] ${
+            activeFilterButton == "mostExpensive" ? "card-active" : ""
+          }`}
+          onClick={() => setActiveFilterButton("mostExpensive")}
           py={"2"}
         />
         <ButtonVariant1
           color={"bg-[#69EEEE]"}
           text="Fastest Delivery"
-          className={"text-[12px]"}
+          className={`text-[12px] ${
+            activeFilterButton == "fastestDelivery" ? "card-active" : ""
+          }`}
+          onClick={() => setActiveFilterButton("fastestDelivery")}
           py={"2"}
         />
         <ButtonVariant1
           color={"bg-[#6988EE]"}
           text="Recommended"
-          className={"text-[12px]"}
+          className={`text-[12px] ${
+            activeFilterButton == "recommended" ? "card-active" : ""
+          }`}
+          onClick={() => setActiveFilterButton("recommended")}
           py={"2"}
         />
         <ButtonVariant1
           color={"bg-[#8C69EE]"}
           text="Best"
-          className={"text-[12px]"}
+          className={`text-[12px] ${
+            activeFilterButton == "best" ? "card-active" : ""
+          }`}
+          onClick={() => setActiveFilterButton("best")}
           py={"2"}
         />
         {/* Price Range */}
@@ -105,16 +169,13 @@ function Explore() {
       <div className={showCategory ? "flex flex-col" : "hidden"}>
         {/* General Categories */}
         <div className="flex gap-2">
-          {[
-            { name: "CPU", pic: "./Category Images/cpu.svg" },
-            { name: "Graphic Card", pic: "./Category Images/gc.svg" },
-            { name: "Motherboard", pic: "./Category Images/mb.svg" },
-            { name: "RAM", pic: "./Category Images/ram.svg" },
-            { name: "Storage Devices", pic: "./Category Images/sd.svg" },
-            { name: "Power Supply Unit", pic: "./Category Images/psu.svg" },
-            { name: "Cooling Systems", pic: "./Category Images/cs.svg" },
-          ].map((e, i) => (
-            <div className="card-variant-1 flex flex-col justify-center items-center flex-1 max-w-[150px] aspect-square rounded-md">
+          {Categories.map((e, i) => (
+            <div
+              className={`card-variant-1 flex flex-col justify-center items-center flex-1 max-w-[150px] aspect-square rounded-md hover:scale-[1.01] transition duration-150 cursor-pointer ${
+                activeCategory == e.name ? "card-active" : ""
+              }`}
+              onClick={() => setActiveCategory(e.name)}
+            >
               <img
                 src={e.pic}
                 alt="img"
@@ -127,10 +188,26 @@ function Explore() {
 
         {/* Sub Categories */}
         <div className="flex gap-2 mt-2">
-          {["Gaming", "Workstations", "Mobile"].map((e, i) => (
-            <ButtonVariant1 color={"bg-red-300"} text={e} className="text-sm" />
-          ))}
+          {activeCategory != null &&
+            subCategories[activeCategory].map((e, i) => (
+              <ButtonVariant1
+                color={"bg-red-300"}
+                text={e}
+                onClick={() => setSubCategory(e.name)}
+                className={
+                  "text-sm " + activeSubCategory == e.name ? "card-active" : ""
+                }
+                hover={false}
+              />
+            ))}
         </div>
+
+        <ButtonVariant3
+          img={<X size={15} />}
+          text={"Clear Category"}
+          className={activeCategory == null ? "hidden" : "blcok mt-3"}
+          onClick={() => setActiveCategory(null)}
+        />
       </div>
       {/* Brand Section */}
       <h3
