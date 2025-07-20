@@ -21,6 +21,7 @@ function Explore() {
   const [activeFilterButton, setActiveFilterButton] = useState("mostRelevant");
   const [activeCategory, setActiveCategory] = useState(null);
   const [activeSubCategory, setSubCategory] = useState(null);
+  const [activeBrand, setActiveBrand] = useState(null);
 
   // Fetch Categories
 
@@ -43,6 +44,11 @@ function Explore() {
     "Power Supply Unit": ["500W-650W", "Non-Modular", "Fully Modular"],
     "Cooling Systems": ["Air Cooler", "AIO Liquid Cooler"],
   };
+
+  const Brands = [
+    { pic: "./nvidia.png", name: "NVIDIA" },
+    { pic: "./nvidia.png", name: "Intel" },
+  ];
 
   return (
     <div>
@@ -141,17 +147,9 @@ function Explore() {
         />
         {/* Price Range */}
         <div className="flex items-center">
-          <InputVariant2
-            placeholder="From"
-            className="max-w-[50px]"
-            defaultValue="10000"
-          />
+          <InputVariant2 placeholder="From" defaultValue="10000" />
           <h4 className="text-sm mx-2">Price Range</h4>
-          <InputVariant2
-            placeholder="To"
-            className="max-w-[50px]"
-            defaultValue="1000000"
-          />
+          <InputVariant2 placeholder="To" defaultValue="1000000" />
         </div>
       </div>
       {/* Category Section */}
@@ -166,12 +164,20 @@ function Explore() {
           <ChevronDown size={15} className="ml-1" />
         )}
       </h3>
+      <button
+        onClick={() => setActiveCategory(null)}
+        className={`text-sm w-fit  items-center mb-3 text-gray-200 hover:text-gray-400 cursor-pointer transition duration-100 ${
+          activeCategory == null ? "hidden" : "flex"
+        }`}
+      >
+        <X size={15} className="mr-1" /> Clear Category
+      </button>
       <div className={showCategory ? "flex flex-col" : "hidden"}>
         {/* General Categories */}
         <div className="flex gap-2">
           {Categories.map((e, i) => (
             <div
-              className={`card-variant-1 flex flex-col justify-center items-center flex-1 max-w-[150px] aspect-square rounded-md hover:scale-[1.01] transition duration-150 cursor-pointer ${
+              className={`card-variant-3 flex flex-col justify-center items-center flex-1 max-w-[150px] aspect-square rounded-md hover:scale-[1.01] transition duration-150 cursor-pointer ${
                 activeCategory == e.name ? "card-active" : ""
               }`}
               onClick={() => setActiveCategory(e.name)}
@@ -193,21 +199,14 @@ function Explore() {
               <ButtonVariant1
                 color={"bg-red-300"}
                 text={e}
-                onClick={() => setSubCategory(e.name)}
-                className={
-                  "text-sm " + activeSubCategory == e.name ? "card-active" : ""
-                }
+                onClick={() => setSubCategory(e)}
+                className={`${
+                  activeSubCategory == e ? "card-active-2" : ""
+                } text-sm`}
                 hover={false}
               />
             ))}
         </div>
-
-        <ButtonVariant3
-          img={<X size={15} />}
-          text={"Clear Category"}
-          className={activeCategory == null ? "hidden" : "blcok mt-3"}
-          onClick={() => setActiveCategory(null)}
-        />
       </div>
       {/* Brand Section */}
       <h3
@@ -221,13 +220,20 @@ function Explore() {
           <ChevronDown size={15} className="ml-1" />
         )}
       </h3>
+      <button
+        onClick={() => setActiveBrand(null)}
+        className={`text-sm w-fit  items-center mb-3 text-gray-200 hover:text-gray-400 cursor-pointer transition duration-100 ${
+          activeBrand == null ? "hidden" : "flex"
+        }`}
+      >
+        <X size={15} className="mr-1" /> Clear Category
+      </button>
       <div className={showBrands ? "flex gap-2" : "hidden"}>
-        {[
-          { pic: "./nvidia.png", name: "NVIDIA" },
-          { pic: "./nvidia.png", name: "NVIDIA" },
-        ].map((e, i) => (
+        {Brands.map((e, i) => (
           <ButtonVariant1
             px={3}
+            className={activeBrand == e.name ? "card-active-2" : ""}
+            onClick={() => setActiveBrand(e.name)}
             py={2}
             text={
               <div className="flex items-center">

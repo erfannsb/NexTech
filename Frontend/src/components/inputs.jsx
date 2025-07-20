@@ -27,8 +27,8 @@ export const InputVariant2 = React.forwardRef(
         <div className="text-[#7E7D81] text-sm">{placeholder}</div>
         <input
           ref={ref}
-          className="ml-2 outline-0 border-none bg-none flex-1 min-w-0 text-right mr-2 max-w-fit w-[60px] text-[11px] "
-          value={defaultValue}
+          className="ml-2 outline-0 border-none bg-none flex-1 max-w-fit text-right mr-2  min-w-[60px] text-[12px] "
+          defaultValue={defaultValue}
         />
       </div>
     );

@@ -88,8 +88,13 @@ body {
 .card-active {
   border: #4a3e6e 1px solid;
   background: linear-gradient(90deg, #352868 0%, rgba(37, 37, 38, 0) 100%);
-  filter: drop-shadow(0px 0px 9px #322760);
+  filter: drop-shadow(0px 0px 7px #322760);
   backdrop-filter: blur(23px);
+}
+
+.card-active-2 {
+  border: #4a3e6e 2px solid;
+  background: linear-gradient(90deg, #35286861 0%, rgba(37, 37, 38, 0) 100%);
 }
 
 .bg-secondary {
