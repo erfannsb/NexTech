@@ -7,6 +7,8 @@ const useUIStore = create((set) => ({
   setLeftSidebarOpen: (open) => set({ leftSidebarOpen: open }),
   rightSidebarOpen: false,
   setRightSidebarOpen: (open) => set({ rightSidebarOpen: open }),
+  isChatOpen: false,
+  setChatOpen: (open) => set({ isChatOpen: open }),
 }));
 
 export default useUIStore;

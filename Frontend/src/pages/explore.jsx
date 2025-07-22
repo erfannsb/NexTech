@@ -146,7 +146,7 @@ function Explore() {
           py={"2"}
         />
         {/* Price Range */}
-        <div className="flex items-center">
+        <div className="flex items-center max-md:flex-col">
           <InputVariant2 placeholder="From" defaultValue="10000" />
           <h4 className="text-sm mx-2">Price Range</h4>
           <InputVariant2 placeholder="To" defaultValue="1000000" />
@@ -157,24 +157,25 @@ function Explore() {
         className="text-[#E6E9FF] font-black text-lg my-3 flex items-center cursor-pointer"
         onClick={() => setShowCategory(!showCategory)}
       >
-        Categories{" "}
+        Categories
         {showCategory ? (
           <ChevronUp size={15} className="ml-1" />
         ) : (
           <ChevronDown size={15} className="ml-1" />
         )}
       </h3>
-      <button
-        onClick={() => setActiveCategory(null)}
-        className={`text-sm w-fit  items-center mb-3 text-gray-200 hover:text-gray-400 cursor-pointer transition duration-100 ${
-          activeCategory == null ? "hidden" : "flex"
-        }`}
-      >
-        <X size={15} className="mr-1" /> Clear Category
-      </button>
+
       <div className={showCategory ? "flex flex-col" : "hidden"}>
+        <button
+          onClick={() => setActiveCategory(null)}
+          className={`text-sm w-fit  items-center mb-3 text-gray-200 hover:text-gray-400 cursor-pointer transition duration-100 ${
+            activeCategory == null ? "hidden" : "flex"
+          }`}
+        >
+          <X size={15} className="mr-1" /> Clear Category
+        </button>
         {/* General Categories */}
-        <div className="flex gap-2">
+        <div className="flex gap-2 max-md:flex-col">
           {Categories.map((e, i) => (
             <div
               className={`card-variant-3 flex flex-col justify-center items-center flex-1 max-w-[150px] aspect-square rounded-md hover:scale-[1.01] transition duration-150 cursor-pointer ${
@@ -185,9 +186,11 @@ function Explore() {
               <img
                 src={e.pic}
                 alt="img"
-                className="w-[50%] min-w-[50px] mb-2 aspect-square select-none"
+                className="w-[50%] min-w-[20px] mb-2 aspect-square select-none "
               />
-              <p className="text-sm select-none">{e.name}</p>
+              <p className="text-sm px-2 select-none text-center max-xl:text-[10px]">
+                {e.name}
+              </p>
             </div>
           ))}
         </div>
@@ -220,35 +223,38 @@ function Explore() {
           <ChevronDown size={15} className="ml-1" />
         )}
       </h3>
-      <button
-        onClick={() => setActiveBrand(null)}
-        className={`text-sm w-fit  items-center mb-3 text-gray-200 hover:text-gray-400 cursor-pointer transition duration-100 ${
-          activeBrand == null ? "hidden" : "flex"
-        }`}
-      >
-        <X size={15} className="mr-1" /> Clear Category
-      </button>
-      <div className={showBrands ? "flex gap-2" : "hidden"}>
-        {Brands.map((e, i) => (
-          <ButtonVariant1
-            px={3}
-            className={activeBrand == e.name ? "card-active-2" : ""}
-            onClick={() => setActiveBrand(e.name)}
-            py={2}
-            text={
-              <div className="flex items-center">
-                <div className=" bg-[rgb(24,23,27)] rounded-md aspect-auto p-1 flex justify-center items-center">
-                  <img src={e.pic} alt="company" className="w-5 h-auto" />
+
+      <div className={showBrands ? "flex flex-col" : "hidden"}>
+        <button
+          onClick={() => setActiveBrand(null)}
+          className={`text-sm w-fit  items-center mb-3 text-gray-200 hover:text-gray-400 cursor-pointer transition duration-100 ${
+            activeBrand == null ? "hidden" : "flex"
+          }`}
+        >
+          <X size={15} className="mr-1" /> Clear Category
+        </button>
+        <div className="flex gap-2">
+          {Brands.map((e, i) => (
+            <ButtonVariant1
+              px={3}
+              className={activeBrand == e.name ? "card-active-2" : ""}
+              onClick={() => setActiveBrand(e.name)}
+              py={2}
+              text={
+                <div className="flex items-center">
+                  <div className=" bg-[rgb(24,23,27)] rounded-md aspect-auto p-1 flex justify-center items-center">
+                    <img src={e.pic} alt="company" className="w-5 h-auto" />
+                  </div>
+                  <p className="text-[12px] ml-1">{e.name}</p>
                 </div>
-                <p className="text-[12px] ml-1">{e.name}</p>
-              </div>
-            }
-          />
-        ))}
+              }
+            />
+          ))}
+        </div>
       </div>
 
       {/* Product Section */}
-      <div className="my-4 grid  grid-cols-4 gap-3">
+      <div className="my-4 grid  grid-cols-4 gap-3 max-xl:grid-cols-3 max-md:grid-cols-1">
         {[
           {
             companyImg: "./nvidia.png",

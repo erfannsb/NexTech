@@ -28,6 +28,7 @@ export function ButtonVariant1({
   px = 4,
   py = 2,
   hover = true,
+  rounded = "md",
 }) {
   const colors = GenerateColorPalette(10);
   console.log(colors);
@@ -35,7 +36,7 @@ export function ButtonVariant1({
   return (
     <button
       onClick={onClick}
-      className={`cursor-pointer flex items-center justify-around card-variant-1 py-${py} px-${px} rounded-md
+      className={`cursor-pointer flex items-center justify-around card-variant-1 py-${py} px-${px} rounded-${rounded}
         ${
           hover ? "card" : ""
         } hover:scale-102 transition-transform duration-300 ${

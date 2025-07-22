@@ -1,6 +1,8 @@
 import { lazy, Suspense } from "react";
 import useUIStore from "../ui_storage";
 import Loading from "../pages/loading.jsx";
+import { GlassCard } from "./cards.jsx";
+import Chat from "./chat.jsx";
 
 // Lazy load each page
 const ExplorePage = lazy(() => import("../pages/explore"));
@@ -9,6 +11,7 @@ const Test = lazy(() => import("../pages/loading.jsx"));
 const WishList = lazy(() => import("../pages/wishlist.jsx"));
 const Order = lazy(() => import("../pages/order.jsx"));
 const Settings = lazy(() => import("../pages/settings.jsx"));
+const Help = lazy(() => import("../pages/help.jsx"));
 
 const pages = {
   Explore: ExplorePage,
@@ -17,6 +20,7 @@ const pages = {
   "Wish List": WishList,
   Order: Order,
   Settings: Settings,
+  Help: Help,
 };
 
 export default function Pager() {
@@ -24,7 +28,7 @@ export default function Pager() {
   const isLeftSidebarOpen = useUIStore((state) => state.leftSidebarOpen);
   const isRightSidebarOpen = useUIStore((state) => state.rightSidebarOpen);
   const bothSideBarClosed = !isLeftSidebarOpen && !isRightSidebarOpen;
-
+  const isChatOpen = useUIStore((state) => state.isChatOpen);
   const ActivePage = pages[activePage] ?? (() => <div>Invalid page</div>);
 
   return (
@@ -35,6 +39,10 @@ export default function Pager() {
       ${bothSideBarClosed ? "w-full px-[10%]" : ""}
       `}
     >
+      <GlassCard
+        children={<Chat />}
+        className={`fixed bottom-1 right-3 ${isChatOpen ? "block" : "hidden"}`}
+      />
       <Suspense fallback={<Loading />}>
         <ActivePage />
       </Suspense>

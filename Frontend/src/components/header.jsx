@@ -6,7 +6,7 @@ import {
   LifeBuoy,
   PanelRight,
 } from "lucide-react";
-import { ButtonVariant2 } from "./buttons";
+import { ButtonVariant1, ButtonVariant2, ButtonVariant4 } from "./buttons";
 import { InputVariant1 } from "./inputs";
 import useUIStore from "../ui_storage";
 
@@ -15,6 +15,7 @@ export default function Header() {
   const toggleLeftSideBar = useUIStore((state) => state.setLeftSidebarOpen);
   const setRightSideBar = useUIStore((state) => state.setRightSidebarOpen);
   const isRightSideBarOpen = useUIStore((state) => state.rightSidebarOpen);
+  const setChatOpen = useUIStore((state) => state.setChatOpen);
 
   return (
     <>
@@ -58,11 +59,17 @@ export default function Header() {
             }
           />
           <ButtonVariant2 img={<Settings strokeWidth={1.5} size={17} />} />
-          <ButtonVariant2 img={<LifeBuoy strokeWidth={1.5} size={17} />} />
-          <ButtonVariant2
+          <ButtonVariant1
+            rounded="xl"
+            img={<LifeBuoy strokeWidth={1.5} size={17} />}
+            onClick={() => setChatOpen(true)}
+            text="Chat With Support Team"
+            className="text-[11px]"
+          />
+          {/* <ButtonVariant2
             img={<PanelRight size={17} />}
             onClick={() => setRightSideBar(!isRightSideBarOpen)}
-          />
+          /> */}
         </div>
       </header>
     </>
