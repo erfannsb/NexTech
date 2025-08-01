@@ -62,14 +62,14 @@ function Explore() {
         {/* Search Input */}
         <InputVariant1
           placeholder="Search Here..."
-          className="w-[300px] py-[5px] px-2 max-sm:py-3 max-sm:w-full"
+          className="w-[300px] py-[5px] px-2 max-sm:py-2 max-sm:w-full"
           img={<Search strokeWidth={1.5} size={17} />}
         />
         {/* Filtering */}
         <ButtonVariant1
           color={"bg-[#EA5151]"}
           text="Most Relevant"
-          className={`text-[12px] max-sm:text-[11px] max-sm:font-light ${
+          className={`text-[12px]  ${
             activeFilterButton == "mostRelevant" ? "card-active" : ""
           }`}
           onClick={() => setActiveFilterButton("mostRelevant")}
@@ -78,7 +78,7 @@ function Explore() {
         <ButtonVariant1
           color={"bg-[#EE6969]"}
           text="Most Viewed"
-          className={`text-[12px] max-sm:text-[11px] max-sm:font-light ${
+          className={`text-[12px]  ${
             activeFilterButton == "mostViewed" ? "card-active" : ""
           }`}
           onClick={() => setActiveFilterButton("mostViewed")}
@@ -87,7 +87,7 @@ function Explore() {
         <ButtonVariant1
           color={"bg-[#EEBF69]"}
           text="Newest"
-          className={`text-[12px] max-sm:text-[11px] max-sm:font-light ${
+          className={`text-[12px] ${
             activeFilterButton == "newest" ? "card-active" : ""
           }`}
           onClick={() => setActiveFilterButton("newest")}
@@ -96,7 +96,7 @@ function Explore() {
         <ButtonVariant1
           color={"bg-[#D8EE69]"}
           text="Most Sells"
-          className={`text-[12px] max-sm:text-[11px] max-sm:font-light ${
+          className={`text-[12px]  ${
             activeFilterButton == "mostSelles" ? "card-active" : ""
           }`}
           onClick={() => setActiveFilterButton("mostSelles")}
@@ -105,7 +105,7 @@ function Explore() {
         <ButtonVariant1
           color={"bg-[#95EE69]"}
           text="Cheapest"
-          className={`text-[12px] max-sm:text-[11px] max-sm:font-light ${
+          className={`text-[12px]  ${
             activeFilterButton == "cheapest" ? "card-active" : ""
           }`}
           onClick={() => setActiveFilterButton("cheapest")}
@@ -114,7 +114,7 @@ function Explore() {
         <ButtonVariant1
           color={"bg-[#69EEB4]"}
           text="Most Expensive"
-          className={`text-[12px] max-sm:text-[11px] max-sm:font-light ${
+          className={`text-[12px]  ${
             activeFilterButton == "mostExpensive" ? "card-active" : ""
           }`}
           onClick={() => setActiveFilterButton("mostExpensive")}
@@ -123,7 +123,7 @@ function Explore() {
         <ButtonVariant1
           color={"bg-[#69EEEE]"}
           text="Fastest Delivery"
-          className={`text-[12px] max-sm:text-[11px] max-sm:font-light ${
+          className={`text-[12px]  ${
             activeFilterButton == "fastestDelivery" ? "card-active" : ""
           }`}
           onClick={() => setActiveFilterButton("fastestDelivery")}
@@ -132,7 +132,7 @@ function Explore() {
         <ButtonVariant1
           color={"bg-[#6988EE]"}
           text="Recommended"
-          className={`text-[12px] max-sm:text-[11px] max-sm:font-light ${
+          className={`text-[12px]  ${
             activeFilterButton == "recommended" ? "card-active" : ""
           }`}
           onClick={() => setActiveFilterButton("recommended")}
@@ -141,7 +141,7 @@ function Explore() {
         <ButtonVariant1
           color={"bg-[#8C69EE]"}
           text="Best"
-          className={`text-[12px] max-sm:text-[11px] max-sm:font-light ${
+          className={`text-[12px]  ${
             activeFilterButton == "best" ? "card-active" : ""
           }`}
           onClick={() => setActiveFilterButton("best")}

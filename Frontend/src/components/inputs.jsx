@@ -10,7 +10,7 @@ export const InputVariant1 = React.forwardRef(
         <div className="text-[#C5C3CA]">{img}</div>
         <input
           ref={ref}
-          className="ml-2 outline-0 border-none bg-none text-[12px]"
+          className="ml-2 outline-0 border-none bg-none text-base"
           placeholder={placeholder}
         />
       </div>
@@ -67,7 +67,7 @@ export function InputVariant3({
     >
       {img && <div className="text-[#C5C3CA] mr-2">{img}</div>}
       <p className="whitespace-nowrap px-2">{selected || placeholder}</p>
-      <ChevronDown className="ml-2" size={17} />
+      <ChevronDown className="ml-auto" size={17} />
 
       {open && (
         <ul className="absolute top-full left-0 mt-1 z-10 w-full bg-[#1d1d20] border border-[#383838] rounded-md shadow-md overflow-hidden">

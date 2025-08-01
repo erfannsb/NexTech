@@ -10,7 +10,7 @@ import {
 import { CardVariant1 } from "../components/cards";
 export default function Order() {
   return (
-    <div className="mx-10 ">
+    <div className="md:mx-10">
       <h2 className="font-bold text-lg">Order List</h2>
       <p className="font-light text-md text-[#B6B6B6] mb-3">
         List of things you ordered recently
@@ -60,40 +60,45 @@ export default function Order() {
 
       {/* Order State */}
       <h2 className="font-bold text-lg my-3">Order State</h2>
-      <div className="flex">
+      <div className="flex max-sm:flex-col">
+        {/* Order Info */}
+        <div className="flex flex-col max-sm:mb-3">
+          <CardVariant1
+            text={"something"}
+            header={"Order ID"}
+            color={"bg-red-300"}
+            hide_bg={true}
+          />
+          <CardVariant1
+            text={"something"}
+            header={"Estimated Delivery Time"}
+            color={"bg-red-300"}
+            hide_bg={true}
+          />
+          <CardVariant1
+            text={"something"}
+            header={"Shipping Method"}
+            color={"bg-red-300"}
+            hide_bg={true}
+          />
+          <CardVariant1
+            text={"something"}
+            header={"Payment Method"}
+            color={"bg-red-300"}
+            hide_bg={true}
+          />
+        </div>
         {/* State of Order */}
-        <div className="card-variant-1 flex flex-col items-center justify-center rounded-lg p-3 max-w-[300px] ">
+        <div className="card-variant-1 flex flex-col items-center sm:mx-4 justify-center rounded-lg p-3 sm:max-w-[300px] max-sm:mb-3">
           <h3 className="font-bold ">Pending ⏳</h3>
           <p className="font-light text-sm my-2 text-[#C4C2C2] text-center">
             Lorem ipsum dolor sit amet komm tanzen ich will nicht komm
             spatzirieren ich will nicht stoppen sie jetzt
           </p>
         </div>
-        {/* Order Info */}
-        <div className="flex flex-col mx-3 gap-3">
-          <CardVariant1
-            text={"something"}
-            header={"Order ID"}
-            color={"bg-red-300"}
-          />
-          <CardVariant1
-            text={"something"}
-            header={"Estimated Delivery Time"}
-            color={"bg-red-300"}
-          />
-          <CardVariant1
-            text={"something"}
-            header={"Shipping Method"}
-            color={"bg-red-300"}
-          />
-          <CardVariant1
-            text={"something"}
-            header={"Payment Method"}
-            color={"bg-red-300"}
-          />
-        </div>
+
         {/* Installment Status */}
-        <div className="flex flex-col w-[300px] bg-[rgba(24,23,27,0.69)] p-4 text-white border border-[#26262B] rounded-md">
+        <div className="flex flex-col sm:w-[300px] bg-[rgba(24,23,27,0.69)] p-4 text-white border border-[#26262B] rounded-md">
           <h3 className="font-bold text-lg">Installment Status</h3>
           <div className="flex justify-between w-full mt-3">
             <p className="text-[#898989] text-sm">Paid Months</p>
@@ -153,7 +158,7 @@ function OrderItem(
   Quantity = 1
 ) {
   return [
-    <div className="flex items-center my-4">
+    <div className="flex items-center my-2 sm:my-4">
       <div className="p-1 bg-[rgb(24,23,27)] rounded-md flex justify-between items-center">
         <img src={CompanyImg} alt="company" className="w-6 h-auto" />
       </div>

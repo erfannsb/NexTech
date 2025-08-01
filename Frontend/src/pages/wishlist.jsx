@@ -29,11 +29,11 @@ export default function WishList() {
   const [shipping, setShipping] = useState();
 
   return (
-    <div className="grid grid-cols-2  grid-template-rows: max-content max-content; mx-10 gap-5">
+    <div className="mb-10 grid grid-cols-2  md:grid-template-rows: max-content max-content;  max-md:grid-template-rows: max-content max-content max-content; md:mx-10 gap-5">
       {/* Wish List table */}
       <div className="col-start-1 col-end-3">
-        <h2 className="text-lg font-bold">Wish List</h2>
-        <p className="text-[#B6B6B6] text-md mb-2">
+        <h2 className="text-xl font-bold">Wish List</h2>
+        <p className="text-[#B6B6B6] text-md mb-4">
           Manage your wish list here
         </p>
         <Table
@@ -126,17 +126,17 @@ export default function WishList() {
         />
       </div>
       {/* Purchase */}
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col gap-2 max-md:row-start-2 max-md:row-end-3 max-md:col-start-1 max-md:col-end-3">
         <h3 className="text-xl font-bold mt-3 mb-1">Purchase</h3>
         <InputVariant1
           placeholder="Apply Coupan"
           img={<TicketPercent size={17} />}
-          className="p-2 w-fit"
+          className="p-2 w-fit max-md:w-full"
         />
         <InputVariant3
           placeholder="Choosing Paying Option"
           img={<CirclePoundSterling size={17} />}
-          className="p-2 w-fit text-sm"
+          className="p-2 w-fit text-sm max-md:w-full max-md:max-w-full"
           selected={paying}
           onSelect={setPaying}
           options={["something", "things"]}
@@ -144,7 +144,7 @@ export default function WishList() {
         <InputVariant3
           placeholder="Choose Paying Month"
           img={<Calendar size={17} />}
-          className="p-2 w-fit text-sm"
+          className="p-2 w-fit text-sm max-md:w-full max-md:max-w-full"
           selected={month}
           onSelect={setMonth}
           options={["something", "things"]}
@@ -152,37 +152,42 @@ export default function WishList() {
         <InputVariant3
           placeholder="Choosing Shipping Option"
           img={<Truck size={17} />}
-          className="p-2 w-fit text-sm"
+          className="p-2 w-fit text-sm max-md:w-full max-md:max-w-full"
           selected={shipping}
           onSelect={setShipping}
           options={["something", "things"]}
         />
 
-        <button className="underline text-[#6274F7] cursor-pointer w-fit text-sm">
-          Edit Your Information
-        </button>
+        <h3 className="mt-3 font-black text-xl">Your Information</h3>
         <div className="grid grid-template-columns: max-content max-content; grid-template-rows: max-content max-content; gap-3">
           <CardVariant1
             text="Felan Street, Besar Alley, Building Blah, Second Floor"
             header="Address Review"
             color="bg-[#EEBF69]"
             className="col-start-1 col-end-3"
+            hide_bg={true}
           />
           <CardVariant1
             text="12102931301"
             header="Postal Code"
             color="bg-[#EE6969]"
+            hide_bg={true}
           />
           <CardVariant1
             text="10 days "
             header="Estimated Delivery Time"
             color="bg-[#69EE69]"
+            hide_bg={true}
           />
+
+          <button className="underline text-[#6274F7] cursor-pointer w-fit text-sm mb-3">
+            Edit Your Information
+          </button>
         </div>
       </div>
       {/* Confirm */}
 
-      <div className="self-end">
+      <div className="md:self-end max-md:row-start-3 max-md:row-end-4 max-md:col-start-1 max-md:col-end-3">
         <div className="bg-[rgba(24,23,27,0.69)] p-4 text-white border border-[#26262B] rounded-md">
           <h2 className="text-lg font-bold">13 Items Selected</h2>
           <div className="flex flex-col">

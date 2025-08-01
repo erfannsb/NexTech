@@ -101,23 +101,23 @@ export default function Help() {
   ];
 
   return (
-    <div className="flex flex-col items-center mb-10">
+    <div className="flex flex-col items-center mb-20">
       {/* Header */}
-      <h2 className="mt-[100px] font-black text-2xl">
+      <h2 className="max-md:mt-5 md:mt-[100px] font-black text-2xl">
         Frequently Asked Questions
       </h2>
       <p className="text-[#999999]">
         These are the most commonly asked questions about Our Online Shop
       </p>
       <p className="text-[#999999]">
-        Can't Find What You're looking for?
-        <button className="text-blue-500 underline ml-2 cursor-pointer hover:text-blue-600">
+        Can't Find What You're looking for?{" "}
+        <button className="text-blue-500 underline  cursor-pointer hover:text-blue-600">
           chat with our friendly team
         </button>{" "}
       </p>
 
       {/* Questions */}
-      <div className="mt-7 w-[50%] whitespace-break-spaces flex flex-col ">
+      <div className="mt-7 md:w-[50%] whitespace-break-spaces flex flex-col ">
         {faqs.map((e) => (
           <Question q={e.question} a={e.answer} />
         ))}
@@ -132,8 +132,8 @@ function Question({ q, a }) {
     <div className="p-3">
       <div className="flex justify-between">
         <div className="flex items-center">
-          <div className="bg-amber-50 w-3 h-3 rounded-full mr-3"></div>
-          <h3 className="font-bold text-lg text-zinc-100">{q}</h3>
+          <div className="bg-amber-50 w-[10px] h-[10px] rounded-full mr-3"></div>
+          <h3 className="font-bold md:text-lg text-zinc-100">{q}</h3>
         </div>
 
         <button

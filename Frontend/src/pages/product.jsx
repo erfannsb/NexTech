@@ -16,135 +16,29 @@ import "swiper/css/thumbs";
 import { CardVariant1 } from "../components/cards";
 
 function Product() {
-  const [thumbsSwiper, setThumbsSwiper] = useState(null);
   const [moreDetails, setMoreDetails] = useState(false);
+  const [screenIsSmall, setScreenIsSmall] = useState(window.innerWidth < 768);
 
-  const shops = [
-    ["ShopOne", "Very good", 1000],
-    ["ShopOne", "Very good", 1000],
-    ["ShopOne", "Very good", 1000],
-  ];
+  useEffect(() => {
+    const handleResize = () => {
+      setScreenIsSmall(window.innerWidth < 768);
+    };
+
+    window.addEventListener("resize", handleResize);
+
+    // Cleanup when component unmounts
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
 
   return (
-    <div className="grid grid-cols-[35%_65%] mx-4 grid-rows-1 gap-4 mb-20">
+    <div className="grid xl:grid-cols-[35%_65%] max-xl:grid-cols-[50%_50%] max-md:grid-cols-[100%] md:mx-4 grid-rows-1 gap-4 mb-20">
       {/* left column */}
-      <div className="flex flex-col">
-        {/* Main Image Slider */}
-        <div>
-          <Swiper
-            style={{
-              "--swiper-navigation-color": "#fff",
-              "--swiper-pagination-color": "#fff",
-            }}
-            spaceBetween={10}
-            navigation={true}
-            thumbs={{ swiper: thumbsSwiper }}
-            modules={[FreeMode, Navigation, Thumbs]}
-            className="flex items-center justify-center max-h-[70vh]"
-          >
-            <SwiperSlide className="flex justify-center items-center h-full">
-              <img
-                src="msi_product.png"
-                className="w-full h-full object-cover"
-              />
-            </SwiperSlide>
-            <SwiperSlide>
-              <img
-                src="https://swiperjs.com/demos/images/nature-2.jpg"
-                className="w-full h-full object-cover"
-              />
-            </SwiperSlide>
-            <SwiperSlide>
-              <img src="https://swiperjs.com/demos/images/nature-3.jpg" />
-            </SwiperSlide>
-            <SwiperSlide>
-              <img src="https://swiperjs.com/demos/images/nature-4.jpg" />
-            </SwiperSlide>
-            <SwiperSlide>
-              <img src="https://swiperjs.com/demos/images/nature-5.jpg" />
-            </SwiperSlide>
-            <SwiperSlide>
-              <img src="https://swiperjs.com/demos/images/nature-6.jpg" />
-            </SwiperSlide>
-            <SwiperSlide>
-              <img src="https://swiperjs.com/demos/images/nature-7.jpg" />
-            </SwiperSlide>
-            <SwiperSlide>
-              <img src="https://swiperjs.com/demos/images/nature-8.jpg" />
-            </SwiperSlide>
-            <SwiperSlide>
-              <img src="https://swiperjs.com/demos/images/nature-9.jpg" />
-            </SwiperSlide>
-            <SwiperSlide>
-              <img src="https://swiperjs.com/demos/images/nature-10.jpg" />
-            </SwiperSlide>
-          </Swiper>
-          <Swiper
-            onSwiper={setThumbsSwiper}
-            spaceBetween={10}
-            slidesPerView={4}
-            freeMode={true}
-            watchSlidesProgress={true}
-            modules={[FreeMode, Navigation, Thumbs]}
-            className="mySwiper mt-3"
-          >
-            <SwiperSlide>
-              <img src="https://swiperjs.com/demos/images/nature-1.jpg" />
-            </SwiperSlide>
-            <SwiperSlide>
-              <img src="https://swiperjs.com/demos/images/nature-2.jpg" />
-            </SwiperSlide>
-            <SwiperSlide>
-              <img src="https://swiperjs.com/demos/images/nature-3.jpg" />
-            </SwiperSlide>
-            <SwiperSlide>
-              <img src="https://swiperjs.com/demos/images/nature-4.jpg" />
-            </SwiperSlide>
-            <SwiperSlide>
-              <img src="https://swiperjs.com/demos/images/nature-5.jpg" />
-            </SwiperSlide>
-            <SwiperSlide>
-              <img src="https://swiperjs.com/demos/images/nature-6.jpg" />
-            </SwiperSlide>
-            <SwiperSlide>
-              <img src="https://swiperjs.com/demos/images/nature-7.jpg" />
-            </SwiperSlide>
-            <SwiperSlide>
-              <img src="https://swiperjs.com/demos/images/nature-8.jpg" />
-            </SwiperSlide>
-            <SwiperSlide>
-              <img src="https://swiperjs.com/demos/images/nature-9.jpg" />
-            </SwiperSlide>
-            <SwiperSlide>
-              <img src="https://swiperjs.com/demos/images/nature-10.jpg" />
-            </SwiperSlide>
-          </Swiper>
-        </div>
-        {/* Details Table */}
-        <div className="mt-4">
-          <Table
-            className="font-bold"
-            footer={TableFooter({
-              averageRate: 4.5,
-              ratedNum: 100,
-              price: 1000,
-            })}
-            headerItems={[
-              <div className="flex items-center">
-                <Store className="mr-2" size={16} /> Shop
-              </div>,
-              "Performance",
-              "Price",
-              "",
-            ]}
-            px={3}
-            py={3}
-            list={shops.map((e) => ShopItemGenerator(e[0], e[1], e[2]))}
-          />
-        </div>
-      </div>
+      {!screenIsSmall && <LeftColumn />}
+
       {/* right column */}
-      <div className="mx-5">
+      <div className="mx-5 max-md:row-start-1">
         {/* Category */}
         <div className="text-[#959595] text-md">
           Graphic Cards / MSI / Gaming GPUs
@@ -160,6 +54,7 @@ function Product() {
           </div>
           <h3 className="ml-2 text-[14px]">Company name</h3>
         </div>
+        {screenIsSmall && <LeftColumn />}
         {/* Product Description */}
         <p className="text-[#E6E6E6] mt-2 text-md font-md">
           Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam eu libero
@@ -234,6 +129,131 @@ function Product() {
           text="Show More Comment"
           className="text-[12px]"
           img={<ChevronDown />}
+        />
+      </div>
+    </div>
+  );
+}
+
+export function LeftColumn() {
+  const [thumbsSwiper, setThumbsSwiper] = useState(null);
+  const shops = [
+    ["ShopOne", "Very good", 1000],
+    ["ShopOne", "Very good", 1000],
+    ["ShopOne", "Very good", 1000],
+  ];
+
+  return (
+    <div className="flex flex-col mb-5">
+      {/* Main Image Slider */}
+      <div>
+        <Swiper
+          style={{
+            "--swiper-navigation-color": "#fff",
+            "--swiper-pagination-color": "#fff",
+          }}
+          spaceBetween={10}
+          navigation={true}
+          thumbs={{ swiper: thumbsSwiper }}
+          modules={[FreeMode, Navigation, Thumbs]}
+          className="flex items-center justify-center max-h-[70vh]"
+        >
+          <SwiperSlide className="flex justify-center items-center h-full">
+            <img src="msi_product.png" className="w-full h-full object-cover" />
+          </SwiperSlide>
+          <SwiperSlide>
+            <img
+              src="https://swiperjs.com/demos/images/nature-2.jpg"
+              className="w-full h-full object-cover"
+            />
+          </SwiperSlide>
+          <SwiperSlide>
+            <img src="https://swiperjs.com/demos/images/nature-3.jpg" />
+          </SwiperSlide>
+          <SwiperSlide>
+            <img src="https://swiperjs.com/demos/images/nature-4.jpg" />
+          </SwiperSlide>
+          <SwiperSlide>
+            <img src="https://swiperjs.com/demos/images/nature-5.jpg" />
+          </SwiperSlide>
+          <SwiperSlide>
+            <img src="https://swiperjs.com/demos/images/nature-6.jpg" />
+          </SwiperSlide>
+          <SwiperSlide>
+            <img src="https://swiperjs.com/demos/images/nature-7.jpg" />
+          </SwiperSlide>
+          <SwiperSlide>
+            <img src="https://swiperjs.com/demos/images/nature-8.jpg" />
+          </SwiperSlide>
+          <SwiperSlide>
+            <img src="https://swiperjs.com/demos/images/nature-9.jpg" />
+          </SwiperSlide>
+          <SwiperSlide>
+            <img src="https://swiperjs.com/demos/images/nature-10.jpg" />
+          </SwiperSlide>
+        </Swiper>
+        <Swiper
+          onSwiper={setThumbsSwiper}
+          spaceBetween={10}
+          slidesPerView={4}
+          freeMode={true}
+          watchSlidesProgress={true}
+          modules={[FreeMode, Navigation, Thumbs]}
+          className="mySwiper mt-3"
+        >
+          <SwiperSlide>
+            <img src="https://swiperjs.com/demos/images/nature-1.jpg" />
+          </SwiperSlide>
+          <SwiperSlide>
+            <img src="https://swiperjs.com/demos/images/nature-2.jpg" />
+          </SwiperSlide>
+          <SwiperSlide>
+            <img src="https://swiperjs.com/demos/images/nature-3.jpg" />
+          </SwiperSlide>
+          <SwiperSlide>
+            <img src="https://swiperjs.com/demos/images/nature-4.jpg" />
+          </SwiperSlide>
+          <SwiperSlide>
+            <img src="https://swiperjs.com/demos/images/nature-5.jpg" />
+          </SwiperSlide>
+          <SwiperSlide>
+            <img src="https://swiperjs.com/demos/images/nature-6.jpg" />
+          </SwiperSlide>
+          <SwiperSlide>
+            <img src="https://swiperjs.com/demos/images/nature-7.jpg" />
+          </SwiperSlide>
+          <SwiperSlide>
+            <img src="https://swiperjs.com/demos/images/nature-8.jpg" />
+          </SwiperSlide>
+          <SwiperSlide>
+            <img src="https://swiperjs.com/demos/images/nature-9.jpg" />
+          </SwiperSlide>
+          <SwiperSlide>
+            <img src="https://swiperjs.com/demos/images/nature-10.jpg" />
+          </SwiperSlide>
+        </Swiper>
+      </div>
+      {/* Details Table */}
+      <div className="mt-4">
+        <Table
+          className="font-bold"
+          responsive={false}
+          footer={TableFooter({
+            averageRate: 4.5,
+            ratedNum: 100,
+            price: 1000,
+          })}
+          headerItems={[
+            <div className="flex items-center">
+              <Store className="mr-2" size={16} /> Shop
+            </div>,
+            "Performance",
+            "Price",
+            "",
+          ]}
+          px={3}
+          py={3}
+          list={shops.map((e) => ShopItemGenerator(e[0], e[1], e[2]))}
         />
       </div>
     </div>

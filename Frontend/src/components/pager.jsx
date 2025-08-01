@@ -53,8 +53,7 @@ export default function Pager() {
       } ${
         isRightSidebarOpen ? "col-end-3" : "col-end-4"
       } row-start-2 row-end-3 p-4 overflow-y-auto
-      ${bothSideBarClosed ? "w-full px-[10%]" : ""}
-        ${screenIsSmall ? "w-full px-[10%]" : ""}`}
+      ${bothSideBarClosed ? "w-full md:px-[10%] max-md:px-[3%]" : ""}`}
     >
       {/* Chat floating component */}
       <GlassCard
