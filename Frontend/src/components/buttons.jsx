@@ -36,7 +36,7 @@ export function ButtonVariant1({
   return (
     <button
       onClick={onClick}
-      className={`cursor-pointer flex items-center justify-around card-variant-1 py-${py} px-${px} rounded-${rounded}
+      className={`cursor-pointer flex items-center justify-around card-variant-1 py-${py} px-${px} rounded-${rounded} max-sm:py-[6px] max-sm:px-3
         ${
           hover ? "card" : ""
         } hover:scale-102 transition-transform duration-300 ${
@@ -46,7 +46,9 @@ export function ButtonVariant1({
       {img ? <div className="mr-2">{img}</div> : ""}
 
       {color ? (
-        <div className={`rounded-full w-2 h-2 mr-3 ${color}`}></div>
+        <div
+          className={`rounded-full w-2 h-2 max-sm:w-[7px] max-sm:h-[7px] max-sm:mr-2  mr-3 ${color}`}
+        ></div>
       ) : (
         ""
       )}

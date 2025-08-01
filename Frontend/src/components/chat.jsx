@@ -41,7 +41,7 @@ export default function Chat() {
           <User size={22} color="black" fontWeight={300} />
         </div>
         <p className="text-sm font-bold">Ali From Support Team</p>
-        <X className="ml-auto" onClick={onClose} size={17} />
+        <X className="ml-auto cursor-pointer" onClick={onClose} size={17} />
       </div>
 
       {/* Message Body */}
@@ -66,11 +66,11 @@ export default function Chat() {
           }}
           placeholder="Send Message"
           ref={messageRef}
-          className="border-[#676767] border-[1.5px] outline-0 py-2 px-3 rounded-full w-full mr-2 bg-transparent text-white"
+          className="border-[#676767] text-sm border-[1.5px] outline-0 py-2 px-3 rounded-full w-full mr-2 bg-transparent text-white"
         />
         <button
           onClick={onSendClick}
-          className="bg-[#6274F7] h-[40px] aspect-square flex items-center justify-center rounded-full cursor-pointer"
+          className="bg-[#6274F7] hover:bg-[#505999] transition h-[40px] aspect-square flex items-center justify-center rounded-full cursor-pointer"
         >
           <Send size={16} />
         </button>

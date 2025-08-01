@@ -13,15 +13,12 @@ import useUIStore from "../ui_storage";
 export default function Header() {
   const isLeftSidebarOpen = useUIStore((state) => state.leftSidebarOpen);
   const toggleLeftSideBar = useUIStore((state) => state.setLeftSidebarOpen);
-  const setRightSideBar = useUIStore((state) => state.setRightSidebarOpen);
-  const isRightSideBarOpen = useUIStore((state) => state.rightSidebarOpen);
-  const setChatOpen = useUIStore((state) => state.setChatOpen);
 
   return (
     <>
       {/* Top Left Corner of The Header */}
-      <header className="border-r border-b border-[#26262B] text-white p-4 col-start-1 col-end-2 row-start-1 row-end-2 flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-[#6274F7]">NexTech</h1>
+      <header className="border-r border-b border-[#26262B] text-white p-4 col-start-1 col-end-2 max-sm:col-end-4 row-start-1 row-end-2 flex items-center justify-between">
+        <h1 className="text-2xl font-bold text-[#6274F7] ">NexTech</h1>
         {/* toggle leftSideBar */}
         <ButtonVariant2
           img={<PanelLeft size={17} />}
@@ -29,9 +26,9 @@ export default function Header() {
         />
       </header>
       {/* Top Right Corner of The Header */}
-      <header className="border-b border-[#26262B] flex items-center justify-between text-white p-4 col-start-2 col-end-4 row-start-1 row-end-2">
+      <header className="border-b border-[#26262B] flex items-center justify-between text-white p-4 col-start-2 col-end-4 row-start-1 row-end-2 max-sm:hidden">
         {/* Profile */}
-        <div className="flex items-center h-full">
+        <div className="flex items-center h-full max-lg:hidden">
           <img
             src="/pic.png"
             alt="Profile"
@@ -41,7 +38,7 @@ export default function Header() {
           <div className="bg-[#26262B] ml-4 w-[1px] h-full"></div>
         </div>
         {/* Header Search Buttons and other Actions */}
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 ml-auto">
           <InputVariant1
             placeholder="Search Here..."
             className="w-[200px] p-2 "
@@ -59,13 +56,6 @@ export default function Header() {
             }
           />
           <ButtonVariant2 img={<Settings strokeWidth={1.5} size={17} />} />
-          <ButtonVariant1
-            rounded="xl"
-            img={<LifeBuoy strokeWidth={1.5} size={17} />}
-            onClick={() => setChatOpen(true)}
-            text="Chat With Support Team"
-            className="text-[11px]"
-          />
           {/* <ButtonVariant2
             img={<PanelRight size={17} />}
             onClick={() => setRightSideBar(!isRightSideBarOpen)}

@@ -15,7 +15,7 @@ export default function LeftSidebar() {
     <div
       className={`${
         leftSidebarOpen ? "block" : "hidden"
-      } flex flex-col justify-between items-start py-4 px-4 border-r border-[#26262B] sidebar col-start-1 col-end-2 row-start-2 row-end-3 `}
+      } bg-[#0d0d0d] flex flex-col md:justify-between items-start py-4 px-4 md:border-r border-[#26262B] sidebar md:col-start-1 md:col-end-2 md:row-start-2 md:row-end-3 max-md:absolute max-md:top-[60px] z-100 max-md:w-[100vw] max-md:border-b`}
     >
       {/* Menu */}
       <ul className="flex flex-col text-lg">

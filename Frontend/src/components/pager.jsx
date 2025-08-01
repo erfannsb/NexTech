@@ -1,4 +1,4 @@
-import { lazy, Suspense } from "react";
+import { lazy, Suspense, useEffect, useState } from "react";
 import useUIStore from "../ui_storage";
 import Loading from "../pages/loading.jsx";
 import { GlassCard } from "./cards.jsx";
@@ -31,18 +31,39 @@ export default function Pager() {
   const isChatOpen = useUIStore((state) => state.isChatOpen);
   const ActivePage = pages[activePage] ?? (() => <div>Invalid page</div>);
 
+  const [screenIsSmall, setScreenIsSmall] = useState(window.innerWidth < 768);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setScreenIsSmall(window.innerWidth < 768);
+    };
+
+    window.addEventListener("resize", handleResize);
+
+    // Cleanup when component unmounts
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
   return (
     <div
-      className={` ${isLeftSidebarOpen ? "col-start-2 " : "col-start-1"} ${
+      className={` ${
+        isLeftSidebarOpen && !screenIsSmall ? "col-start-2 " : "col-start-1"
+      } ${
         isRightSidebarOpen ? "col-end-3" : "col-end-4"
       } row-start-2 row-end-3 p-4 overflow-y-auto
       ${bothSideBarClosed ? "w-full px-[10%]" : ""}
-      `}
+        ${screenIsSmall ? "w-full px-[10%]" : ""}`}
     >
+      {/* Chat floating component */}
       <GlassCard
         children={<Chat />}
-        className={`fixed bottom-1 right-3 ${isChatOpen ? "block" : "hidden"}`}
+        className={`z-[1000] fixed bottom-1 right-3 ${
+          isChatOpen ? "block" : "hidden"
+        }`}
       />
+      {/* Active Page component */}
       <Suspense fallback={<Loading />}>
         <ActivePage />
       </Suspense>
