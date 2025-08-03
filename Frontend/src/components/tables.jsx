@@ -8,6 +8,7 @@ export default function Table({
   headerFontWeight = "semibold",
   headerFontSize = "md",
   responsive = true,
+  alternative_style = false,
 }) {
   if (list.length <= 0) {
     return <div>Invalid Table</div>;
@@ -17,7 +18,9 @@ export default function Table({
 
   return (
     <div
-      className={`card-variant-3 rounded-xl shadow-lg border overflow-auto ${className}`}
+      className={` ${
+        alternative_style ? "admin-card" : "card-variant-3"
+      } rounded-xl border overflow-auto ${className}`}
     >
       {/* Desktop Table */}
       <div className={`${responsive ? "hidden sm:block" : ""} overflow-y-auto`}>

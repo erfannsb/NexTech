@@ -3,6 +3,7 @@ import useUIStore from "../ui_storage";
 import Loading from "../pages/loading.jsx";
 import { GlassCard } from "./cards.jsx";
 import Chat from "./chat.jsx";
+import Home from "../admin_pages/home.jsx";
 
 // Lazy load each page
 const ExplorePage = lazy(() => import("../pages/explore"));
@@ -21,6 +22,7 @@ const pages = {
   Order: Order,
   Settings: Settings,
   Help: Help,
+  Admin_Home: Home,
 };
 
 export default function Pager() {

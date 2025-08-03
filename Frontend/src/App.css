@@ -105,3 +105,18 @@ body {
   align-items: center;
   height: fit-content;
 }
+
+.admin-card {
+  border-radius: 15px;
+  border: 1px solid;
+  border-image: linear-gradient(
+      to bottom,
+      #3341ff81,
+      #3341ff61,
+      #0d0d0f00,
+      #0d0d0f00
+    )
+    1;
+}
+
+/* Layout 4 */
