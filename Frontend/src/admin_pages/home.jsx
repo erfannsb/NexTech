@@ -1,6 +1,12 @@
-import { Search } from "lucide-react";
+import {
+  ArrowUpRight,
+  Columns3Cog,
+  Database,
+  Icon,
+  Search,
+} from "lucide-react";
 import { InputVariant1 } from "../components/inputs";
-import { ButtonVariant1 } from "../components/buttons";
+import { ButtonVariant1, ButtonVariant2 } from "../components/buttons";
 import Table from "../components/tables";
 import {
   AreaChart,
@@ -10,30 +16,72 @@ import {
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
+  Legend,
+  BarChart,
+  Bar,
+  Rectangle,
 } from "recharts";
 
 export default function Home() {
+  // fetching Recent Orders
+  const RecentOrders = [
+    {
+      orderNumber: "123123131",
+      customerName: "Some Guy",
+      status: "Delivered",
+      dateNtime: "123/123/1",
+      price: 1000,
+    },
+    {
+      orderNumber: "123123131",
+      customerName: "Some Guy",
+      status: "Delivered",
+      dateNtime: "123/123/1",
+      price: 1000,
+    },
+    {
+      orderNumber: "123123131",
+      customerName: "Some Guy",
+      status: "Delivered",
+      dateNtime: "123/123/1",
+      price: 1000,
+    },
+    {
+      orderNumber: "123123131",
+      customerName: "Some Guy",
+      status: "Delivered",
+      dateNtime: "123/123/1",
+      price: 1000,
+    },
+  ];
+
+  console.log([
+    RecentOrders.map((e) =>
+      OrderItems(e.customerName, e.customerName, e.status, e.dateNtime, e.price)
+    ),
+  ]);
+
   return (
     <div>
       {/* Charts */}
-      <div className="flex">
+      <div className="flex mt-5 max-md:flex-col max-md:items-center max-md:mb-7">
         {/* Sales overview */}
-        <SalesOverview className="w-min-[300px] w-[40%]" />
+        <SalesOverview className="md:w-min-[300px] md:w-[40%] max-md:w-full h-[300px]" />
         {/* customer satisfaction */}
-        <SatisfactionMeter className={"mx-3"} />
+        <SatisfactionMeter />
         {/* Trending Products */}
-        <div> Trending Products</div>
+        <TrendingProduct className={"max-md:w-[100%]"} />
       </div>
       <h3 className="mt-3 font-black text-xl mb-2">Recent Orders</h3>
       <div className="flex flex-wrap gap-2">
         <InputVariant1
           placeholder="Search"
           img={<Search size={15} />}
-          className={"py-1 px-2 w-[200px]"}
+          className={"py-1 px-2 w-[200px] text-sm"}
         />
-        <ButtonVariant1 text="pending" color={"bg-red-300"} />
-        <ButtonVariant1 text="shipped" color={"bg-red-300"} />
-        <ButtonVariant1 text="delivered" color={"bg-red-300"} />
+        {["Pending", "Shipped", "Delivered"].map((e) => (
+          <ButtonVariant1 text={e} color={"bg-red-300"} className={"text-sm"} />
+        ))}
       </div>
       <Table
         className="mt-3"
@@ -44,7 +92,15 @@ export default function Home() {
           "Date & Time",
           "Total Price",
         ]}
-        list={[["", "", "", "", "", ""]]}
+        list={RecentOrders.map((e) =>
+          OrderItems(
+            e.customerName,
+            e.customerName,
+            e.status,
+            e.dateNtime,
+            e.price
+          )
+        )}
       />
     </div>
   );
@@ -159,9 +215,8 @@ export function SalesOverview({ className }) {
   return (
     <div className={`${className} flex flex-col`}>
       {/* header */}
-      <div className="flex justify-between items-center mb-3">
+      <div className="flex justify-between items-center">
         <h2 className="font-black text-lg">Sales Overview</h2>
-        <h4 className="text-sm">Total Sales This Month: 20000$</h4>
       </div>
       <ResponsiveContainer width="100%" height="100%">
         <AreaChart
@@ -175,6 +230,14 @@ export function SalesOverview({ className }) {
             bottom: 0,
           }}
         >
+          <Legend
+            verticalAlign="top"
+            iconType="circle"
+            align="left"
+            iconSize={10}
+            height={40}
+          />
+
           <CartesianGrid
             strokeDasharray="3 3"
             vertical={false}
@@ -214,4 +277,119 @@ export function SalesOverview({ className }) {
       </ResponsiveContainer>
     </div>
   );
+}
+
+export function TrendingProduct({ className }) {
+  const data = [
+    {
+      name: "Page A",
+      pv: 2400,
+    },
+    {
+      name: "Page B",
+      pv: 1398,
+    },
+    {
+      name: "Page C",
+      pv: 9800,
+    },
+    {
+      name: "Page D",
+      pv: 3908,
+    },
+    {
+      name: "Page E",
+      pv: 4800,
+    },
+    {
+      name: "Page F",
+      pv: 3800,
+    },
+    {
+      name: "Page G",
+      pv: 4300,
+    },
+  ];
+
+  return (
+    <div className="flex flex-col justify-center">
+      {/* Chart */}
+      <div className="w-full h-[120px] py-3 bg-[linear-gradient(96.23deg,_rgba(98,_116,_247,_0.32)_53.15%,_rgba(43,_46,_72,_0.32)_101.52%,_rgba(127,_144,_208,_0)_200.56%)] rounded-lg">
+        <ResponsiveContainer width="100%" height="100%">
+          <BarChart
+            width={500}
+            height={300}
+            data={data}
+            margin={{
+              top: 5,
+              right: 30,
+              left: 20,
+              bottom: 5,
+            }}
+          >
+            <YAxis tick={{ fontSize: 12, fill: "#CBD5E0" }} axisLine={false} />
+            <Tooltip />
+            <Bar
+              dataKey="pv"
+              barSize={3}
+              fill="#FFFFFF"
+              activeBar={<Rectangle fill="pink" stroke="blue" />}
+            />
+          </BarChart>
+        </ResponsiveContainer>
+      </div>
+
+      {/* Info */}
+      <h3 className="font-bold text-lg mt-3">Trending Products</h3>
+      <p className="font-medium text-gray-400">
+        <span className="text-[#36DCF6]">(+23)</span> than last week
+      </p>
+      {/* statistics */}
+      <div className="flex justify-between gap-5 mt-6">
+        {["Sales", "Orders", "Top tags", "Mood Insights"].map((e) => (
+          <div>
+            <div className="flex items-center">
+              <div className="bg-gray-600 h-5 flex justify-center items-center rounded-sm aspect-square mr-1">
+                <Database size={14} />
+              </div>
+              <p className="text-gray-400 text-[13px] font-bold">{e}</p>
+            </div>
+            <h3 className="font-bold mt-[2px] border-b-3 border-[#0A2348]">
+              32,984
+            </h3>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+export function OrderItems(
+  orderNumber,
+  customerName,
+  status,
+  dateNtime,
+  price
+) {
+  let statusComp = null;
+
+  if (status == "Delivered") {
+    statusComp = (
+      <div className="text-green-600 bg-green-50 w-fit px-2 pys-[2px] rounded-xl">
+        {status}
+      </div>
+    );
+  } else if (status == "Shipped") {
+    statusComp = <div className="text-cyan-600 bg-cyan-50">{status}</div>;
+  } else if (status == "Pening") {
+    statusComp = <div className="text-orange-600 bg-orange-50">{status}</div>;
+  }
+  return [
+    <h3>{orderNumber}</h3>,
+    <h3>{customerName}</h3>,
+    statusComp,
+    <h3>{dateNtime}</h3>,
+    <h3>{price}</h3>,
+    <ButtonVariant2 img={<ArrowUpRight size={13} />} />,
+  ];
 }

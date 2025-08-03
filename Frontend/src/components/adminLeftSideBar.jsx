@@ -1,6 +1,15 @@
 import useUIStore from "../ui_storage";
 import { useState } from "react";
-import { Bookmark, Box, LifeBuoy, Settings, Sparkles, X } from "lucide-react";
+import {
+  Bookmark,
+  Box,
+  Home,
+  LifeBuoy,
+  Settings,
+  ShoppingBag,
+  Sparkles,
+  X,
+} from "lucide-react";
 export default function AdminLeftSidebar() {
   const currentPage = useUIStore((state) => state.currentUserPage);
   const setCurrentPage = useUIStore((state) => state.setCurrentUserPage);
@@ -23,7 +32,7 @@ export default function AdminLeftSidebar() {
           // Pages
           [
             "Home",
-            "Products Management",
+            "Product Management",
             "Order Management",
             "Finance",
             "Settings",
@@ -38,9 +47,9 @@ export default function AdminLeftSidebar() {
               }`}
             >
               {i === 0 ? (
-                <Sparkles className="mr-2" size={20} />
+                <Home className="mr-2" size={20} />
               ) : i === 1 ? (
-                <Bookmark className="mr-2" size={20} />
+                <ShoppingBag className="mr-2" size={20} />
               ) : i === 2 ? (
                 <LifeBuoy className="mr-2" size={20} />
               ) : i == 3 ? (
