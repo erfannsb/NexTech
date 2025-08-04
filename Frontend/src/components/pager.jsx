@@ -14,6 +14,7 @@ const Settings = lazy(() => import("../pages/settings.jsx"));
 const Help = lazy(() => import("../pages/help.jsx"));
 const AdminHome = lazy(() => import("../admin_pages/home.jsx"));
 const ProductMangement = lazy(() => import("../admin_pages/productM.jsx"));
+const Finance = lazy(() => import("../admin_pages/finanace.jsx"));
 
 const pages = {
   Explore: ExplorePage,
@@ -25,6 +26,7 @@ const pages = {
   Help: Help,
   Admin_Home: AdminHome,
   "Admin_Product Management": ProductMangement,
+  Admin_Finance: Finance,
 };
 
 export default function Pager() {
