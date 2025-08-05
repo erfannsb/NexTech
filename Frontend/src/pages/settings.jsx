@@ -1,5 +1,6 @@
 import { KeyRound, RedoDot, Trash } from "lucide-react";
-import { ButtonVariant2, ButtonVariant3 } from "../components/buttons";
+import { ButtonVariant3 } from "../components/buttons";
+import { Input } from "../components/inputs";
 
 export default function Settings() {
   return (
@@ -55,18 +56,6 @@ export default function Settings() {
           />
         </div>
       </div>
-    </div>
-  );
-}
-
-function Input({ label, className }) {
-  return (
-    <div className={`flex flex-col ${className}`}>
-      <label className="mb-1">{label}</label>
-      <input
-        type="text"
-        className="card-variant-1 p-[5px] rounded-md outline-0"
-      />
     </div>
   );
 }

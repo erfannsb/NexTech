@@ -10,7 +10,7 @@ export const InputVariant1 = React.forwardRef(
         <div className="text-[#C5C3CA]">{img}</div>
         <input
           ref={ref}
-          className="ml-2 outline-0 border-none bg-none text-base"
+          className="ml-2 outline-0 border-none bg-none text-base w-full"
           placeholder={placeholder}
         />
       </div>
@@ -89,3 +89,16 @@ export function InputVariant3({
     </div>
   );
 }
+
+export const Input = React.forwardRef(({ label, className, ...props }, ref) => {
+  return (
+    <div className={`flex flex-col ${className}`}>
+      <label className="mb-1 text-sm text-gray-100">{label}</label>
+      <input
+        ref={ref}
+        {...props}
+        className="card-variant-1 px-3 py-2 text-sm rounded-md outline-0"
+      />
+    </div>
+  );
+});

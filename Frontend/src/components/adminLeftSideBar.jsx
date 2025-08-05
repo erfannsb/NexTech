@@ -3,11 +3,15 @@ import { useState } from "react";
 import {
   Bookmark,
   Box,
+  CirclePoundSterling,
   Home,
   LifeBuoy,
+  Package,
+  Percent,
   Settings,
   ShoppingBag,
   Sparkles,
+  Warehouse,
   X,
 } from "lucide-react";
 export default function AdminLeftSidebar() {
@@ -32,8 +36,9 @@ export default function AdminLeftSidebar() {
           // Pages
           [
             "Home",
-            "Product Management",
+            "Inventory Management",
             "Order Management",
+            "Discounts",
             "Finance",
             "Settings",
           ].map((page, i) => (
@@ -49,15 +54,15 @@ export default function AdminLeftSidebar() {
               {i === 0 ? (
                 <Home className="mr-2" size={20} />
               ) : i === 1 ? (
-                <ShoppingBag className="mr-2" size={20} />
+                <Warehouse className="mr-2" size={20} />
               ) : i === 2 ? (
-                <LifeBuoy className="mr-2" size={20} />
+                <Package className="mr-2" size={20} />
               ) : i == 3 ? (
-                <Settings className="mr-2" size={20} />
+                <Percent className="mr-2" size={20} />
               ) : i == 4 ? (
-                <Bookmark className="mr-2" size={20} />
+                <CirclePoundSterling className="mr-2" size={20} />
               ) : i == 5 ? (
-                <Box className="mr-2" size={20} />
+                <Settings className="mr-2" size={20} />
               ) : (
                 <></>
               )}

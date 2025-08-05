@@ -94,7 +94,7 @@ export default function Home() {
         ]}
         list={RecentOrders.map((e) =>
           OrderItems(
-            e.customerName,
+            e.orderNumber,
             e.customerName,
             e.status,
             e.dateNtime,

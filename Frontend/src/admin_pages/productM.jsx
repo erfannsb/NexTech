@@ -6,7 +6,6 @@ import {
 } from "../components/buttons";
 import { InputVariant1 } from "../components/inputs";
 import Table from "../components/tables";
-import { ShoppingCard } from "../components/cards";
 
 export default function ProductManageMent() {
   //fetching products
