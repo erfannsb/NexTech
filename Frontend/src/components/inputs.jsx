@@ -102,3 +102,32 @@ export const Input = React.forwardRef(({ label, className, ...props }, ref) => {
     </div>
   );
 });
+
+export const CheckBox = React.forwardRef(
+  ({ label, className, ...props }, ref) => {
+    return (
+      <label className="flex items-center space-x-3 cursor-pointer select-none">
+        <input type="checkbox" className="sr-only peer" />
+        <div
+          className="w-5 h-5 border-2 border-gray-400 rounded-sm 
+               peer-checked:bg-blue-600 peer-checked:border-blue-600 
+               flex items-center justify-center 
+               transition-colors duration-200"
+        >
+          <svg
+            className="w-3 h-3 text-white hidden peer-checked:block"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="3"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <polyline points="20 6 9 17 4 12" />
+          </svg>
+        </div>
+        <span className="text-sm text-gray-800">Subscribe to newsletter</span>
+      </label>
+    );
+  }
+);
