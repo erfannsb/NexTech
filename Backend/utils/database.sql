@@ -109,8 +109,8 @@ CREATE TABLE `Discount` (
   `DiscountID` int(11) NOT NULL,
   `DiscountCode` varchar(10) NOT NULL,
   `discountValue` decimal(5,2) UNSIGNED NOT NULL,
-  `DiscountStartTime` timestamp NOT NULL DEFAULT curtime(),
-  `DiscountEndTime` timestamp NOT NULL DEFAULT curtime()
+  `DiscountStartTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `DiscountEndTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -185,7 +185,7 @@ CREATE TABLE `Ordering` (
   `PaymentMethod` enum('Credit Card','Installment','Cash on Delivery') NOT NULL,
   `CreatedAt` timestamp NOT NULL DEFAULT current_timestamp(),
   `OrderStatus` enum('Pending','Processing','Shipped','Delivered','Cancelled') NOT NULL DEFAULT 'Pending',
-  `OrderDate` date NOT NULL DEFAULT current_timestamp(),
+  `OrderDate` date NOT NULL,
   `CustomerID` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
