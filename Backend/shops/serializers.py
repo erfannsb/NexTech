@@ -19,7 +19,7 @@ class DiscountSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class DiscountProductSerializer(serializers.ModelSerializer):
+class DiscountproductSerializer(serializers.ModelSerializer):
     class Meta:
         model = Discountproduct
         fields = '__all__'
