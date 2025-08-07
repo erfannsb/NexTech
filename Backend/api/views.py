@@ -7,13 +7,8 @@ from io import BytesIO
 from django.http import JsonResponse
 
 
+
 @api_view(["GET"])
-def hello(request):
-    return Response({"message": "Hello from Django!"})
-
-
-
-
 def get_dominant_color(request):
     image_url = request.GET.get('url')
     if not image_url:
