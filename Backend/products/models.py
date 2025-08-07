@@ -1,9 +1,6 @@
 from django.db import models
 from users.models import Customer
 
-
-# Create your models here.
-
 class Category(models.Model):
     categoryid = models.AutoField(db_column='CategoryID', primary_key=True)  # Field name made lowercase.
     categoryname = models.CharField(db_column='CategoryName', max_length=100)  # Field name made lowercase.
