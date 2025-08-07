@@ -6,18 +6,15 @@ class ShopSerializer(serializers.ModelSerializer):
         model = Shop
         fields = '__all__'
 
-
 class ShopProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = ShopProduct
         fields = '__all__'
 
-
 class DiscountSerializer(serializers.ModelSerializer):
     class Meta:
         model = Discount
         fields = '__all__'
-
 
 class DiscountproductSerializer(serializers.ModelSerializer):
     class Meta:
