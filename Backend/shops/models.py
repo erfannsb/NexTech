@@ -48,7 +48,7 @@ class Discountproduct(models.Model):
         db_table = 'discountproduct'
 
 
-class Shopadmin(models.Model):
+class ShopAdmin(models.Model):
     adminid = models.AutoField(db_column='AdminID', primary_key=True)  # Field name made lowercase.
     phonenumber = models.CharField(db_column='PhoneNumber', unique=True, max_length=20)  # Field name made lowercase.
     firstname = models.CharField(db_column='FirstName', max_length=50)  # Field name made lowercase.
