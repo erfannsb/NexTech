@@ -1,5 +1,5 @@
 
-// Product Table
+// --------- Product API ---------
 
 export async function GetProducts() {
   try {
@@ -119,7 +119,7 @@ export async function DeleteProduct(productId) {
 
 
 
-// Category Table
+// --------- Category API ---------
 
 export async function GetCategories() {
   try {
@@ -241,7 +241,8 @@ export async function DeleteCategory(categoryId) {
 }
 
 
-// ProductCategory Table
+
+// --------- ProductCategory API ---------
 
 export async function GetProductCategory() {
   try {
@@ -363,7 +364,7 @@ export async function DeleteProductCategory(productCategoryId) {
 }
 
 
-// Details Table
+// --------- Details API ---------
 
 export async function GetDetails() {
   try {
@@ -481,7 +482,7 @@ export async function DeleteDetail(detailId) {
 
 
 
-// ImageurlProduct Table
+// --------- ImageurlProduct API ---------
 
 export async function GetImageurlProducts(){
   try {
@@ -595,7 +596,7 @@ export async function DeleteImageurlProduct(imageurlProductId){
 }
 
 
-// Comment Table
+// --------- Comment API ---------
 
 export async function GetComments(){
   try {
