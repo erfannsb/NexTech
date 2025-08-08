@@ -503,23 +503,23 @@ export async function GetShopAdmins() {
   
   export async function GetShopAdmin(id) {
     try {
-      const response = await fetch(
+        const response = await fetch(
         `http://127.0.0.1:8000/shops/shopAdmin/${id}`, {
         method: "GET",
         headers: {
-          "Content-Type": "application/json",
+            "Content-Type": "application/json",
         },
-      });
-  
-      if (!response.ok) {
+        });
+
+        if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
-      }
-  
-      const data = await response.json();
-      return data;
+        }
+
+        const data = await response.json();
+        return data;
     } catch (error) {
-      console.error("Failed to fetch shopAdmin:", error);
-      return false;
+        console.error("Failed to fetch shopAdmin:", error);
+        return false;
     }
   }
   
