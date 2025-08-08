@@ -59,18 +59,50 @@ class ImageurlProduct(models.Model):
         db_table = 'imageurl_product'
         unique_together = ('image_url', 'productid')
 
+
 class Comment(models.Model):
-    # pk = models.CompositePrimaryKey("productid", "commentnum")
-    productid = models.ForeignKey(Product, models.DO_NOTHING, db_column='ProductID')
-    commentnum = models.PositiveIntegerField(db_column='CommentNum', primary_key=True)
-    commentdate = models.DateTimeField(db_column='CommentDate')
-    commenttext = models.TextField(db_column='CommentText')
-    customerid = models.ForeignKey(Customer, models.DO_NOTHING, db_column='CustomerID')
-    parentcommentnum = models.ForeignKey('self', models.DO_NOTHING, db_column='ParentCommentNum', blank=True, null=True)
-    updated_at = models.DateTimeField()
-    rating = models.PositiveIntegerField(db_column='Rating', blank=True, null=True)
+    commentnum = models.BigAutoField(
+        db_column='CommentNum',
+        primary_key=True
+    )
+    productid = models.ForeignKey(
+        Product,
+        on_delete=models.CASCADE,
+        db_column='ProductID'
+    )
+    commentdate = models.DateTimeField(
+        db_column='CommentDate',
+        auto_now_add=True
+    )
+    commenttext = models.TextField(
+        db_column='CommentText'
+    )
+    customerid = models.ForeignKey(
+        Customer,
+        on_delete=models.CASCADE,
+        db_column='CustomerID'
+    )
+    parentcommentnum = models.ForeignKey(
+        'self',
+        on_delete=models.CASCADE,
+        db_column='ParentCommentNum',
+        null=True,
+        blank=True
+    )
+    updated_at = models.DateTimeField(
+        auto_now=True
+    )
+    rating = models.PositiveSmallIntegerField(
+        db_column='Rating',
+        null=True,
+        blank=True
+    )
 
     class Meta:
-        managed = False
         db_table = 'comment'
-        unique_together = ('commentnum', 'productid')
+        constraints = [
+            models.CheckConstraint(
+                check=models.Q(rating__gte=1) & models.Q(rating__lte=5),
+                name='comment_chk_1'
+            )
+        ]
