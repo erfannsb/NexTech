@@ -43,56 +43,16 @@ function Explore() {
   ];
 
   //fetch products
-  const products = [
-    {
-      companyImg: "./nvidia.png",
-      companyName: "NVIDIA",
-      productImg: "./test_product.png",
-      title: "MSI GeForce RTX™ 5090 32G VENTUS 3X OC",
-      rate: "4.5",
-      price: "10000$",
-    },
-    {
-      companyImg: "./nvidia.png",
-      companyName: "NVIDIA",
-      productImg: "./test_product.png",
-      title: "MSI GeForce RTX™ 5090 32G VENTUS 3X OC",
-      rate: "4.5",
-      price: "10000$",
-    },
-    {
-      companyImg: "./nvidia.png",
-      companyName: "NVIDIA",
-      productImg: "./test_product.png",
-      title: "MSI GeForce RTX™ 5090 32G VENTUS 3X OC",
-      rate: "4.5",
-      price: "10000$",
-    },
-    {
-      companyImg: "./nvidia.png",
-      companyName: "NVIDIA",
-      productImg: "./test_product.png",
-      title: "MSI GeForce RTX™ 5090 32G VENTUS 3X OC",
-      rate: "4.5",
-      price: "10000$",
-    },
-    {
-      companyImg: "./nvidia.png",
-      companyName: "NVIDIA",
-      productImg: "./test_product.png",
-      title: "MSI GeForce RTX™ 5090 32G VENTUS 3X OC",
-      rate: "4.5",
-      price: "10000$",
-    },
-  ];
 
-  useEffect(
-    () => async () => {
-      let products = await GetProducts();
-      console.log(products);
-    },
-    []
-  );
+  const [products, setProducts] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const data = await GetProducts();
+      setProducts(data);
+    };
+    fetchData();
+  }, []);
 
   return (
     <div>

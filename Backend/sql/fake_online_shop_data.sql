@@ -1,3 +1,5 @@
+USE onlineshop;
+
 INSERT INTO Admins (AdminID, FirstName, LastName, EmailAddress, PasswordHash, PasswordSalt, CreatedAt, Permission, LastLogin, PhoneNumber)
         VALUES (1, 'Megan', 'Chang', 'gwilliams@example.com',
         'faa5be1206846743dec0c4d3e5afc2d48a023011fdb6eabcc842f2b47eca8a00', '8e36506d1af0f8133ec6c833feb77689049fec2a0f7a49b8218fd49f41fde9d9', '2022-07-31 08:38:08',

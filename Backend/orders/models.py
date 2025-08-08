@@ -17,6 +17,7 @@ class Ordering(models.Model):
 
 
 class Orderitem(models.Model):
+    pk = models.CompositePrimaryKey('orderid','productid')
     quantity = models.PositiveIntegerField(db_column='Quantity')  # Field name made lowercase.
     orderid = models.ForeignKey(Ordering, models.DO_NOTHING, db_column='OrderID')  # Field name made lowercase.
     productid = models.ForeignKey(Product, models.DO_NOTHING, db_column='ProductID')  # Field name made lowercase.
@@ -24,17 +25,16 @@ class Orderitem(models.Model):
     class Meta:
         managed = False
         db_table = 'orderitem'
-        unique_together = ('orderid', 'productid')
 
 
 class Orderpayment(models.Model):
+    pk = models.CompositePrimaryKey("orderid", "paymentid")
     orderid = models.ForeignKey(Ordering, models.DO_NOTHING, db_column='OrderID')  # Field name made lowercase.
     paymentid = models.ForeignKey(Payment, models.DO_NOTHING, db_column='PaymentID')  # Field name made lowercase.
 
     class Meta:
         managed = False
         db_table = 'orderpayment'
-        unique_together = ('orderid', 'paymentid')
 
 
 class Shipping(models.Model):
