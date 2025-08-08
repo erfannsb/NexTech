@@ -1,27 +1,27 @@
 // --------- Shop API ---------
 
 export async function GetShops() {}
-  
+
 export async function GetShop(id) {}
-    
-export async function PostShops(shop) {}
-  
-export async function UpdateShops(shopId, shop) {}
-  
-export async function DeleteShops(shopId) {}
+
+export async function PostShop(shop) {}
+
+export async function UpdateShop(shopId, shop) {}
+
+export async function DeleteShop(shopId) {}
 
 
 
 // --------- ShopProduct API ---------
 
 export async function GetShopProducts() {}
-  
+
 export async function GetShopProduct(id) {}
-    
-export async function PostShopProducts(shopProduct) {}
-  
-export async function UpdateShopProduct(ShopProductId, shopProduct) {}
-  
+
+export async function PostShopProduct(shopProduct) {}
+
+export async function UpdateShopProduct(shopProductId, shopProduct) {}
+
 export async function DeleteShopProduct(shopProductId) {}
 
 
@@ -29,42 +29,39 @@ export async function DeleteShopProduct(shopProductId) {}
 // --------- Discount API ---------
 
 export async function GetDiscounts() {}
-  
+
 export async function GetDiscount(id) {}
-    
+
 export async function PostDiscount(discount) {}
-  
+
 export async function UpdateDiscount(discountId, discount) {}
-  
+
 export async function DeleteDiscount(discountId) {}
 
 
 
+// --------- DiscountProduct API ---------
 
-// --------- Discountproduct API ---------
+export async function GetDiscountProducts() {}
 
-export async function GetDiscountproducts() {}
-  
-export async function GetDiscountproduct(id) {}
-    
-export async function PostDiscountproduct(discountProduct) {}
-  
-export async function UpdateDiscountproduct(discountProductId, discountProduct) {}
-  
-export async function DeleteDiscountproduct(discountProductId) {}
+export async function GetDiscountProduct(id) {}
 
+export async function PostDiscountProduct(discountProduct) {}
+
+export async function UpdateDiscountProduct(discountProductId, discountProduct) {}
+
+export async function DeleteDiscountProduct(discountProductId) {}
 
 
 
-// --------- Shopadmin API ---------
+// --------- ShopAdmin API ---------
 
-export async function GetShopadmins() {}
-  
-export async function GetShopadmin(id) {}
-    
-export async function PostShopadmin(shopadmin) {}
-  
-export async function UpdateShopadmin(shopadminId, shopadmin) {}
-  
-export async function DeleteShopadmin(shopadminId) {}
+export async function GetShopAdmins() {}
 
+export async function GetShopAdmin(id) {}
+
+export async function PostShopAdmin(shopAdmin) {}
+
+export async function UpdateShopAdmin(shopAdminId, shopAdmin) {}
+
+export async function DeleteShopAdmin(shopAdminId) {}
