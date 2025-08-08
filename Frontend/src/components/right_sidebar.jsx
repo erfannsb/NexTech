@@ -62,8 +62,6 @@ export default function RightSidebar() {
     return WishListRowMaker(e[0], e[1], e[2], e[3]);
   });
 
-  console.log(ConvertedList);
-
   return (
     <div
       className={`${

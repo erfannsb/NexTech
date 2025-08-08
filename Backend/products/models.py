@@ -28,6 +28,7 @@ class Product(models.Model):
 
 
 class ProductCategory(models.Model):
+    pk = models.CompositePrimaryKey("productid", "categoryid")
     productid = models.ForeignKey(Product, models.DO_NOTHING, db_column='ProductID')  # Field name made lowercase.
     categoryid = models.ForeignKey(Category, models.DO_NOTHING, db_column='CategoryID')  # Field name made lowercase.
 
@@ -37,6 +38,7 @@ class ProductCategory(models.Model):
         unique_together = ('productid', 'categoryid')
 
 class Details(models.Model):
+    pk = models.CompositePrimaryKey("attributenum", "productid")
     attributenum = models.IntegerField(db_column='AttributeNum')  # Field name made lowercase.
     attributename = models.CharField(db_column='AttributeName', max_length=512)  # Field name made lowercase.
     attributevalue = models.CharField(db_column='AttributeValue', max_length=512)  # Field name made lowercase.
@@ -48,7 +50,7 @@ class Details(models.Model):
         unique_together = ('attributenum', 'productid')
 
 class ImageurlProduct(models.Model):
-    id = models.AutoField(primary_key=True) 
+    pk = models.CompositePrimaryKey("image_url", "productid")
     image_url = models.CharField(db_column='Image_URL', max_length=512)  # Field name made lowercase.
     productid = models.ForeignKey(Product, models.DO_NOTHING, db_column='ProductID')  # Field name made lowercase.
 
@@ -58,8 +60,9 @@ class ImageurlProduct(models.Model):
         unique_together = ('image_url', 'productid')
 
 class Comment(models.Model):
+    # pk = models.CompositePrimaryKey("productid", "commentnum")
     productid = models.ForeignKey(Product, models.DO_NOTHING, db_column='ProductID')
-    commentnum = models.PositiveIntegerField(db_column='CommentNum')
+    commentnum = models.PositiveIntegerField(db_column='CommentNum', primary_key=True)
     commentdate = models.DateTimeField(db_column='CommentDate')
     commenttext = models.TextField(db_column='CommentText')
     customerid = models.ForeignKey(Customer, models.DO_NOTHING, db_column='CustomerID')
@@ -70,4 +73,4 @@ class Comment(models.Model):
     class Meta:
         managed = False
         db_table = 'comment'
-        unique_together = ('productid', 'commentnum')  # composite uniqueness, no PK here!
+        unique_together = ('commentnum', 'productid')

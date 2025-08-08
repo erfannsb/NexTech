@@ -46,7 +46,6 @@ export function ShoppingCard({
       if (!data.error) {
         setColorBGForCompany(data.color.join(","));
       }
-      console.log(data.color.join(","));
     },
     []
   );

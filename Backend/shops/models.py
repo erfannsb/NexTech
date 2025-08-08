@@ -45,3 +45,20 @@ class Discountproduct(models.Model):
         managed = False
         db_table = 'discountproduct'
         unique_together = ('productid', 'discountid')
+
+
+class Shopadmin(models.Model):
+    adminid = models.AutoField(db_column='AdminID', primary_key=True)  # Field name made lowercase.
+    phonenumber = models.CharField(db_column='PhoneNumber', unique=True, max_length=20)  # Field name made lowercase.
+    firstname = models.CharField(db_column='FirstName', max_length=50)  # Field name made lowercase.
+    lastname = models.CharField(db_column='LastName', max_length=50)  # Field name made lowercase.
+    shopadminrole = models.CharField(db_column='ShopAdminRole', max_length=20)  # Field name made lowercase.
+    emailaddress = models.CharField(db_column='EmailAddress', unique=True, max_length=255)  # Field name made lowercase.
+    passwordsalt = models.CharField(db_column='PasswordSalt', max_length=64)  # Field name made lowercase.
+    passwordhash = models.CharField(db_column='PasswordHash', max_length=64)  # Field name made lowercase.
+    createdat = models.DateTimeField(db_column='CreatedAt')  # Field name made lowercase.
+    shopid = models.ForeignKey(Shop, models.DO_NOTHING, db_column='ShopID')  # Field name made lowercase.
+
+    class Meta:
+        managed = False
+        db_table = 'shopadmin'

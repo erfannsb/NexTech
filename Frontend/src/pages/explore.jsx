@@ -1,20 +1,10 @@
 import React, { useEffect, useState } from "react";
-import {
-  ChevronDown,
-  ChevronUp,
-  Cross,
-  CrossIcon,
-  Delete,
-  Search,
-  X,
-} from "lucide-react";
+import { ChevronDown, ChevronUp, Search, X } from "lucide-react";
 import { InputVariant1, InputVariant2 } from "../components/inputs";
-import {
-  ButtonVariant1,
-  ButtonVariant2,
-  ButtonVariant3,
-} from "../components/buttons";
+import { ButtonVariant1 } from "../components/buttons";
 import { ShoppingCard } from "../components/cards";
+import { GetProducts } from "../../data/products";
+
 function Explore() {
   const [showCategory, setShowCategory] = useState(false);
   const [showBrands, setShowBrands] = useState(false);
@@ -51,6 +41,58 @@ function Explore() {
     { pic: "./nvidia.png", name: "NVIDIA" },
     { pic: "./nvidia.png", name: "Intel" },
   ];
+
+  //fetch products
+  const products = [
+    {
+      companyImg: "./nvidia.png",
+      companyName: "NVIDIA",
+      productImg: "./test_product.png",
+      title: "MSI GeForce RTX™ 5090 32G VENTUS 3X OC",
+      rate: "4.5",
+      price: "10000$",
+    },
+    {
+      companyImg: "./nvidia.png",
+      companyName: "NVIDIA",
+      productImg: "./test_product.png",
+      title: "MSI GeForce RTX™ 5090 32G VENTUS 3X OC",
+      rate: "4.5",
+      price: "10000$",
+    },
+    {
+      companyImg: "./nvidia.png",
+      companyName: "NVIDIA",
+      productImg: "./test_product.png",
+      title: "MSI GeForce RTX™ 5090 32G VENTUS 3X OC",
+      rate: "4.5",
+      price: "10000$",
+    },
+    {
+      companyImg: "./nvidia.png",
+      companyName: "NVIDIA",
+      productImg: "./test_product.png",
+      title: "MSI GeForce RTX™ 5090 32G VENTUS 3X OC",
+      rate: "4.5",
+      price: "10000$",
+    },
+    {
+      companyImg: "./nvidia.png",
+      companyName: "NVIDIA",
+      productImg: "./test_product.png",
+      title: "MSI GeForce RTX™ 5090 32G VENTUS 3X OC",
+      rate: "4.5",
+      price: "10000$",
+    },
+  ];
+
+  useEffect(
+    () => async () => {
+      let products = await GetProducts();
+      console.log(products);
+    },
+    []
+  );
 
   return (
     <div>
@@ -289,48 +331,7 @@ function Explore() {
       )}
       {/* Product Section */}
       <div className="my-4 grid  grid-cols-4 gap-3 max-xl:grid-cols-3 max-md:grid-cols-1">
-        {[
-          {
-            companyImg: "./nvidia.png",
-            companyName: "NVIDIA",
-            productImg: "./test_product.png",
-            title: "MSI GeForce RTX™ 5090 32G VENTUS 3X OC",
-            rate: "4.5",
-            price: "10000$",
-          },
-          {
-            companyImg: "./nvidia.png",
-            companyName: "NVIDIA",
-            productImg: "./test_product.png",
-            title: "MSI GeForce RTX™ 5090 32G VENTUS 3X OC",
-            rate: "4.5",
-            price: "10000$",
-          },
-          {
-            companyImg: "./nvidia.png",
-            companyName: "NVIDIA",
-            productImg: "./test_product.png",
-            title: "MSI GeForce RTX™ 5090 32G VENTUS 3X OC",
-            rate: "4.5",
-            price: "10000$",
-          },
-          {
-            companyImg: "./nvidia.png",
-            companyName: "NVIDIA",
-            productImg: "./test_product.png",
-            title: "MSI GeForce RTX™ 5090 32G VENTUS 3X OC",
-            rate: "4.5",
-            price: "10000$",
-          },
-          {
-            companyImg: "./nvidia.png",
-            companyName: "NVIDIA",
-            productImg: "./test_product.png",
-            title: "MSI GeForce RTX™ 5090 32G VENTUS 3X OC",
-            rate: "4.5",
-            price: "10000$",
-          },
-        ].map((e, i) => (
+        {products.map((e, i) => (
           <ShoppingCard
             companyImg={e.companyImg}
             companyName={e.companyName}

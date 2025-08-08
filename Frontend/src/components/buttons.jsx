@@ -31,7 +31,6 @@ export function ButtonVariant1({
   rounded = "md",
 }) {
   const colors = GenerateColorPalette(10);
-  console.log(colors);
 
   return (
     <button
