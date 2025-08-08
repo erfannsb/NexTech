@@ -1,6 +1,25 @@
 // --------- Shop API ---------
 
-export async function GetShops() {}
+export async function GetShops() {
+    try {
+        const response = await fetch("http://127.0.0.1:8000/products/products/", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+    
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+    
+        const data = await response.json();
+        return data;
+      } catch (error) {
+        console.error("Failed to fetch products:", error);
+        return false;
+      }
+}
 
 export async function GetShop(id) {}
 
