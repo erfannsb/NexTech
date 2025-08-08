@@ -2,13 +2,14 @@ import { ChevronDown } from "lucide-react";
 import React, { useRef, useEffect } from "react";
 
 export const InputVariant1 = React.forwardRef(
-  ({ className = "", placeholder = "Type here...", img }, ref) => {
+  ({ className = "", placeholder = "Type here...", img, ...props }, ref) => {
     return (
       <div
         className={`card-variant-1 flex items-center rounded-lg ${className}`}
       >
         <div className="text-[#C5C3CA]">{img}</div>
         <input
+          {...props}
           ref={ref}
           className="ml-2 outline-0 border-none bg-none text-base w-full"
           placeholder={placeholder}

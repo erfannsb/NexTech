@@ -31,6 +31,7 @@ class Installment(models.Model):
 
 
 class Installmentpayment(models.Model):
+    pk = models.CompositePrimaryKey("installmentid", "paymentid")
     installmentid = models.ForeignKey(Installment, models.DO_NOTHING, db_column='InstallmentID')  # Field name made lowercase.
     installmentnumber = models.IntegerField(db_column='InstallmentNumber')  # Field name made lowercase.
     paymentid = models.ForeignKey(Payment, models.DO_NOTHING, db_column='PaymentID')  # Field name made lowercase.
@@ -38,7 +39,6 @@ class Installmentpayment(models.Model):
     class Meta:
         managed = False
         db_table = 'installmentpayment'
-        unique_together = ('installmentid', 'installmentnumber')
 
 
 

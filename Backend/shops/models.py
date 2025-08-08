@@ -39,13 +39,13 @@ class Discount(models.Model):
 
 
 class Discountproduct(models.Model):
+    pk = models.CompositePrimaryKey("productid", "discountid")
     productid = models.ForeignKey(Product, models.DO_NOTHING, db_column='ProductID')  # Field name made lowercase.
     discountid = models.ForeignKey(Discount, models.DO_NOTHING, db_column='DiscountID')  # Field name made lowercase.
 
     class Meta:
         managed = False
         db_table = 'discountproduct'
-        unique_together = ('productid', 'discountid')
 
 
 class Shopadmin(models.Model):

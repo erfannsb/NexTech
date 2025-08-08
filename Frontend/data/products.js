@@ -1,4 +1,3 @@
-
 // --------- Product API ---------
 
 export async function GetProducts() {
@@ -45,7 +44,6 @@ export async function GetProduct(id) {
     return false;
   }
 }
-
 
 export async function PostProducts(product) {
   try {
@@ -117,8 +115,6 @@ export async function DeleteProduct(productId) {
   }
 }
 
-
-
 // --------- Category API ---------
 
 export async function GetCategories() {
@@ -139,9 +135,8 @@ export async function GetCategories() {
   } catch (error) {
     console.error("Failed to fetch categories:", error);
     return false;
-    }
   }
-
+}
 
 export async function GetCategory(id) {
   try {
@@ -167,8 +162,7 @@ export async function GetCategory(id) {
   }
 }
 
-
-export async function  PostCategory(category) {
+export async function PostCategory(category) {
   try {
     const response = await fetch("http://127.0.0.1:8000/products/categories/", {
       method: "POST",
@@ -190,7 +184,6 @@ export async function  PostCategory(category) {
     throw error;
   }
 }
-
 
 export async function UpdateCategory(categoryId, category) {
   try {
@@ -218,7 +211,6 @@ export async function UpdateCategory(categoryId, category) {
   }
 }
 
-
 export async function DeleteCategory(categoryId) {
   try {
     const response = await fetch(
@@ -240,18 +232,19 @@ export async function DeleteCategory(categoryId) {
   }
 }
 
-
-
 // --------- ProductCategory API ---------
 
-export async function GetProductCategory() {
+export async function GetProductCategories() {
   try {
-    const response = await fetch("http://127.0.0.1:8000/products/productCategory/", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    const response = await fetch(
+      "http://127.0.0.1:8000/products/productCategory/",
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
 
     if (!response.ok) {
       throw new Error(`HTTP error! Status: ${response.status}`);
@@ -262,9 +255,8 @@ export async function GetProductCategory() {
   } catch (error) {
     console.error("Failed to fetch product category:", error);
     return false;
-    }
   }
-
+}
 
 export async function GetProductCategory(id) {
   try {
@@ -290,16 +282,18 @@ export async function GetProductCategory(id) {
   }
 }
 
-
-export async function  PostProductCategory(productCategory) {
+export async function PostProductCategory(productCategory) {
   try {
-    const response = await fetch("http://127.0.0.1:8000/products/productCategory/", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(productCategory),
-    });
+    const response = await fetch(
+      "http://127.0.0.1:8000/products/productCategory/",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(productCategory),
+      }
+    );
 
     if (!response.ok) {
       throw new Error(`HTTP error! Status: ${response.status}`);
@@ -314,10 +308,13 @@ export async function  PostProductCategory(productCategory) {
   }
 }
 
-
-export async function UpdateProductCategory(productCategoryId, productCategory) {
+export async function UpdateProductCategory(
+  productCategoryId,
+  productCategory
+) {
   try {
-    const response = await fetch(`http://127.0.0.1:8000/products/productCategory/${categoryId}/`,
+    const response = await fetch(
+      `http://127.0.0.1:8000/products/productCategory/${categoryId}/`,
 
       {
         method: "PUT",
@@ -336,11 +333,13 @@ export async function UpdateProductCategory(productCategoryId, productCategory) 
     console.log(`productCategory ${productCategoryId} updated:`, data);
     return data;
   } catch (error) {
-    console.error(`Failed to update productCategory ${productCategoryId}:`, error);
+    console.error(
+      `Failed to update productCategory ${productCategoryId}:`,
+      error
+    );
     return false;
   }
 }
-
 
 export async function DeleteProductCategory(productCategoryId) {
   try {
@@ -358,11 +357,13 @@ export async function DeleteProductCategory(productCategoryId) {
     console.log(`productCategory ${productCategoryId} deleted successfully`);
     return true;
   } catch (error) {
-    console.error(`Failed to delete productCategory ${productCategoryId}:`, error);
+    console.error(
+      `Failed to delete productCategory ${productCategoryId}:`,
+      error
+    );
     return false;
   }
 }
-
 
 // --------- Details API ---------
 
@@ -411,7 +412,6 @@ export async function GetDetail(id) {
   }
 }
 
-
 export async function PostDetails(detail) {
   try {
     const response = await fetch("http://127.0.0.1:8000/products/details/", {
@@ -437,7 +437,9 @@ export async function PostDetails(detail) {
 
 export async function UpdateDetail(detailId, detail) {
   try {
-    const response = await fetch(`http://127.0.0.1:8000/products/details/${detailId}/`, {
+    const response = await fetch(
+      `http://127.0.0.1:8000/products/details/${detailId}/`,
+      {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -480,18 +482,19 @@ export async function DeleteDetail(detailId) {
   }
 }
 
-
-
 // --------- ImageurlProduct API ---------
 
-export async function GetImageurlProducts(){
+export async function GetImageurlProducts() {
   try {
-    const response = await fetch("http://127.0.0.1:8000/products/imageurlProduct/", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    const response = await fetch(
+      "http://127.0.0.1:8000/products/imageurlProduct/",
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
 
     if (!response.ok) {
       throw new Error(`HTTP error! Status: ${response.status}`);
@@ -504,7 +507,7 @@ export async function GetImageurlProducts(){
     return false;
   }
 }
-export async function GetImageurlProductId(id){
+export async function GetImageurlProductId(id) {
   try {
     const response = await fetch(
       `http://127.0.0.1:8000/products/imageurlProduct/${id}`,
@@ -527,15 +530,18 @@ export async function GetImageurlProductId(id){
     return false;
   }
 }
-export async function PostImageurlProduct(imageurlProduct){
+export async function PostImageurlProduct(imageurlProduct) {
   try {
-    const response = await fetch("http://127.0.0.1:8000/products/imageurlProduct/", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(imageurlProduct),
-    });
+    const response = await fetch(
+      "http://127.0.0.1:8000/products/imageurlProduct/",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(imageurlProduct),
+      }
+    );
 
     if (!response.ok) {
       throw new Error(`HTTP error! Status: ${response.status}`);
@@ -549,7 +555,10 @@ export async function PostImageurlProduct(imageurlProduct){
     throw error;
   }
 }
-export async function UpdateImageurlProduct(imageurlProductId, imageurlProduct){
+export async function UpdateImageurlProduct(
+  imageurlProductId,
+  imageurlProduct
+) {
   try {
     const response = await fetch(
       `http://127.0.0.1:8000/products/imageurlProduct/${imageurlProductId}/`,
@@ -570,11 +579,14 @@ export async function UpdateImageurlProduct(imageurlProductId, imageurlProduct){
     console.log(`ImageurlProduct ${imageurlProductId} updated:`, data);
     return data;
   } catch (error) {
-    console.error(`Failed to update imageurlProduct ${imageurlProductId}:`, error);
+    console.error(
+      `Failed to update imageurlProduct ${imageurlProductId}:`,
+      error
+    );
     return false;
   }
 }
-export async function DeleteImageurlProduct(imageurlProductId){
+export async function DeleteImageurlProduct(imageurlProductId) {
   try {
     const response = await fetch(
       `http://127.0.0.1:8000/products/imageurlProduct/${imageurlProductId}/`,
@@ -590,15 +602,17 @@ export async function DeleteImageurlProduct(imageurlProductId){
     console.log(`imageurlProductId ${imageurlProductId} deleted successfully`);
     return true;
   } catch (error) {
-    console.error(`Failed to delete imageurlProductId ${imageurlProductId}:`, error);
+    console.error(
+      `Failed to delete imageurlProductId ${imageurlProductId}:`,
+      error
+    );
     return false;
   }
 }
 
-
 // --------- Comment API ---------
 
-export async function GetComments(){
+export async function GetComments() {
   try {
     const response = await fetch("http://127.0.0.1:8000/products/comment/", {
       method: "GET",
@@ -618,7 +632,7 @@ export async function GetComments(){
     return false;
   }
 }
-export async function GetCommentsId(id){
+export async function GetCommentsId(id) {
   try {
     const response = await fetch(
       `http://127.0.0.1:8000/products/comment/${id}`,
@@ -641,7 +655,7 @@ export async function GetCommentsId(id){
     return false;
   }
 }
-export async function PostComments(comment){
+export async function PostComments(comment) {
   try {
     const response = await fetch("http://127.0.0.1:8000/products/comment/", {
       method: "POST",
@@ -688,7 +702,7 @@ export async function UpdateComments(commentId, comment) {
     return false;
   }
 }
-export async function DeleteComments(commentId){
+export async function DeleteComments(commentId) {
   try {
     const response = await fetch(
       `http://127.0.0.1:8000/products/comment/${commentId}/`,

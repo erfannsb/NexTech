@@ -65,7 +65,7 @@ export function ShoppingCard({
           }}
         >
           <div className="p-1 bg-[rgb(24,23,27)] rounded-md w-fit flex justify-between items-center">
-            <img src={companyImg} alt="company" className="w-7 h-auto" />
+            <img src={companyImg} alt="c" className="w-7 h-auto" />
           </div>
           <h4 className="ml-2 font-medium text-sm">{companyName}</h4>
         </div>

@@ -5,6 +5,20 @@ import { ButtonVariant1 } from "../components/buttons";
 import { ShoppingCard } from "../components/cards";
 import { GetProducts } from "../../data/products";
 
+function buildQueryString(filters) {
+  const params = new URLSearchParams();
+
+  if (filters.search) params.append("search", filters.search);
+  if (filters.category) params.append("category", filters.category);
+  if (filters.subCategory) params.append("sub_category", filters.subCategory);
+  if (filters.brand) params.append("brand", filters.brand);
+  if (filters.priceFrom) params.append("price__gte", filters.priceFrom);
+  if (filters.priceTo) params.append("price__lte", filters.priceTo);
+  if (filters.sortBy) params.append("ordering", filters.sortBy); // backend sorting
+
+  return params.toString();
+}
+
 function Explore() {
   const [showCategory, setShowCategory] = useState(false);
   const [showBrands, setShowBrands] = useState(false);
@@ -14,6 +28,15 @@ function Explore() {
   const [activeSubCategory, setSubCategory] = useState(null);
   const [activeBrand, setActiveBrand] = useState(null);
   const [showAdvancedFilters, setShowAdvancedFilters] = useState(false);
+  const [filters, setFilters] = useState({
+    search: "",
+    category: null,
+    subCategory: null,
+    brand: null,
+    priceFrom: null,
+    priceTo: null,
+    sortBy: "mostRelevant",
+  });
 
   // Fetch Categories
 
@@ -43,56 +66,21 @@ function Explore() {
   ];
 
   //fetch products
-  const products = [
-    {
-      companyImg: "./nvidia.png",
-      companyName: "NVIDIA",
-      productImg: "./test_product.png",
-      title: "MSI GeForce RTX™ 5090 32G VENTUS 3X OC",
-      rate: "4.5",
-      price: "10000$",
-    },
-    {
-      companyImg: "./nvidia.png",
-      companyName: "NVIDIA",
-      productImg: "./test_product.png",
-      title: "MSI GeForce RTX™ 5090 32G VENTUS 3X OC",
-      rate: "4.5",
-      price: "10000$",
-    },
-    {
-      companyImg: "./nvidia.png",
-      companyName: "NVIDIA",
-      productImg: "./test_product.png",
-      title: "MSI GeForce RTX™ 5090 32G VENTUS 3X OC",
-      rate: "4.5",
-      price: "10000$",
-    },
-    {
-      companyImg: "./nvidia.png",
-      companyName: "NVIDIA",
-      productImg: "./test_product.png",
-      title: "MSI GeForce RTX™ 5090 32G VENTUS 3X OC",
-      rate: "4.5",
-      price: "10000$",
-    },
-    {
-      companyImg: "./nvidia.png",
-      companyName: "NVIDIA",
-      productImg: "./test_product.png",
-      title: "MSI GeForce RTX™ 5090 32G VENTUS 3X OC",
-      rate: "4.5",
-      price: "10000$",
-    },
-  ];
 
-  useEffect(
-    () => async () => {
-      let products = await GetProducts();
-      console.log(products);
-    },
-    []
-  );
+  const [products, setProducts] = useState([]);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      const query = buildQueryString(filters);
+      const res = await fetch(
+        `http://127.0.0.1:8000/products/products/?${query}`
+      );
+      const data = await res.json();
+      setProducts(data);
+    };
+
+    fetchProducts();
+  }, [filters]);
 
   return (
     <div>
@@ -106,6 +94,21 @@ function Explore() {
           placeholder="Search Here..."
           className="w-[300px] py-[5px] px-2 max-sm:py-2 max-sm:w-full"
           img={<Search strokeWidth={1.5} size={17} />}
+          onChange={async (e) => {
+            const d = e.target.value;
+            console.log(d);
+            let p = await fetch(
+              `http://127.0.0.1:8000/products/products/?search=${d}`,
+              {
+                method: "GET",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+              }
+            );
+            p = await p.json();
+            setProducts(p || []);
+          }}
         />
         {/* Filtering */}
         <ButtonVariant1
@@ -334,10 +337,10 @@ function Explore() {
         {products.map((e, i) => (
           <ShoppingCard
             companyImg={e.companyImg}
-            companyName={e.companyName}
-            productImg={e.productImg}
-            title={e.title}
-            rate={e.rate}
+            companyName={e.brand}
+            productImg={e.thumbnail}
+            title={e.name}
+            rate={e.rating}
             price={e.price}
           />
         ))}

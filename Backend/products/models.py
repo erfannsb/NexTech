@@ -21,7 +21,10 @@ class Product(models.Model):
     stockquantity = models.PositiveIntegerField(db_column='StockQuantity')  # Field name made lowercase.
     rating = models.DecimalField(db_column='Rating', max_digits=3, decimal_places=2, blank=True, null=True)  # Field name made lowercase.
     installmentpolicy = models.IntegerField(db_column='InstallmentPolicy')  # Field name made lowercase.
-
+    thumbnail = models.CharField(db_column="Thumbnail", null=True, max_length=500)
+    brand = models.CharField(db_column="Brand", null=True, max_length=100)
+    categories = models.ManyToManyField(Category, related_name='products', through='ProductCategory')
+    
     class Meta:
         managed = False
         db_table = 'product'

@@ -1,3 +1,14 @@
-from django.shortcuts import render
+from rest_framework import viewsets
+from .serializers import *
 
-# Create your views here.
+class PaymentViewSet(viewsets.ModelViewSet):
+    queryset = Payment.objects.all()
+    serializer_class = PaymentSerializer
+
+class InstallmentViewSet(viewsets.ModelViewSet):
+    queryset = Installment.objects.all()
+    serializer_class = InstallmentSerializer
+
+class InstallmentPaymentViewSet(viewsets.ModelViewSet):
+    queryset = Installmentpayment.objects.all()
+    serializer_class = InstallmentpaymentSerializer
