@@ -1,3 +1,4 @@
+
 // --------- Product API ---------
 
 export async function GetProducts() {
@@ -115,6 +116,8 @@ export async function DeleteProduct(productId) {
   }
 }
 
+
+
 // --------- Category API ---------
 
 export async function GetCategories() {
@@ -231,6 +234,8 @@ export async function DeleteCategory(categoryId) {
     return false;
   }
 }
+
+
 
 // --------- ProductCategory API ---------
 
@@ -365,6 +370,8 @@ export async function DeleteProductCategory(productCategoryId) {
   }
 }
 
+
+
 // --------- Details API ---------
 
 export async function GetDetails() {
@@ -482,6 +489,8 @@ export async function DeleteDetail(detailId) {
   }
 }
 
+
+
 // --------- ImageurlProduct API ---------
 
 export async function GetImageurlProducts() {
@@ -507,6 +516,7 @@ export async function GetImageurlProducts() {
     return false;
   }
 }
+
 export async function GetImageurlProductId(id) {
   try {
     const response = await fetch(
@@ -530,6 +540,7 @@ export async function GetImageurlProductId(id) {
     return false;
   }
 }
+
 export async function PostImageurlProduct(imageurlProduct) {
   try {
     const response = await fetch(
@@ -555,6 +566,7 @@ export async function PostImageurlProduct(imageurlProduct) {
     throw error;
   }
 }
+
 export async function UpdateImageurlProduct(
   imageurlProductId,
   imageurlProduct
@@ -586,6 +598,7 @@ export async function UpdateImageurlProduct(
     return false;
   }
 }
+
 export async function DeleteImageurlProduct(imageurlProductId) {
   try {
     const response = await fetch(
@@ -610,6 +623,8 @@ export async function DeleteImageurlProduct(imageurlProductId) {
   }
 }
 
+
+
 // --------- Comment API ---------
 
 export async function GetComments() {
@@ -632,6 +647,7 @@ export async function GetComments() {
     return false;
   }
 }
+
 export async function GetCommentsId(id) {
   try {
     const response = await fetch(
@@ -655,6 +671,7 @@ export async function GetCommentsId(id) {
     return false;
   }
 }
+
 export async function PostComments(comment) {
   try {
     const response = await fetch("http://127.0.0.1:8000/products/comment/", {
@@ -677,6 +694,7 @@ export async function PostComments(comment) {
     throw error;
   }
 }
+
 export async function UpdateComments(commentId, comment) {
   try {
     const response = await fetch(
@@ -702,6 +720,7 @@ export async function UpdateComments(commentId, comment) {
     return false;
   }
 }
+
 export async function DeleteComments(commentId) {
   try {
     const response = await fetch(
