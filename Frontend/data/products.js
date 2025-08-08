@@ -1,4 +1,4 @@
-// Product Table
+// --------- Product API ---------
 
 export async function GetProducts() {
   try {
@@ -115,7 +115,7 @@ export async function DeleteProduct(productId) {
   }
 }
 
-// Category Table
+// --------- Category API ---------
 
 export async function GetCategories() {
   try {
@@ -232,7 +232,7 @@ export async function DeleteCategory(categoryId) {
   }
 }
 
-// ProductCategory Table
+// --------- ProductCategory API ---------
 
 export async function GetProductCategories() {
   try {
@@ -365,7 +365,7 @@ export async function DeleteProductCategory(productCategoryId) {
   }
 }
 
-// Details Table
+// --------- Details API ---------
 
 export async function GetDetails() {
   try {
@@ -482,10 +482,243 @@ export async function DeleteDetail(detailId) {
   }
 }
 
-// ImageurlProduct Table
+// --------- ImageurlProduct API ---------
 
-export async function GetImageurlProducts() {}
-export async function GetImageurlProductId() {}
-export async function PostImageurlProduct() {}
-export async function UpdateImageurlProduct() {}
-export async function DeleteImageurlProduct() {}
+export async function GetImageurlProducts() {
+  try {
+    const response = await fetch(
+      "http://127.0.0.1:8000/products/imageurlProduct/",
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Failed to fetch image url product:", error);
+    return false;
+  }
+}
+export async function GetImageurlProductId(id) {
+  try {
+    const response = await fetch(
+      `http://127.0.0.1:8000/products/imageurlProduct/${id}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Failed to fetch imageurlproduct:", error);
+    return false;
+  }
+}
+export async function PostImageurlProduct(imageurlProduct) {
+  try {
+    const response = await fetch(
+      "http://127.0.0.1:8000/products/imageurlProduct/",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(imageurlProduct),
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    console.log("Image url Product created:", data);
+    return data;
+  } catch (error) {
+    console.error("Failed to post imageurlProduct:", error);
+    throw error;
+  }
+}
+export async function UpdateImageurlProduct(
+  imageurlProductId,
+  imageurlProduct
+) {
+  try {
+    const response = await fetch(
+      `http://127.0.0.1:8000/products/imageurlProduct/${imageurlProductId}/`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(imageurlProduct),
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    console.log(`ImageurlProduct ${imageurlProductId} updated:`, data);
+    return data;
+  } catch (error) {
+    console.error(
+      `Failed to update imageurlProduct ${imageurlProductId}:`,
+      error
+    );
+    return false;
+  }
+}
+export async function DeleteImageurlProduct(imageurlProductId) {
+  try {
+    const response = await fetch(
+      `http://127.0.0.1:8000/products/imageurlProduct/${imageurlProductId}/`,
+      {
+        method: "DELETE",
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+
+    console.log(`imageurlProductId ${imageurlProductId} deleted successfully`);
+    return true;
+  } catch (error) {
+    console.error(
+      `Failed to delete imageurlProductId ${imageurlProductId}:`,
+      error
+    );
+    return false;
+  }
+}
+
+// --------- Comment API ---------
+
+export async function GetComments() {
+  try {
+    const response = await fetch("http://127.0.0.1:8000/products/comment/", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Failed to fetch comments:", error);
+    return false;
+  }
+}
+export async function GetCommentsId(id) {
+  try {
+    const response = await fetch(
+      `http://127.0.0.1:8000/products/comment/${id}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Failed to fetch comment:", error);
+    return false;
+  }
+}
+export async function PostComments(comment) {
+  try {
+    const response = await fetch("http://127.0.0.1:8000/products/comment/", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(comment),
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    console.log("Comment created:", data);
+    return data;
+  } catch (error) {
+    console.error("Failed to post comment:", error);
+    throw error;
+  }
+}
+export async function UpdateComments(commentId, comment) {
+  try {
+    const response = await fetch(
+      `http://127.0.0.1:8000/products/comment/${commentId}/`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(comment),
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    console.log(`Comment ${commentId} updated:`, data);
+    return data;
+  } catch (error) {
+    console.error(`Failed to update product ${commentId}:`, error);
+    return false;
+  }
+}
+export async function DeleteComments(commentId) {
+  try {
+    const response = await fetch(
+      `http://127.0.0.1:8000/products/comment/${commentId}/`,
+      {
+        method: "DELETE",
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+
+    console.log(`Comment ${commentId} deleted successfully`);
+    return true;
+  } catch (error) {
+    console.error(`Failed to delete comment ${commentId}:`, error);
+    return false;
+  }
+}
