@@ -1,7 +1,49 @@
+
+// Product Table
+
 export async function GetProducts() {
-  let data = await fetch("http://127.0.0.1:8000/products/products");
-  data = await data.json();
-  return data;
+  try {
+    const response = await fetch("http://127.0.0.1:8000/products/products/", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Failed to fetch products:", error);
+    return false;
+  }
+}
+
+export async function GetProduct(id) {
+  try {
+    const response = await fetch(
+      `http://127.0.0.1:8000/products/products/${id}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Failed to fetch products:", error);
+    return false;
+  }
 }
 
 
@@ -12,14 +54,7 @@ export async function PostProducts(product) {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({
-        Name: product.Name,
-        Description: product.Description,
-        Price: product.Price,
-        StockQuantity: product.StockQuantity ?? 0,
-        Rating: product.Rating ?? null,
-        InstallmentPolicy: product.InstallmentPolicy ? 1 : 0,
-      }),
+      body: JSON.stringify(product),
     });
 
     if (!response.ok) {
@@ -32,6 +67,100 @@ export async function PostProducts(product) {
   } catch (error) {
     console.error("Failed to post product:", error);
     throw error;
+  }
+}
+
+export async function UpdateProduct(productId, product) {
+  try {
+    const response = await fetch(
+      `http://127.0.0.1:8000/products/products/${productId}/`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(product),
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    console.log(`Product ${productId} updated:`, data);
+    return data;
+  } catch (error) {
+    console.error(`Failed to update product ${productId}:`, error);
+    return false;
+  }
+}
+
+export async function DeleteProduct(productId) {
+  try {
+    const response = await fetch(
+      `http://127.0.0.1:8000/products/products/${productId}/`,
+      {
+        method: "DELETE",
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+
+    console.log(`Product ${productId} deleted successfully`);
+    return true;
+  } catch (error) {
+    console.error(`Failed to delete product ${productId}:`, error);
+    return false;
+  }
+}
+
+export async function UpdateProduct(productId, product) {
+  try {
+    const response = await fetch(
+      `http://127.0.0.1:8000/products/products/${productId}/`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(product),
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    console.log(`Product ${productId} updated:`, data);
+    return data;
+  } catch (error) {
+    console.error(`Failed to update product ${productId}:`, error);
+    return false;
+  }
+}
+
+export async function DeleteProduct(productId) {
+  try {
+    const response = await fetch(
+      `http://127.0.0.1:8000/products/products/${productId}/`,
+      {
+        method: "DELETE",
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+
+    console.log(`Product ${productId} deleted successfully`);
+    return true;
+  } catch (error) {
+    console.error(`Failed to delete product ${productId}:`, error);
+    return false;
   }
 }
 

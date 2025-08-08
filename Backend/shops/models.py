@@ -17,6 +17,7 @@ class Shop(models.Model):
 
 
 class ShopProduct(models.Model):
+    pk = models.CompositePrimaryKey("shopid", "productid")
     shopid = models.ForeignKey(Shop, models.DO_NOTHING, db_column='ShopID')  # Field name made lowercase.
     productid = models.ForeignKey(Product, models.DO_NOTHING, db_column='ProductID')  # Field name made lowercase.
 
