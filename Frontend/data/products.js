@@ -491,3 +491,9 @@ export async function DeleteImageurlProduct(){}
 
 
 
+
+export async function GetComments(){}
+export async function GetImageurlProductId(){}
+export async function PostImageurlProduct(){}
+export async function UpdateImageurlProduct(){}
+export async function DeleteImageurlProduct(){}
