@@ -51,7 +51,7 @@ class Shipping(models.Model):
 
 
 
-class Odershipping(models.Model):
+class OrderShipping(models.Model):
     orderid = models.OneToOneField(Ordering, models.DO_NOTHING, db_column='OrderID', primary_key=True)  # Field name made lowercase.
     shippingid = models.ForeignKey(Shipping, models.DO_NOTHING, db_column='ShippingID')  # Field name made lowercase.
 

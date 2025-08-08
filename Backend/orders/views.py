@@ -17,3 +17,6 @@ class ShippingViewSet(viewsets.ModelViewSet):
     queryset = Shipping.objects.all()
     serializer_class = ShippingSerializer
 
+class OrderShippingViewSet(viewsets.ModelViewSet):
+    queryset = OrderShipping.objects.all()
+    serializer_class = OrderShippingSerializer
