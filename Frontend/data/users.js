@@ -200,7 +200,8 @@ export async function UpdateAdmin(adminId, admin) {
 
 export async function DeleteAdmin(adminId) {
     try {
-      const response = await fetch(`http://127.0.0.1:8000/users/admins/${adminId}/`, {
+      const response = await fetch(
+        `http://127.0.0.1:8000/users/admins/${adminId}/`, {
         method: "DELETE",
       });
 
