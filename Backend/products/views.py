@@ -37,7 +37,7 @@ class ImageurlProductViewSet(viewsets.ModelViewSet):
     filterset_fields = ['productid']
 
 class CommentViewSet(viewsets.ModelViewSet):
-    queryset = Comment.objects.all()
+    queryset = Comment.objects.filter(parentcommentnum__isnull=True)  # Only top-level comments
     serializer_class = CommentSerializer
     filter_backends = [DjangoFilterBackend, filters.SearchFilter]
     filterset_fields = ['productid']

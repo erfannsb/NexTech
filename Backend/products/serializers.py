@@ -54,6 +54,7 @@ class CommentSerializer(serializers.ModelSerializer):
     customer = CustomerSerializer(source='customerid', read_only=True)
     customer_name = serializers.SerializerMethodField()
     formatted_date = serializers.SerializerMethodField()
+    replies = serializers.SerializerMethodField()
 
     class Meta:
         model = Comment
@@ -91,3 +92,10 @@ class CommentSerializer(serializers.ModelSerializer):
                 years = diff.days // 365
                 return f"{years} year{'s' if years != 1 else ''} ago"
         return "Unknown date"
+    
+    def get_replies(self, obj):
+        # Get all replies to this comment (comments that have this comment as parent)
+        replies = Comment.objects.filter(parentcommentnum=obj.commentnum)
+        if replies.exists():
+            return CommentSerializer(replies, many=True, context=self.context).data
+        return []

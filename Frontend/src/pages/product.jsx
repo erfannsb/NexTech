@@ -166,9 +166,12 @@ function Product() {
           {Array.isArray(comments) ? (
             comments.map((comment) => (
               <Comment
+                key={comment.commentnum}
                 name={comment.customer_name}
                 text={comment.commenttext}
                 date={comment.formatted_date}
+                stars={comment.rating}
+                replies={comment.replies}
               />
             ))
           ) : (
@@ -277,7 +280,7 @@ export function LeftColumn({ images, rating, shops, countedrates }) {
   );
 }
 
-export function Comment({ reply, name, text, date, stars }) {
+export function Comment({ replies, name, text, date, stars }) {
   return (
     <div className="flex flex-col w-full my-5">
       <div className="flex w-full">
@@ -303,10 +306,19 @@ export function Comment({ reply, name, text, date, stars }) {
           </div>
         </div>
       </div>
-      {/* reply */}
-      {reply && (
+      {/* replies */}
+      {replies && replies.length > 0 && (
         <div className="ml-[19px] pl-5 my-3 border-l border-gray-600">
-          {reply}
+          {replies.map((reply) => (
+            <Comment
+              key={reply.commentnum}
+              name={reply.customer_name}
+              text={reply.commenttext}
+              date={reply.formatted_date}
+              stars={reply.rating}
+              replies={reply.replies}
+            />
+          ))}
         </div>
       )}
     </div>
