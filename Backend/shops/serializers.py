@@ -7,6 +7,8 @@ class ShopSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class ShopProductSerializer(serializers.ModelSerializer):
+    shop = ShopSerializer(source='shopid', read_only=True)
+
     class Meta:
         model = ShopProduct
         fields = '__all__'

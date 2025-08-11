@@ -20,13 +20,17 @@ export const InputVariant1 = React.forwardRef(
 );
 
 export const InputVariant2 = React.forwardRef(
-  ({ className = "", placeholder = "Type here...", defaultValue }, ref) => {
+  (
+    { className = "", placeholder = "Type here...", defaultValue, ...props },
+    ref
+  ) => {
     return (
       <div
         className={` card-variant-1 flex justify-between items-center py-2 px-3 rounded-lg max-w-fit ${className}`}
       >
         <div className="text-[#7E7D81] text-sm">{placeholder}</div>
         <input
+          {...props}
           ref={ref}
           className="ml-2 outline-0 border-none bg-none flex-1 max-w-fit text-right mr-2  min-w-[60px] text-[12px] "
           defaultValue={defaultValue}

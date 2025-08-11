@@ -3,6 +3,7 @@ import useUIStore from "../ui_storage";
 import Loading from "../pages/loading.jsx";
 import { GlassCard } from "./cards.jsx";
 import Chat from "./chat.jsx";
+import { useLocation } from "react-router";
 
 // Lazy load each page
 const ExplorePage = lazy(() => import("../pages/explore"));
@@ -18,29 +19,33 @@ const Finance = lazy(() => import("../admin_pages/finanace.jsx"));
 const OrderMangement = lazy(() => import("../admin_pages/orderM.jsx"));
 const Discounts = lazy(() => import("../admin_pages/discount.jsx"));
 const AdminSettings = lazy(() => import("../admin_pages/setttings.jsx"));
-const pages = {
-  Explore: ExplorePage,
-  Product: ProductPage,
-  Test: Test,
-  "Wish List": WishList,
-  Order: Order,
-  Settings: Settings,
-  Help: Help,
-  Admin_Home: AdminHome,
-  "Admin_Inventory Management": ProductMangement,
-  Admin_Finance: Finance,
-  "Admin_Order Management": OrderMangement,
-  Admin_Discounts: Discounts,
-  Admin_Settings: AdminSettings,
+const pagesByRoute = {
+  "/": ExplorePage,
+  "/help": Help,
+  "/settings": Settings,
+  "/wishlist": WishList,
+  "/order": Order,
+  "/product/:id": ProductPage,
+  // Admin routes
+  "/admin/dashboard/home": AdminHome,
+  "/admin/dashboard/inventory": ProductMangement,
+  "/admin/dashboard/finance": Finance,
+  "/admin/dashboard/orders": OrderMangement,
+  "/admin/dashboard/discounts": Discounts,
+  "/admin/dashboard/settings": AdminSettings,
 };
 
 export default function Pager() {
-  const activePage = useUIStore((state) => state.currentUserPage);
+  const location = useLocation();
   const isLeftSidebarOpen = useUIStore((state) => state.leftSidebarOpen);
   const isRightSidebarOpen = useUIStore((state) => state.rightSidebarOpen);
   const bothSideBarClosed = !isLeftSidebarOpen && !isRightSidebarOpen;
   const isChatOpen = useUIStore((state) => state.isChatOpen);
-  const ActivePage = pages[activePage] ?? (() => <div>Invalid page</div>);
+  // Match route: exact or product/:id pattern
+  const isProductRoute = location.pathname.startsWith("/product/");
+  const ActivePage = isProductRoute
+    ? ProductPage
+    : pagesByRoute[location.pathname] ?? (() => <div>Not Found</div>);
 
   const [screenIsSmall, setScreenIsSmall] = useState(window.innerWidth < 768);
 

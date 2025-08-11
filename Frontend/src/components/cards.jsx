@@ -1,6 +1,7 @@
 import { LucideShoppingBasket, Star } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { ButtonVariant3 } from "./buttons";
+import { useNavigate } from "react-router";
 
 export function CardVariant1({
   header,
@@ -33,25 +34,18 @@ export function ShoppingCard({
   title,
   rate,
   price,
+  id,
 }) {
   const [colorBGForCompany, setColorBGForCompany] = useState("");
-
-  useEffect(
-    () => async () => {
-      const img = `http://localhost:5173/${companyImg}`;
-      const res = await fetch(
-        `/api/dominant-color/?url=${encodeURIComponent(img)}`
-      );
-      const data = await res.json();
-      if (!data.error) {
-        setColorBGForCompany(data.color.join(","));
-      }
-    },
-    []
-  );
+  const navigate = useNavigate();
 
   return (
-    <div className="py-3 border border-[#212121] rounded-lg">
+    <div
+      onClick={() => {
+        navigate(`/product/${id}`);
+      }}
+      className="py-3 border border-[#212121] rounded-lg cursor-pointer hover:scale-[1.01] transition hover:border-[#444444]"
+    >
       {/* header */}
       <div className="flex items-center justify-between">
         <div
@@ -85,7 +79,7 @@ export function ShoppingCard({
         <p className="font-medium text-lg mb-2 text-[#ededed]">{price}</p>
 
         <h3 className="text-lg font-extrabold">{title}</h3>
-        <div className="flex items-center justify-end">
+        <div className="flex items-center justify-end mt-auto">
           <ButtonVariant3
             text="Add"
             img={<LucideShoppingBasket size={16} />}

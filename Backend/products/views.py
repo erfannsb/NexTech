@@ -1,8 +1,9 @@
 from rest_framework import viewsets, filters
 from django_filters.rest_framework import DjangoFilterBackend
-from .models import Product
+from .models import Product, Category, ProductCategory, Details, ImageurlProduct, Comment
 from .serializers import *
 from .filters import ProductFilter 
+from django.db.models import Sum
 
 class ProductViewSet(viewsets.ModelViewSet):
     queryset = Product.objects.all()
@@ -11,6 +12,10 @@ class ProductViewSet(viewsets.ModelViewSet):
     filterset_class = ProductFilter
     search_fields = ['name', 'brand']
 
+    ordering_fields = ['price', 'createdat', 'rating', 'total_sells']
+    ordering = ['-createdat']  # default ordering
+
+    
 class CategoryViewSet(viewsets.ModelViewSet):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
@@ -22,13 +27,17 @@ class ProductCategoryViewSet(viewsets.ModelViewSet):
 class DetailsViewSet(viewsets.ModelViewSet):
     queryset = Details.objects.all()
     serializer_class = DetailsSerializer
-
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter]
+    filterset_fields = ['productid']
 
 class ImageurlProductViewSet(viewsets.ModelViewSet):
     queryset = ImageurlProduct.objects.all()
     serializer_class = ImageurlProductSerializer
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter]
+    filterset_fields = ['productid']
 
 class CommentViewSet(viewsets.ModelViewSet):
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
-
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter]
+    filterset_fields = ['productid']

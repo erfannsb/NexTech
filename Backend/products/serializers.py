@@ -1,10 +1,34 @@
 from rest_framework import serializers
 from .models import Product, Category, ProductCategory, Details, ImageurlProduct, Comment
+from shops.serializers import ShopProductSerializer
+from users.models import Customer
+
+class CustomerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Customer
+        fields = ['customerid', 'firstname', 'lastname']
 
 class ProductSerializer(serializers.ModelSerializer):
+    shop_products = serializers.SerializerMethodField()
+    categories_names = serializers.SerializerMethodField()
+
     class Meta:
         model = Product
-        fields = '__all__'
+        fields = [
+            'productid', 'name', 'description', 'createdat', 'rating', 
+            'thumbnail', 'brand', 'countedrates', 'categories', 'shops',
+            'shop_products', 'categories_names'
+        ]
+
+    def get_shop_products(self, obj):
+        related_qs = getattr(obj, 'shopproduct_set', None)
+        if related_qs is None:
+            return []
+        return ShopProductSerializer(related_qs.all(), many=True).data
+
+    def get_categories_names(self, obj):
+        categories = obj.categories.all()
+        return [category.categoryname for category in categories] if categories.exists() else []
 
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
@@ -27,6 +51,43 @@ class ImageurlProductSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class CommentSerializer(serializers.ModelSerializer):
+    customer = CustomerSerializer(source='customerid', read_only=True)
+    customer_name = serializers.SerializerMethodField()
+    formatted_date = serializers.SerializerMethodField()
+
     class Meta:
         model = Comment
         fields = '__all__'
+
+    def get_customer_name(self, obj):
+        if obj.customerid:
+            return f"{obj.customerid.firstname} {obj.customerid.lastname}"
+        return "Unknown User"
+    
+    def get_formatted_date(self, obj):
+        if obj.commentdate:
+            from django.utils import timezone
+            now = timezone.now()
+            diff = now - obj.commentdate
+            
+            if diff.days == 0:
+                if diff.seconds < 3600:
+                    minutes = diff.seconds // 60
+                    return f"{minutes} minute{'s' if minutes != 1 else ''} ago"
+                else:
+                    hours = diff.seconds // 3600
+                    return f"{hours} hour{'s' if hours != 1 else ''} ago"
+            elif diff.days == 1:
+                return "1 day ago"
+            elif diff.days < 7:
+                return f"{diff.days} days ago"
+            elif diff.days < 30:
+                weeks = diff.days // 7
+                return f"{weeks} week{'s' if weeks != 1 else ''} ago"
+            elif diff.days < 365:
+                months = diff.days // 30
+                return f"{months} month{'s' if months != 1 else ''} ago"
+            else:
+                years = diff.days // 365
+                return f"{years} year{'s' if years != 1 else ''} ago"
+        return "Unknown date"

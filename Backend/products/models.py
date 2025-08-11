@@ -16,15 +16,20 @@ class Product(models.Model):
     productid = models.AutoField(db_column='ProductID', primary_key=True)  # Field name made lowercase.
     name = models.CharField(db_column='Name', max_length=512)  # Field name made lowercase.
     description = models.TextField(db_column='Description', blank=True, null=True)  # Field name made lowercase.
-    price = models.DecimalField(db_column='Price', max_digits=20, decimal_places=2)  # Field name made lowercase.
     createdat = models.DateTimeField(db_column='CreatedAt')  # Field name made lowercase.
-    stockquantity = models.PositiveIntegerField(db_column='StockQuantity')  # Field name made lowercase.
     rating = models.DecimalField(db_column='Rating', max_digits=3, decimal_places=2, blank=True, null=True)  # Field name made lowercase.
-    installmentpolicy = models.IntegerField(db_column='InstallmentPolicy')  # Field name made lowercase.
     thumbnail = models.CharField(db_column="Thumbnail", null=True, max_length=500)
     brand = models.CharField(db_column="Brand", null=True, max_length=100)
+    countedrates = models.IntegerField(db_column="CountedRates", null=True, blank=True)
     categories = models.ManyToManyField(Category, related_name='products', through='ProductCategory')
     
+    shops = models.ManyToManyField(
+        'shops.Shop',
+        related_name='products',
+        through='shops.ShopProduct',
+        through_fields=('productid', 'shopid')
+    )
+
     class Meta:
         managed = False
         db_table = 'product'

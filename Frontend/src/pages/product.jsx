@@ -1,8 +1,14 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useMemo } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { FreeMode, Navigation, Thumbs } from "swiper/modules";
 import Table from "./../components/tables";
-import { ChevronDown, ChevronUp, ShoppingBasket, Store } from "lucide-react";
+import {
+  ChevronDown,
+  ChevronUp,
+  CircleOff,
+  ShoppingBasket,
+  Store,
+} from "lucide-react";
 import {
   ButtonVariant1,
   ButtonVariant2,
@@ -14,12 +20,37 @@ import "swiper/css/free-mode";
 import "swiper/css/navigation";
 import "swiper/css/thumbs";
 import { CardVariant1 } from "../components/cards";
+import {
+  GetDetails,
+  GetImageurlProducts,
+  GetProduct,
+  GetComments,
+} from "../../data/products";
+import { useParams } from "react-router";
 
 function Product() {
   const [moreDetails, setMoreDetails] = useState(false);
   const [screenIsSmall, setScreenIsSmall] = useState(window.innerWidth < 768);
+  const { id: productIdParam } = useParams();
+  const [product, setProduct] = useState([]);
+  const [images, setImages] = useState(false);
+  const [details, setDetails] = useState([]);
+  const [comments, setComments] = useState([]);
 
   useEffect(() => {
+    const fetchData = async () => {
+      const data = await GetProduct(productIdParam);
+      setProduct(data);
+      const images = await GetImageurlProducts(productIdParam);
+      setImages(images);
+      const details = await GetDetails(productIdParam);
+      setDetails(details);
+      const comments = await GetComments(productIdParam);
+      console.log(comments);
+      setComments(comments);
+    };
+    fetchData();
+
     const handleResize = () => {
       setScreenIsSmall(window.innerWidth < 768);
     };
@@ -30,83 +61,93 @@ function Product() {
     return () => {
       window.removeEventListener("resize", handleResize);
     };
-  }, []);
+  }, [productIdParam]);
+
+  const detailColors = useMemo(() => {
+    return details.map(() => {
+      const colors = [
+        "bg-red-400",
+        "bg-blue-400",
+        "bg-green-400",
+        "bg-yellow-400",
+        "bg-purple-400",
+        "bg-pink-400",
+        "bg-indigo-400",
+        "bg-teal-400",
+      ];
+      return colors[Math.floor(Math.random() * colors.length)];
+    });
+  }, [details]);
 
   return (
     <div className="grid xl:grid-cols-[35%_65%] max-xl:grid-cols-[50%_50%] max-md:grid-cols-[100%] md:mx-4 grid-rows-1 gap-4 mb-20">
       {/* left column */}
-      {!screenIsSmall && <LeftColumn />}
+      {!screenIsSmall && (
+        <LeftColumn
+          images={images}
+          rating={product.rating}
+          shops={product.shop_products}
+          countedrates={product.countedrates}
+        />
+      )}
 
       {/* right column */}
       <div className="mx-5 max-md:row-start-1">
         {/* Category */}
         <div className="text-[#959595] text-md">
-          Graphic Cards / MSI / Gaming GPUs
+          {product.categories_names?.join(" / ")}
         </div>
         {/* Product Title */}
-        <h1 className="my-2 font-black text-2xl">
-          MSI GeForce RTX™ 5090 32G VENTUS 3X OC
-        </h1>
+        <h1 className="my-2 font-black text-2xl">{product.name}</h1>
         {/* Product Company */}
         <div className="flex items-center my-4">
           <div className="p-1 bg-[rgb(24,23,27)] rounded-md flex justify-between items-center">
-            <img src={"./nvidia.png"} alt="company" className="w-6 h-auto" />
+            <img src={"/nvidia.png"} alt="company" className="w-6 h-auto" />
           </div>
-          <h3 className="ml-2 text-[14px]">Company name</h3>
+          <h3 className="ml-2 text-[14px]">{product.brand}</h3>
         </div>
-        {screenIsSmall && <LeftColumn />}
+        {screenIsSmall && <LeftColumn images={images} />}
         {/* Product Description */}
         <p className="text-[#E6E6E6] mt-2 text-md font-md">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam eu libero
-          tortor. Pellentesque habitant morbi tristique senectus et netus et
-          malesuada fames ac turpis egestas.
+          {product.description}
         </p>
-        {/* Colors */}
-        <div>
-          <h3 className="text-[#E6E9FF] font-black text-2xl mt-8 mb-4">
-            Colors
-          </h3>
-          <ul className="flex gap-3 mb-3">
-            <li className={`bg-red-200 w-8 h-8 rounded-full`}></li>
-            <li className={`bg-blue-200 w-8 h-8 rounded-full`}></li>
-            <li className={`bg-gray-200 w-8 h-8 rounded-full`}></li>
-            <li className={`bg-yellow-200 w-8 h-8 rounded-full`}></li>
-          </ul>
-        </div>
+
         {/* Product Details */}
         <div>
           <h3 className="text-[#E6E9FF] font-black text-2xl mt-8 mb-4">
             Details
           </h3>
           <div className="flex flex-wrap gap-3">
-            {Array(5)
-              .fill({ key: "VRAM", value: "32GB" })
-              .map((val, ind) => (
-                <CardVariant1
-                  color={"bg-red-300"}
-                  text={val.value}
-                  header={val.key}
-                  className={"min-w-[120px]"}
-                />
-              ))}
+            {details.slice(0, 5).map((val, ind) => (
+              <CardVariant1
+                key={ind}
+                color={detailColors[ind] || "bg-gray-400"}
+                text={val.attributevalue}
+                header={val.attributename}
+                className={"min-w-[120px]"}
+              />
+            ))}
             {moreDetails &&
-              Array(5)
-                .fill({ key: "VRAM", value: "32GB" })
+              details
+                .slice(5)
                 .map((val, ind) => (
                   <CardVariant1
-                    color={"bg-red-300"}
-                    text={val.value}
-                    header={val.key}
+                    key={ind + 5}
+                    color={detailColors[ind + 5] || "bg-gray-400"}
+                    text={val.attributevalue}
+                    header={val.attributename}
                     className={"min-w-[120px]"}
                   />
                 ))}
           </div>
-          <ButtonVariant3
-            text={moreDetails ? "Show Less Details" : "Show More Details"}
-            className="my-7 text-sm"
-            img={moreDetails ? <ChevronUp /> : <ChevronDown />}
-            onClick={() => setMoreDetails(!moreDetails)}
-          />
+          {details.length > 5 && (
+            <ButtonVariant3
+              text={moreDetails ? "Show Less Details" : "Show More Details"}
+              className="my-7 text-sm"
+              img={moreDetails ? <ChevronUp /> : <ChevronDown />}
+              onClick={() => setMoreDetails(!moreDetails)}
+            />
+          )}
         </div>
         {/* Comment */}
         <div className="text-[#E6E9FF] font-black text-2xl mt-8 mb-4">
@@ -122,8 +163,19 @@ function Product() {
         </div>
 
         <div className="flex flex-col">
-          <Comment reply={Array(4).fill(<Comment />)} />
-          <Comment />
+          {Array.isArray(comments) ? (
+            comments.map((comment) => (
+              <Comment
+                name={comment.customer_name}
+                text={comment.commenttext}
+                date={comment.formatted_date}
+              />
+            ))
+          ) : (
+            <div className="flex justify-center items-center">
+              No Comment Yet
+            </div>
+          )}
         </div>
         <ButtonVariant3
           text="Show More Comment"
@@ -135,14 +187,10 @@ function Product() {
   );
 }
 
-export function LeftColumn() {
+// Images and Shops
+export function LeftColumn({ images, rating, shops, countedrates }) {
   const [thumbsSwiper, setThumbsSwiper] = useState(null);
-  const shops = [
-    ["ShopOne", "Very good", 1000],
-    ["ShopOne", "Very good", 1000],
-    ["ShopOne", "Very good", 1000],
-  ];
-
+  shops = shops?.sort((a, b) => a.price - b.price);
   return (
     <div className="flex flex-col mb-5">
       {/* Main Image Slider */}
@@ -158,39 +206,19 @@ export function LeftColumn() {
           modules={[FreeMode, Navigation, Thumbs]}
           className="flex items-center justify-center max-h-[70vh]"
         >
-          <SwiperSlide className="flex justify-center items-center h-full">
-            <img src="msi_product.png" className="w-full h-full object-cover" />
-          </SwiperSlide>
-          <SwiperSlide>
-            <img
-              src="https://swiperjs.com/demos/images/nature-2.jpg"
-              className="w-full h-full object-cover"
-            />
-          </SwiperSlide>
-          <SwiperSlide>
-            <img src="https://swiperjs.com/demos/images/nature-3.jpg" />
-          </SwiperSlide>
-          <SwiperSlide>
-            <img src="https://swiperjs.com/demos/images/nature-4.jpg" />
-          </SwiperSlide>
-          <SwiperSlide>
-            <img src="https://swiperjs.com/demos/images/nature-5.jpg" />
-          </SwiperSlide>
-          <SwiperSlide>
-            <img src="https://swiperjs.com/demos/images/nature-6.jpg" />
-          </SwiperSlide>
-          <SwiperSlide>
-            <img src="https://swiperjs.com/demos/images/nature-7.jpg" />
-          </SwiperSlide>
-          <SwiperSlide>
-            <img src="https://swiperjs.com/demos/images/nature-8.jpg" />
-          </SwiperSlide>
-          <SwiperSlide>
-            <img src="https://swiperjs.com/demos/images/nature-9.jpg" />
-          </SwiperSlide>
-          <SwiperSlide>
-            <img src="https://swiperjs.com/demos/images/nature-10.jpg" />
-          </SwiperSlide>
+          {Array.isArray(images) &&
+            images.map((e, idx) => (
+              <SwiperSlide
+                key={(e && e.image_url) || idx}
+                className="flex justify-center items-center h-full"
+              >
+                <img
+                  src={(e && e.image_url) || undefined}
+                  alt="product"
+                  className="w-full h-full object-cover"
+                />
+              </SwiperSlide>
+            ))}
         </Swiper>
         <Swiper
           onSwiper={setThumbsSwiper}
@@ -201,94 +229,77 @@ export function LeftColumn() {
           modules={[FreeMode, Navigation, Thumbs]}
           className="mySwiper mt-3"
         >
-          <SwiperSlide>
-            <img src="https://swiperjs.com/demos/images/nature-1.jpg" />
-          </SwiperSlide>
-          <SwiperSlide>
-            <img src="https://swiperjs.com/demos/images/nature-2.jpg" />
-          </SwiperSlide>
-          <SwiperSlide>
-            <img src="https://swiperjs.com/demos/images/nature-3.jpg" />
-          </SwiperSlide>
-          <SwiperSlide>
-            <img src="https://swiperjs.com/demos/images/nature-4.jpg" />
-          </SwiperSlide>
-          <SwiperSlide>
-            <img src="https://swiperjs.com/demos/images/nature-5.jpg" />
-          </SwiperSlide>
-          <SwiperSlide>
-            <img src="https://swiperjs.com/demos/images/nature-6.jpg" />
-          </SwiperSlide>
-          <SwiperSlide>
-            <img src="https://swiperjs.com/demos/images/nature-7.jpg" />
-          </SwiperSlide>
-          <SwiperSlide>
-            <img src="https://swiperjs.com/demos/images/nature-8.jpg" />
-          </SwiperSlide>
-          <SwiperSlide>
-            <img src="https://swiperjs.com/demos/images/nature-9.jpg" />
-          </SwiperSlide>
-          <SwiperSlide>
-            <img src="https://swiperjs.com/demos/images/nature-10.jpg" />
-          </SwiperSlide>
+          {Array.isArray(images) &&
+            images.map((e, idx) => (
+              <SwiperSlide key={(e && e.image_url) || idx}>
+                <img src={(e && e.image_url) || undefined} alt="thumb" />
+              </SwiperSlide>
+            ))}
         </Swiper>
       </div>
       {/* Details Table */}
-      <div className="mt-4">
-        <Table
-          className="font-bold"
-          responsive={false}
-          footer={TableFooter({
-            averageRate: 4.5,
-            ratedNum: 100,
-            price: 1000,
-          })}
-          headerItems={[
-            <div className="flex items-center">
-              <Store className="mr-2" size={16} /> Shop
-            </div>,
-            "Performance",
-            "Price",
-            "",
-          ]}
-          px={3}
-          py={3}
-          list={shops.map((e) => ShopItemGenerator(e[0], e[1], e[2]))}
-        />
-      </div>
+      {shops?.length > 0 ? (
+        <div className="mt-4">
+          <Table
+            className="font-bold"
+            responsive={false}
+            footer={
+              <TableFooter
+                averageRate={rating}
+                ratedNum={countedrates}
+                price={shops[0]?.price}
+                shop={shops[0]?.shop}
+              />
+            }
+            headerItems={[
+              <div className="flex items-center">
+                <Store className="mr-2" size={16} /> Shop
+              </div>,
+              "Performance",
+              "Price",
+              "",
+            ]}
+            px={3}
+            py={3}
+            list={(Array.isArray(shops) ? shops : []).map((sp) =>
+              ShopItemGenerator(sp?.shop?.shopname, sp?.shop?.rating, sp?.price)
+            )}
+          />
+        </div>
+      ) : (
+        <div className="flex justify-center items-center">
+          <h3 className="text-[#E6E9FF] font-bold text-lg py-3 px-4 mt-8 mb-4 bg-neutral-900 rounded-lg w-full flex items-center gap-2">
+            <CircleOff size={16} className="mr-1" /> Not Available Right Now
+          </h3>
+        </div>
+      )}
     </div>
   );
 }
 
-export function Comment({ reply }) {
+export function Comment({ reply, name, text, date, stars }) {
   return (
     <div className="flex flex-col w-full my-5">
       <div className="flex w-full">
         {/* profile */}
-        <img
-          src=""
-          alt=""
-          className=" bg-gray-600 h-10 w-10 rounded-full object-cover"
-        />
+        <div className=" bg-gray-600 h-[40px] w-[40px] rounded-full"></div>
         {/* content */}
         <div className="w-full">
           <div className="flex justify-between w-full">
             <div className="flex">
               <h4 className="text-[#7F7F7F] font-medium mx-2 text-sm">
-                Erfan Nasibi
+                {name}
               </h4>
-              <p className="font-light mx-1 text-sm">
-                I'm Literally Astonished How Cool This is
-              </p>
+              <p className="font-light mx-1 text-sm">{text}</p>
             </div>
-            <h5 className="text-[#7F7F7F] font-light text-sm ">1 weeks ago</h5>
+            <h5 className="text-[#7F7F7F] font-light text-sm ">{date}</h5>
           </div>
           {/* buttons */}
           <div className="flex mt-2 text-[12px]">
             <button className="text-[#7F7F7F] mx-2 hover:text-[#969696] cursor-pointer ">
               Reply
             </button>
-            <h4>stars</h4>
+            <h4>{stars}</h4>
           </div>
         </div>
       </div>
@@ -306,13 +317,25 @@ export function Comment({ reply }) {
 export function ShopItemGenerator(shopName, performance, price) {
   const performances = {
     "Very good": "#96C8A7",
+    Good: "#96C8A7",
+    Average: "#96C8A7",
     Bad: "#EE6969",
   };
+
+  if (performance > 4) {
+    performance = "Very good";
+  } else if (performance > 3) {
+    performance = "Good";
+  } else if (performance > 2) {
+    performance = "Average";
+  } else {
+    performance = "Bad";
+  }
 
   return [
     <div>{shopName}</div>,
     <div style={{ color: performances[performance] }}>{performance}</div>,
-    <p>{price}</p>,
+    <p>${price}</p>,
     <ButtonVariant2
       img={<ShoppingBasket size={14} />}
       className="rounded-xl"
@@ -320,7 +343,7 @@ export function ShopItemGenerator(shopName, performance, price) {
   ];
 }
 
-export function TableFooter({ averageRate, ratedNum, price }) {
+export function TableFooter({ averageRate, ratedNum, price, shop }) {
   const ratingRef = useRef(null);
   const [rating, setRating] = useState(0);
 
@@ -354,8 +377,8 @@ export function TableFooter({ averageRate, ratedNum, price }) {
       {/* Price */}
       <div className="flex justify-between items-end">
         <div>
-          <h1 className="font-bold text-2xl">{price}$</h1>
-          <h5>Selected From RTX WEX</h5>
+          <h1 className="font-bold text-2xl">${price}</h1>
+          <h5>Selected From {shop?.shopname}</h5>
         </div>
         <ButtonVariant4 text="Add" img={<ShoppingBasket />} className="h-fit" />
       </div>

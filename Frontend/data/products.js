@@ -1,4 +1,3 @@
-
 // --------- Product API ---------
 
 export async function GetProducts() {
@@ -116,8 +115,6 @@ export async function DeleteProduct(productId) {
   }
 }
 
-
-
 // --------- Category API ---------
 
 export async function GetCategories() {
@@ -234,8 +231,6 @@ export async function DeleteCategory(categoryId) {
     return false;
   }
 }
-
-
 
 // --------- ProductCategory API ---------
 
@@ -370,18 +365,19 @@ export async function DeleteProductCategory(productCategoryId) {
   }
 }
 
-
-
 // --------- Details API ---------
 
-export async function GetDetails() {
+export async function GetDetails(productid) {
   try {
-    const response = await fetch("http://127.0.0.1:8000/products/details/", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    const response = await fetch(
+      `http://127.0.0.1:8000/products/details/?productid=${productid}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
 
     if (!response.ok) {
       throw new Error(`HTTP error! Status: ${response.status}`);
@@ -489,14 +485,12 @@ export async function DeleteDetail(detailId) {
   }
 }
 
-
-
 // --------- ImageurlProduct API ---------
 
-export async function GetImageurlProducts() {
+export async function GetImageurlProducts(Productid) {
   try {
     const response = await fetch(
-      "http://127.0.0.1:8000/products/imageurlProduct/",
+      `http://127.0.0.1:8000/products/imageurlProduct/?productid=${Productid}`,
       {
         method: "GET",
         headers: {
@@ -623,18 +617,19 @@ export async function DeleteImageurlProduct(imageurlProductId) {
   }
 }
 
-
-
 // --------- Comment API ---------
 
-export async function GetComments() {
+export async function GetComments(productid) {
   try {
-    const response = await fetch("http://127.0.0.1:8000/products/comment/", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    const response = await fetch(
+      `http://127.0.0.1:8000/products/comment/?productid=${productid}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
 
     if (!response.ok) {
       throw new Error(`HTTP error! Status: ${response.status}`);

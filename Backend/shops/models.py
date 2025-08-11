@@ -20,7 +20,11 @@ class ShopProduct(models.Model):
     pk = models.CompositePrimaryKey("shopid", "productid")
     shopid = models.ForeignKey(Shop, models.DO_NOTHING, db_column='ShopID')  # Field name made lowercase.
     productid = models.ForeignKey(Product, models.DO_NOTHING, db_column='ProductID')  # Field name made lowercase.
-
+    stockquantity = models.PositiveIntegerField(db_column='StockQuantity')  # Field name made lowercase.
+    installmentpolicy = models.IntegerField(db_column='InstallmentPolicy')  # Field name made lowercase.
+    sells = models.IntegerField(db_column="Sells")
+    price = models.DecimalField(db_column='Price', max_digits=20, decimal_places=2)  # Field name made lowercase.
+    
     class Meta:
         managed = False
         db_table = 'shop_product'
