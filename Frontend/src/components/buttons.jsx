@@ -83,14 +83,20 @@ export function ButtonVariant3({ img, onClick, text, className }) {
   );
 }
 
-export function ButtonVariant4({ img, onClick, text, className }) {
+export function ButtonVariant4({
+  img,
+  onClick,
+  text,
+  className,
+  textsize = "14px",
+}) {
   return (
     <button
       onClick={onClick}
       className={`cursor-pointer flex items-center justify-around card-variant-2 rounded-[23px]
         hover:scale-102 transition-transform duration-300 px-4 py-2  ${className}`}
     >
-      <div className="text-sm">{text}</div>
+      <div className={`text-[${textsize}]`}>{text}</div>
       <div className="ml-2">{img}</div>
     </button>
   );

@@ -3,6 +3,7 @@ import { createRoot } from "react-dom/client";
 import App from "./App.jsx";
 import { createBrowserRouter, RouterProvider } from "react-router";
 import AdminApp from "./AdminApp.jsx";
+import Form from "./pages/form.jsx";
 
 let router = createBrowserRouter([
   {
@@ -18,6 +19,7 @@ let router = createBrowserRouter([
   { path: "/settings", Component: App },
   { path: "/wishlist", Component: App },
   { path: "/order", Component: App },
+  { path: "/form/:type", Component: Form },
   {
     path: "/admin/dashboard",
     Component: AdminApp,

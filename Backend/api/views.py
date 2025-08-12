@@ -5,7 +5,14 @@ from PIL import Image
 import requests
 from io import BytesIO
 from django.http import JsonResponse
-
+import jwt
+from datetime import timedelta
+from django.conf import settings
+from django.utils import timezone
+from rest_framework.views import APIView
+from rest_framework import status, permissions
+from .serializers import CustomerLoginSerializer
+from users.serializers import CustomerSerializer as PublicCustomerSerializer
 
 
 @api_view(["GET"])
@@ -29,3 +36,39 @@ def get_dominant_color(request):
 
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=500)
+
+
+# ---- Auth helpers ----
+
+def make_token(customer, minutes=60, token_type="access"):
+    now = timezone.now()
+    payload = {
+        "customer_id": customer.customerid,
+        "exp": int((now + timedelta(minutes=minutes)).timestamp()),
+        "iat": int(now.timestamp()),
+        "typ": token_type,
+    }
+    return jwt.encode(payload, settings.SECRET_KEY, algorithm="HS256")
+
+
+class CustomerLoginView(APIView):
+    permission_classes = []
+    authentication_classes = []
+
+    def post(self, request):
+        ser = CustomerLoginSerializer(data=request.data)
+        ser.is_valid(raise_exception=True)
+        customer = ser.validated_data["customer"]
+        access = make_token(customer, minutes=60, token_type="access")
+        refresh = make_token(customer, minutes=60 * 24 * 7, token_type="refresh")
+        return Response({"access": access, "refresh": refresh}, status=status.HTTP_200_OK)
+
+
+class MeView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request):
+        # request.user is a CustomerPrincipal (proxy) -> expose underlying fields
+        customer = getattr(request.user, "_customer", request.user)
+        data = PublicCustomerSerializer(customer).data
+        return Response(data)

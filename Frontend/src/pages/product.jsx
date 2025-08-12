@@ -163,7 +163,7 @@ function Product() {
         </div>
 
         <div className="flex flex-col">
-          {Array.isArray(comments) ? (
+          {Array.isArray(comments) || comments.length > 0 ? (
             comments.map((comment) => (
               <Comment
                 key={comment.commentnum}

@@ -1,18 +1,22 @@
-import {
-  PanelLeft,
-  Search,
-  Bell,
-  Settings,
-  LifeBuoy,
-  PanelRight,
-} from "lucide-react";
+import { PanelLeft, Search, Bell, Settings, LogIn } from "lucide-react";
 import { ButtonVariant1, ButtonVariant2, ButtonVariant4 } from "./buttons";
 import { InputVariant1 } from "./inputs";
 import useUIStore from "../ui_storage";
+import { isLoggedIn } from "../../data/users";
+import { useEffect, useState } from "react";
 
 export default function Header() {
   const isLeftSidebarOpen = useUIStore((state) => state.leftSidebarOpen);
   const toggleLeftSideBar = useUIStore((state) => state.setLeftSidebarOpen);
+  const [loggedIn, setLogged] = useState(false);
+
+  useEffect(() => {
+    const fetchdata = async () => {
+      const isLogged = await isLoggedIn();
+      setLogged(isLogged);
+    };
+    fetchdata();
+  }, []);
 
   return (
     <>
@@ -28,15 +32,28 @@ export default function Header() {
       {/* Top Right Corner of The Header */}
       <header className="border-b border-[#26262B] flex items-center justify-between text-white p-4 col-start-2 col-end-4 row-start-1 row-end-2 max-sm:hidden">
         {/* Profile */}
-        <div className="flex items-center h-full max-lg:hidden">
-          <img
-            src="/pic.png"
-            alt="Profile"
-            className="aspect-auto h-full rounded-full mr-3"
-          />
-          <span className="text-sm font-medium">John Doe</span>
-          <div className="bg-[#26262B] ml-4 w-[1px] h-full"></div>
-        </div>
+        {loggedIn ? (
+          <div className="flex items-center h-full max-lg:hidden">
+            <img
+              src="/pic.png"
+              alt="Profile"
+              className="aspect-auto h-full rounded-full mr-3"
+            />
+            <span className="text-sm font-medium">John Doe</span>
+            <div className="bg-[#26262B] ml-4 w-[1px] h-full"></div>
+          </div>
+        ) : (
+          <div className="flex gap-2">
+            <ButtonVariant4
+              text={"Login"}
+              img={<LogIn size={15} />}
+              className={"rounded-md text-[11px]"}
+              textsize="11"
+            />
+            <ButtonVariant1 text={"Sign Up"} className={"text-[11px]"} />
+          </div>
+        )}
+
         {/* Header Search Buttons and other Actions */}
         <div className="flex items-center gap-2 ml-auto">
           <InputVariant1
@@ -56,10 +73,6 @@ export default function Header() {
             }
           />
           <ButtonVariant2 img={<Settings strokeWidth={1.5} size={17} />} />
-          {/* <ButtonVariant2
-            img={<PanelRight size={17} />}
-            onClick={() => setRightSideBar(!isRightSideBarOpen)}
-          /> */}
         </div>
       </header>
     </>

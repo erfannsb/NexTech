@@ -13,6 +13,7 @@ const WishList = lazy(() => import("../pages/wishlist.jsx"));
 const Order = lazy(() => import("../pages/order.jsx"));
 const Settings = lazy(() => import("../pages/settings.jsx"));
 const Help = lazy(() => import("../pages/help.jsx"));
+const Form = lazy(() => import("../pages/form.jsx"));
 const AdminHome = lazy(() => import("../admin_pages/home.jsx"));
 const ProductMangement = lazy(() => import("../admin_pages/productM.jsx"));
 const Finance = lazy(() => import("../admin_pages/finanace.jsx"));
