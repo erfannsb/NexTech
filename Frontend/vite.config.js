@@ -11,6 +11,8 @@ export default defineConfig({
       "/api": "http://localhost:8000",
       "/products": "http://localhost:8000",
       "/users": "http://localhost:8000",
+      "/orders": "http://localhost:8000",
+      "/shops": "http://localhost:8000",
     },
   },
   plugins: [react(), tailwindcss()],

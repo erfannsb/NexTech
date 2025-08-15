@@ -152,6 +152,7 @@ export function SignUp() {
     Err_Pass: false,
     Err_ConfPass: false,
   });
+  const navigate = useNavigate();
 
   const onSubmit = async (e) => {
     e.preventDefault();
@@ -265,6 +266,17 @@ export function SignUp() {
         });
 
         setInputError(errors);
+      } else {
+        // Clear input errors on successful submission
+        setInputError({
+          Err_firstN: false,
+          Err_lastN: false,
+          Err_Email: false,
+          Err_Pass: false,
+          Err_ConfPass: false,
+        });
+        // Navigate to login page or any other page
+        navigate("/");
       }
       // Handle success case here if needed
     } catch (error) {

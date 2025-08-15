@@ -2,7 +2,14 @@ import { LucideShoppingBasket, Star } from "lucide-react";
 import { useState } from "react";
 import { ButtonVariant3 } from "./buttons";
 import { useNavigate } from "react-router";
-
+import { fetchWithAuth } from "../../data/api";
+import useUIStore from "../ui_storage";
+import {
+  GetOrdering,
+  GetOrderings,
+  PostOrdering,
+  PostOrderItem,
+} from "../../data/orders";
 export function CardVariant1({
   header,
   text,
@@ -35,9 +42,72 @@ export function ShoppingCard({
   rate,
   price,
   id,
+  shops,
+  is_available,
 }) {
   const [colorBGForCompany, setColorBGForCompany] = useState("");
   const navigate = useNavigate();
+  const activeUser = useUIStore((state) => state.active_user);
+
+  const addToBasket = async () => {
+    let orderID;
+
+    const res = await fetchWithAuth(() => GetOrderings());
+    if (!res.ok) {
+      console.error("Failed to add to basket:", res.statusText);
+      return;
+    }
+    const data = await res.json();
+
+    if (data.length === 0) {
+      const newOrder = await fetchWithAuth(() =>
+        PostOrdering({
+          customerid: activeUser.customerid,
+        })
+      );
+      if (!newOrder.ok) {
+        console.error("Failed to create new order:", newOrder.statusText);
+        return;
+      }
+      const orderData = await newOrder.json();
+
+      orderID = orderData.orderid;
+    } else {
+      orderID = data[0].orderid;
+    }
+
+    console.log("Order ID:", orderID);
+    console.log("shops", shops);
+
+    let shopId = shops[0].id; // Assuming you want to use the first shop
+    console.log("product id", id);
+    const resFromShopProduct = await fetch(
+      `/shops/shopProduct/?shopid=${shopId}&productid=${id}`
+    );
+
+    console.log("resFromShopProduct", resFromShopProduct);
+    if (!resFromShopProduct.ok) {
+      console.error(
+        "Failed to fetch shop product:",
+        resFromShopProduct.statusText
+      );
+      return;
+    }
+
+    const dataFromShopProduct = await resFromShopProduct.json();
+
+    let shopProductId = dataFromShopProduct[0].id; // this is the shopProduct PK you need
+
+    const resFromOrderItem = await fetchWithAuth(() =>
+      PostOrderItem({
+        quantity: 1,
+        shopproductid: shopProductId,
+        orderid: orderID,
+      })
+    );
+
+    console.log("resFromOrderItem", resFromOrderItem);
+  };
 
   return (
     <div
@@ -83,11 +153,19 @@ export function ShoppingCard({
       {/* footer */}
       <div className="flex justify-between flex-col px-4 ">
         <div className="flex items-center justify-end mt-auto">
-          <ButtonVariant3
-            text="Add"
-            img={<LucideShoppingBasket size={16} />}
-            className="text-sm"
-          />
+          {is_available ? (
+            <ButtonVariant3
+              text="Add"
+              img={<LucideShoppingBasket size={16} />}
+              className="text-sm"
+              onClick={(e) => {
+                e.stopPropagation();
+                addToBasket();
+              }}
+            />
+          ) : (
+            <span className="text-red-300 text-sm p-2">Out of Stock</span>
+          )}
         </div>
       </div>
     </div>

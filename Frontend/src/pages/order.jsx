@@ -1,13 +1,8 @@
 import Table from "../components/tables";
 import { ButtonVariant2, ButtonVariant3 } from "../components/buttons";
-import {
-  ArrowBigRight,
-  ArrowUpRight,
-  Euro,
-  EuroIcon,
-  Hourglass,
-} from "lucide-react";
+import { ArrowUpRight, Euro } from "lucide-react";
 import { CardVariant1 } from "../components/cards";
+
 export default function Order() {
   return (
     <div className="md:mx-10">

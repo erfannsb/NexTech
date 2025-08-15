@@ -1,13 +1,9 @@
 import {
   Calendar,
   CirclePoundSterling,
-  Coins,
-  CoinsIcon,
   Minus,
   Plus,
-  ShoppingBasketIcon,
   ShoppingCart,
-  Ticket,
   TicketPercent,
   Trash,
   Truck,
@@ -16,17 +12,63 @@ import { InputVariant1, InputVariant3 } from "../components/inputs";
 import Table from "../components/tables";
 import { useState } from "react";
 import { CardVariant1 } from "../components/cards";
-import {
-  ButtonVariant1,
-  ButtonVariant2,
-  ButtonVariant3,
-  ButtonVariant4,
-} from "../components/buttons";
+import { ButtonVariant2, ButtonVariant4 } from "../components/buttons";
+import { useEffect } from "react";
+import { fetchWithAuth } from "../../data/api";
+import { GetOrderings } from "../../data/orders";
 
 export default function WishList() {
   const [paying, setPaying] = useState();
   const [month, setMonth] = useState();
   const [shipping, setShipping] = useState();
+  const [wishListItems, setItems] = useState([]);
+  const [quantities, setQuantities] = useState({});
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const response = await fetchWithAuth(() => GetOrderings());
+      if (!response.ok) {
+        return;
+      }
+
+      let data = await response.json();
+      data = data[0];
+      let items = data.items;
+
+      let product_info = [];
+
+      for (let item of items) {
+        console.log(item);
+        const product = item.product;
+        const quantity = item.quantity;
+        const price = item.shop_product.price;
+        product_info.push({
+          company: product.brand,
+          name: product.name,
+          price: price,
+          rate: product.rating,
+          category: product.categories_names,
+          quantity: quantity,
+        });
+      }
+
+      const handleQuantityChange = (item, newQuantity) => {
+        setQuantities((prev) => ({ ...prev, [item.id]: newQuantity }));
+      };
+
+      const lists = product_info.map((item) =>
+        WishItemArray(
+          item,
+          quantities[item.id] || item.quantity,
+          handleQuantityChange
+        )
+      );
+      console.log("Wish List Items:", lists);
+      console.log(lists);
+      setItems(lists);
+    };
+    fetchData();
+  }, []);
 
   return (
     <div className="mb-10 grid grid-cols-2  md:grid-template-rows: max-content max-content;  max-md:grid-template-rows: max-content max-content max-content; md:mx-10 gap-5">
@@ -36,94 +78,25 @@ export default function WishList() {
         <p className="text-[#B6B6B6] text-md mb-4">
           Manage your wish list here
         </p>
-        <Table
-          className="max-h-[60vh]"
-          py={1}
-          headerItems={["Company", "Product", "Price", "Rate", "Category", ""]}
-          list={[
-            WishItem(
-              "Nvidia",
-              "./nvidia.png",
-              "Cool Product",
-              "1000",
-              "4.4",
-              "Super Cool",
-              "3"
-            ),
-            WishItem(
-              "Nvidia",
-              "./nvidia.png",
-              "Cool Product",
-              "1000",
-              "4.4",
-              "Super Cool",
-              "3"
-            ),
-            WishItem(
-              "Nvidia",
-              "./nvidia.png",
-              "Cool Product",
-              "1000",
-              "4.4",
-              "Super Cool",
-              "3"
-            ),
-            WishItem(
-              "Nvidia",
-              "./nvidia.png",
-              "Cool Product",
-              "1000",
-              "4.4",
-              "Super Cool",
-              "3"
-            ),
-            WishItem(
-              "Nvidia",
-              "./nvidia.png",
-              "Cool Product",
-              "1000",
-              "4.4",
-              "Super Cool",
-              "3"
-            ),
-            WishItem(
-              "Nvidia",
-              "./nvidia.png",
-              "Cool Product",
-              "1000",
-              "4.4",
-              "Super Cool",
-              "3"
-            ),
-            WishItem(
-              "Nvidia",
-              "./nvidia.png",
-              "Cool Product",
-              "1000",
-              "4.4",
-              "Super Cool",
-              "3"
-            ),
-            WishItem(
-              "Nvidia",
-              "./nvidia.png",
-              "Cool Product",
-              "1000",
-              "4.4",
-              "Super Cool",
-              "3"
-            ),
-            WishItem(
-              "Nvidia",
-              "./nvidia.png",
-              "Cool Product",
-              "1000",
-              "4.4",
-              "Super Cool",
-              "3"
-            ),
-          ]}
-        />
+        {wishListItems.length === 0 ? (
+          <p className="text-black text-md bg-red-400 w-fit p-2 rounded-md font-bold">
+            No items in your wish list
+          </p>
+        ) : (
+          <Table
+            className="max-h-[60vh]"
+            py={1}
+            headerItems={[
+              "Company",
+              "Product",
+              "Price",
+              "Rate",
+              "Category",
+              "",
+            ]}
+            list={wishListItems}
+          />
+        )}
       </div>
       {/* Purchase */}
       <div className="flex flex-col gap-2 max-md:row-start-2 max-md:row-end-3 max-md:col-start-1 max-md:col-end-3">
@@ -219,46 +192,37 @@ export default function WishList() {
   );
 }
 
-function WishItem(
-  CompanyName,
-  CompanyImg,
-  ProductName,
-  Price,
-  Rate,
-  Category,
-  Quantity = 1
-) {
-  const [quantity, setQuantity] = useState(Quantity);
+function WishItemArray(item, quantity, onQuantityChange) {
   return [
     <div className="flex items-center my-4">
       <div className="p-1 bg-[rgb(24,23,27)] rounded-md flex justify-between items-center">
-        <img src={CompanyImg} alt="company" className="w-6 h-auto" />
+        <img src="/nvidia.png" alt="company" className="w-6 h-auto" />
       </div>
-      <h3 className="ml-2 text-[14px]">{CompanyName}</h3>
+      <h3 className="ml-2 text-[14px]">{item.company}</h3>
     </div>,
-    <h3>{ProductName}</h3>,
-    <h3>{Price}</h3>,
-    <h3>{Rate}</h3>,
-    <h3>{Category}</h3>,
+    <h3>{item.name}</h3>,
+    <h3>{item.price}</h3>,
+    <h3>{item.rate}</h3>,
+    <h3>{item.category.join(" ")}</h3>,
     <div className="flex justify-center items-center">
       <div className="flex items-center mr-2 card-variant-1 p-[5px] rounded-xl">
         <Minus
           size={14}
           className="mr-2 cursor-pointer"
           color="#ddd"
-          onClick={() => setQuantity(parseInt(quantity) - 1)}
+          onClick={() => onQuantityChange(item, quantity - 1)}
         />
         <input
           type="number"
-          defaultValue={1}
           value={quantity}
           className="outline-0 w-7 text-center"
+          readOnly
         />
         <Plus
           size={14}
           className="ml-2 cursor-pointer"
           color="#ddd"
-          onClick={() => setQuantity(parseInt(quantity) + 1)}
+          onClick={() => onQuantityChange(item, quantity + 1)}
         />
       </div>
       <ButtonVariant2 img={<Trash size={16} />} />

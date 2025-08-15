@@ -27,7 +27,7 @@ import {
   GetComments,
 } from "../../data/products";
 import { useParams } from "react-router";
-import { fetchWithAuth } from "../../data/users";
+import { fetchWithAuth } from "../../data/api";
 
 function Product() {
   const [moreDetails, setMoreDetails] = useState(false);

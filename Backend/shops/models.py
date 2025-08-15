@@ -17,7 +17,7 @@ class Shop(models.Model):
 
 
 class ShopProduct(models.Model):
-    pk = models.CompositePrimaryKey("shopid", "productid")
+    id = models.AutoField(db_column='id', primary_key=True)  # Field name made lowercase.
     shopid = models.ForeignKey(Shop, models.DO_NOTHING, db_column='ShopID')  # Field name made lowercase.
     productid = models.ForeignKey(Product, models.DO_NOTHING, db_column='ProductID')  # Field name made lowercase.
     stockquantity = models.PositiveIntegerField(db_column='StockQuantity')  # Field name made lowercase.

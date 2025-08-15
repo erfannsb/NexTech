@@ -1,23 +1,30 @@
-import { PanelLeft, Search, Bell, Settings, LogIn } from "lucide-react";
+import {
+  PanelLeft,
+  Search,
+  Bell,
+  Settings,
+  LogIn,
+  ShoppingBasket,
+} from "lucide-react";
 import { ButtonVariant1, ButtonVariant2, ButtonVariant4 } from "./buttons";
 import { InputVariant1 } from "./inputs";
 import useUIStore from "../ui_storage";
 import { isLoggedIn } from "../../data/users";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-
 export default function Header() {
   const isLeftSidebarOpen = useUIStore((state) => state.leftSidebarOpen);
   const toggleLeftSideBar = useUIStore((state) => state.setLeftSidebarOpen);
   const [loggedIn, setLogged] = useState(false);
+  const setActiveUser = useUIStore((state) => state.setActiveUser);
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchdata = async () => {
       const response = await isLoggedIn();
-      console.log(response);
       if (response) {
         setLogged(response);
+        setActiveUser(response);
       } else {
         setLogged(false);
       }
@@ -83,7 +90,7 @@ export default function Header() {
             className="relative"
             img={
               <>
-                <Bell strokeWidth={1.5} size={17} />
+                <ShoppingBasket strokeWidth={1.5} size={17} />
                 <div className="bg-[#6274F7] w-5 h-5 rounded-full flex justify-center items-center text-sm absolute top-[-8px] right-[-8px]">
                   1
                 </div>

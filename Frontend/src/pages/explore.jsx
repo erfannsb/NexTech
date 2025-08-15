@@ -73,7 +73,7 @@ function Explore() {
         `http://127.0.0.1:8000/products/products/?${query}`
       );
       const data = await res.json();
-
+      console.log(data);
       setProducts(data || []);
     };
 
@@ -403,10 +403,10 @@ function Explore() {
       {/* Product Section */}
       <div className="my-4 grid  grid-cols-4 gap-3 max-xl:grid-cols-3 max-md:grid-cols-1">
         {products.map((e, i) => {
-          const sortedPrice = [...e.shop_products].sort(
+          const sortedShops = [...e.shop_products].sort(
             (a, b) => a.price - b.price
           );
-          const lowestPrice = sortedPrice[0]?.price || 0; // optional fallback
+          const lowestPrice = sortedShops[0]?.price || 0; // optional fallback
 
           return (
             <ShoppingCard
@@ -416,7 +416,9 @@ function Explore() {
               productImg={e.thumbnail}
               title={e.name}
               rate={e.rating}
+              shops={sortedShops}
               price={lowestPrice}
+              is_available={e.is_available}
             />
           );
         })}

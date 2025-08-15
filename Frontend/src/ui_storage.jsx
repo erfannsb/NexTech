@@ -7,6 +7,8 @@ const useUIStore = create((set) => ({
   setRightSidebarOpen: (open) => set({ rightSidebarOpen: open }),
   isChatOpen: false,
   setChatOpen: (open) => set({ isChatOpen: open }),
+  active_user: null,
+  setActiveUser: (user) => set({ active_user: user }),
 }));
 
 export default useUIStore;

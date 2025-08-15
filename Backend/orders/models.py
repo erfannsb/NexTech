@@ -2,25 +2,70 @@ from django.db import models
 from users.models import Customer
 from products.models import Product
 from payments.models import Payment
+from shops.models import ShopProduct
 
 class Ordering(models.Model):
-    orderid = models.AutoField(db_column='OrderID', primary_key=True)  # Field name made lowercase.
-    paymentmethod = models.CharField(db_column='PaymentMethod', max_length=16)  # Field name made lowercase.
-    createdat = models.DateTimeField(db_column='CreatedAt')  # Field name made lowercase.
-    orderstatus = models.CharField(db_column='OrderStatus', max_length=10)  # Field name made lowercase.
-    orderdate = models.DateField(db_column='OrderDate')  # Field name made lowercase.
-    customerid = models.ForeignKey(Customer, models.DO_NOTHING, db_column='CustomerID')  # Field name made lowercase.
+    class PaymentMethodChoices(models.TextChoices):
+        CREDIT_CARD = "Credit Card", "Credit Card"
+        INSTALLMENT = "Installment", "Installment"
+        CASH_ON_DELIVERY = "Cash on Delivery", "Cash on Delivery"
+
+    class OrderStatusChoices(models.TextChoices):
+        PENDING = "Pending", "Pending"
+        PROCESSING = "Processing", "Processing"
+        SHIPPED = "Shipped", "Shipped"
+        DELIVERED = "Delivered", "Delivered"
+        CANCELLED = "Cancelled", "Cancelled"
+
+    orderid = models.AutoField(db_column="OrderID", primary_key=True)
+    paymentmethod = models.CharField(
+        db_column="PaymentMethod",
+        max_length=20,  # long enough for 'Cash on Delivery'
+        choices=PaymentMethodChoices.choices,
+        blank=True,
+        null=True,
+    )
+    createdat = models.DateTimeField(
+        db_column="CreatedAt",
+        auto_now_add=True,
+        blank=True,
+        null=True,
+    )
+    orderstatus = models.CharField(
+        db_column="OrderStatus",
+        max_length=10,  # long enough for 'Processing'
+        choices=OrderStatusChoices.choices,
+        default=OrderStatusChoices.PENDING,
+    )
+    orderdate = models.DateTimeField(
+        db_column="OrderDate",
+        auto_now_add=True,
+        blank=True,
+        null=True,
+    )
+    customerid = models.ForeignKey(
+        Customer,
+        db_column="CustomerID",
+        on_delete=models.DO_NOTHING,
+    )
+    is_confirmed = models.BooleanField(
+        db_column="is_confirmed",
+        default=False,
+    )
 
     class Meta:
-        managed = False
-        db_table = 'ordering'
+        managed = False  # your table already exists
+        db_table = "ordering"
+
+    def __str__(self):
+        return f"Order {self.orderid} - {self.orderstatus}"
 
 
 class Orderitem(models.Model):
-    pk = models.CompositePrimaryKey('orderid','productid')
+    id = models.AutoField(db_column='id', primary_key=True)  # Field name made lowercase.
     quantity = models.PositiveIntegerField(db_column='Quantity')  # Field name made lowercase.
     orderid = models.ForeignKey(Ordering, models.DO_NOTHING, db_column='OrderID')  # Field name made lowercase.
-    productid = models.ForeignKey(Product, models.DO_NOTHING, db_column='ProductID')  # Field name made lowercase.
+    shopproductid = models.ForeignKey(ShopProduct, models.DO_NOTHING, db_column='ShopProductID')  # Field name made lowercase.
 
     class Meta:
         managed = False

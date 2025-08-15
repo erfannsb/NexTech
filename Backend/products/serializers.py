@@ -11,13 +11,14 @@ class CustomerSerializer(serializers.ModelSerializer):
 class ProductSerializer(serializers.ModelSerializer):
     shop_products = serializers.SerializerMethodField()
     categories_names = serializers.SerializerMethodField()
+    is_available = serializers.SerializerMethodField()  
 
     class Meta:
         model = Product
         fields = [
             'productid', 'name', 'description', 'createdat', 'rating', 
             'thumbnail', 'brand', 'countedrates', 'categories', 'shops',
-            'shop_products', 'categories_names'
+            'shop_products', 'categories_names', 'is_available'
         ]
 
     def get_shop_products(self, obj):
@@ -29,6 +30,16 @@ class ProductSerializer(serializers.ModelSerializer):
     def get_categories_names(self, obj):
         categories = obj.categories.all()
         return [category.categoryname for category in categories] if categories.exists() else []
+
+    def get_is_available(self, obj):
+        """
+        Returns True if the product exists in at least one shop with stock > 0
+        """
+        related_qs = getattr(obj, 'shopproduct_set', None)
+        if related_qs is None:
+            return False
+        return related_qs.filter(stockquantity__gt=0).exists()
+
 
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
