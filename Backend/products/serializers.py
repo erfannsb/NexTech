@@ -51,6 +51,7 @@ class ImageurlProductSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class CommentSerializer(serializers.ModelSerializer):
+    customerid = serializers.PrimaryKeyRelatedField(read_only=True)
     customer = CustomerSerializer(source='customerid', read_only=True)
     customer_name = serializers.SerializerMethodField()
     formatted_date = serializers.SerializerMethodField()

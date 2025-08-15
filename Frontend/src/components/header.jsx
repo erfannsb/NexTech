@@ -4,16 +4,23 @@ import { InputVariant1 } from "./inputs";
 import useUIStore from "../ui_storage";
 import { isLoggedIn } from "../../data/users";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function Header() {
   const isLeftSidebarOpen = useUIStore((state) => state.leftSidebarOpen);
   const toggleLeftSideBar = useUIStore((state) => state.setLeftSidebarOpen);
   const [loggedIn, setLogged] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchdata = async () => {
-      const isLogged = await isLoggedIn();
-      setLogged(isLogged);
+      const response = await isLoggedIn();
+      console.log(response);
+      if (response) {
+        setLogged(response);
+      } else {
+        setLogged(false);
+      }
     };
     fetchdata();
   }, []);
@@ -39,7 +46,9 @@ export default function Header() {
               alt="Profile"
               className="aspect-auto h-full rounded-full mr-3"
             />
-            <span className="text-sm font-medium">John Doe</span>
+            <span className="text-sm font-medium">
+              {loggedIn.firstname} {loggedIn.lastname}
+            </span>
             <div className="bg-[#26262B] ml-4 w-[1px] h-full"></div>
           </div>
         ) : (
@@ -49,8 +58,17 @@ export default function Header() {
               img={<LogIn size={15} />}
               className={"rounded-md text-[11px]"}
               textsize="11"
+              onClick={() => {
+                navigate("/form/login/");
+              }}
             />
-            <ButtonVariant1 text={"Sign Up"} className={"text-[11px]"} />
+            <ButtonVariant1
+              text={"Sign Up"}
+              className={"text-[11px]"}
+              onClick={() => {
+                navigate("/form/signup/");
+              }}
+            />
           </div>
         )}
 

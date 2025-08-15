@@ -95,18 +95,27 @@ export function InputVariant3({
   );
 }
 
-export const Input = React.forwardRef(({ label, className, ...props }, ref) => {
-  return (
-    <div className={`flex flex-col ${className}`}>
-      <label className="mb-1 text-sm text-gray-100">{label}</label>
-      <input
-        ref={ref}
-        {...props}
-        className="card-variant-1 px-3 py-2 text-sm rounded-md outline-0"
-      />
-    </div>
-  );
-});
+export const Input = React.forwardRef(
+  ({ label, className, alert = false, ...props }, ref) => {
+    return (
+      <div className={`flex flex-col ${className}`}>
+        <label className="mb-1 text-sm text-gray-100">{label}</label>
+        <input
+          ref={ref}
+          {...props}
+          className={`card-variant-1 px-3 py-2 text-sm rounded-md outline-0 ${
+            alert ? "!border !border-red-400" : ""
+          }`}
+        />
+        {alert && (
+          <p className="text-[11px] font-medium mt-1 ml-1 text-red-400">
+            {alert}
+          </p>
+        )}
+      </div>
+    );
+  }
+);
 
 export const CheckBox = React.forwardRef(
   ({ label, className, ...props }, ref) => {

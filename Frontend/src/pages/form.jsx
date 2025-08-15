@@ -1,15 +1,18 @@
 import { ArrowLeft, Bell, PanelLeft, Search, Settings } from "lucide-react";
-import { ButtonVariant2 } from "../components/buttons";
+import { ButtonVariant2, ButtonVariant4 } from "../components/buttons";
 import Header from "../components/header";
-import { InputVariant1 } from "../components/inputs";
+import { Input, InputVariant1 } from "../components/inputs";
 import { useNavigate } from "react-router-dom";
-import { useParams } from "react-router";
+import { data, useParams } from "react-router";
+import { useRef, useState } from "react";
+import { logIn, PostCustomer } from "../../data/users";
 
 export default function Form() {
   const navigate = useNavigate();
   const { type: typeParam } = useParams();
+
   return (
-    <div className="grid grid-rows-2 grid-cols-1">
+    <div className="grid grid-rows-[65px_1fr] grid-cols-1 w-full h-screen">
       {/* Top Left Corner of The Header */}
       <header className="border-r border-b border-[#26262B] text-white p-4 col-start-1 col-end-2 max-sm:col-end-4 row-start-1 row-end-2 flex items-center justify-between">
         <ButtonVariant2
@@ -40,13 +43,295 @@ export default function Form() {
           <ButtonVariant2 img={<Settings strokeWidth={1.5} size={17} />} />
         </div>
       </header>
-      <div className="">
-        {typeParam.toLocaleLowerCase() == "login" ? <Login /> : <></>}
+      <div>
+        {typeParam && typeParam.toLowerCase() === "login" ? (
+          <Login />
+        ) : typeParam.toLocaleLowerCase() === "signup" ? (
+          <SignUp />
+        ) : (
+          <div className="text-white">
+            Form type: {typeParam || "No type specified"}
+          </div>
+        )}
       </div>
     </div>
   );
 }
 
+function isValidEmail(email) {
+  const emailRegexRFC =
+    /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
+  return emailRegexRFC.test(email);
+}
+
+function isValidPassword(password) {
+  const mediumPassword = /^(?=.*[A-Za-z])(?=.*\d).{8,}$/;
+  return mediumPassword.test(password);
+}
+
+function isValidName(name) {
+  const standardName = /^[A-Za-z\s\-']{2,50}$/;
+  return standardName.test(name);
+}
 export function Login() {
-  return <div>Login form is here dude</div>;
+  const emailRef = useRef(null);
+  const passwordRef = useRef(null);
+  const [isError, setError] = useState(false);
+  const navigate = useNavigate();
+
+  const onSubmit = async (e) => {
+    const email = emailRef.current.value;
+    const password = passwordRef.current.value;
+    e.preventDefault();
+
+    try {
+      const tokenJson = await logIn({
+        identifier: email,
+        password: password,
+      });
+
+      if (!tokenJson.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+
+      navigate("/");
+    } catch (error) {
+      setError("Wrong Credentials");
+    }
+  };
+
+  return (
+    <div className="flex flex-1 w-full h-full justify-center items-center">
+      {/* Form */}
+      <form className="card-variant-3 p-10 rounded-md flex flex-col">
+        {/* Title */}
+        <h3 className="font-black text-xl mb-3">Login Form</h3>
+        <Input
+          ref={emailRef}
+          label={"Email Address"}
+          placeholder="qwerty@gmail.com"
+          className="mb-3 min-w-[300px]"
+        />
+        <Input
+          ref={passwordRef}
+          label={"Password"}
+          placeholder="type password..."
+          type={"password"}
+          className="mb-3"
+        />
+        {/* Form Error */}
+        {isError && (
+          <div className="text-[12px] mb-2 text-red-400">* {isError}</div>
+        )}
+        <a className="text-[13px] text-[#6274f7] cursor-pointer ml-1">
+          Forgot Password?
+        </a>
+
+        <button
+          onClick={onSubmit}
+          className=" card-variant-2 w-fit py-[7px] px-6 rounded-md cursor-pointer text-sm ml-auto hover:scale-[1.02] transition"
+        >
+          Login
+        </button>
+      </form>
+    </div>
+  );
+}
+
+export function SignUp() {
+  const firstNRef = useRef(null);
+  const lastNRef = useRef(null);
+  const emailRef = useRef(null);
+  const passwordRef = useRef(null);
+  const ConfirmPassRef = useRef(null);
+  const [isError, setError] = useState(false);
+  const [inputError, setInputError] = useState({
+    Err_firstN: false,
+    Err_lastN: false,
+    Err_Email: false,
+    Err_Pass: false,
+    Err_ConfPass: false,
+  });
+
+  const onSubmit = async (e) => {
+    e.preventDefault();
+
+    // Get form values
+    const formData = {
+      firstName: firstNRef.current.value.trim(),
+      lastName: lastNRef.current.value.trim(),
+      email: emailRef.current.value.trim(),
+      password: passwordRef.current.value,
+      confirmPass: ConfirmPassRef.current.value,
+    };
+
+    // Validation rules with error messages
+    const validationRules = [
+      {
+        field: "firstName",
+        errorKey: "Err_firstN",
+        validate: (value) => {
+          if (!value) return "First name is required";
+          if (!isValidName(value)) return "Invalid first name format";
+          return null;
+        },
+      },
+      {
+        field: "lastName",
+        errorKey: "Err_lastN",
+        validate: (value) => {
+          if (value && !isValidName(value)) return "Invalid last name format";
+          return null;
+        },
+      },
+      {
+        field: "email",
+        errorKey: "Err_Email",
+        validate: (value) => {
+          if (!value) return "Email is required";
+          if (!isValidEmail(value)) return "Invalid email format";
+          return null;
+        },
+      },
+      {
+        field: "password",
+        errorKey: "Err_Pass",
+        validate: (value) => {
+          if (!value) return "Password is required";
+          if (!isValidPassword(value))
+            return "Password must contain at least 8 characters with letters and numbers";
+          return null;
+        },
+      },
+      {
+        field: "confirmPass",
+        errorKey: "Err_ConfPass",
+        validate: (value) => {
+          if (!value) return "Please confirm your password";
+          if (formData.password !== value) return "Passwords do not match";
+          return null;
+        },
+      },
+    ];
+
+    // Run validation
+    const errors = validationRules.reduce(
+      (acc, rule) => {
+        const error = rule.validate(formData[rule.field]);
+        if (error) acc[rule.errorKey] = error;
+        return acc;
+      },
+      {
+        Err_firstN: "",
+        Err_lastN: "",
+        Err_Email: "",
+        Err_Pass: "",
+        Err_ConfPass: "",
+      }
+    );
+
+    // Check if there are any validation errors
+    const hasValidationErrors = Object.values(errors).some(
+      (error) => error !== ""
+    );
+
+    if (hasValidationErrors) {
+      setInputError(errors);
+      return;
+    }
+
+    // Submit form
+    try {
+      const response = await PostCustomer({
+        firstname: formData.firstName,
+        lastname: formData.lastName,
+        emailaddress: formData.email,
+        password: formData.password,
+      });
+
+      if (!response.ok) {
+        // Map server errors to form errors
+        const serverErrorMap = {
+          emailaddress: "Err_Email",
+          password: "Err_ConfPass",
+          firstname: "Err_firstN",
+          lastname: "Err_lastN",
+        };
+
+        Object.entries(serverErrorMap).forEach(([serverField, errorKey]) => {
+          if (response.data?.[serverField]) {
+            errors[errorKey] = response.data[serverField];
+          }
+        });
+
+        setInputError(errors);
+      }
+      // Handle success case here if needed
+    } catch (error) {
+      console.error("Form submission error:", error);
+      // Handle network/other errors
+    }
+  };
+
+  return (
+    <div className="flex flex-1 w-full h-full justify-center items-center">
+      {/* Form */}
+      <form className="h-fit card-variant-3 p-6 rounded-md grid grid-rows-6 grid-cols-2 gap-3">
+        {/* Title */}
+        <h3 className="font-black text-xl mb-3 self-end">Sign Up Form</h3>
+        <Input
+          ref={firstNRef}
+          label={"First Name"}
+          placeholder="Type Your Name"
+          className=" w-full col-start-1 col-end-2"
+          required
+          alert={inputError.Err_firstN}
+        />
+        <Input
+          ref={lastNRef}
+          label={"Last Name"}
+          placeholder="Type Your Last Name"
+          className=" w-full col-start-2 col-end-3"
+          alert={inputError.Err_lastN}
+        />
+        <Input
+          ref={emailRef}
+          label={"Email Address"}
+          placeholder="qwerty@gmail.com"
+          className="min-w-[300px] col-start-1 col-end-3"
+          required
+          alert={inputError.Err_Email}
+        />
+        <Input
+          ref={passwordRef}
+          label={"Password"}
+          placeholder="Type Password..."
+          type={"password"}
+          required
+          alert={inputError.Err_Pass}
+        />
+        <Input
+          ref={ConfirmPassRef}
+          label={"Confirm Password"}
+          placeholder="Confirm Password..."
+          type={"password"}
+          required
+          alert={inputError.Err_ConfPass}
+        />
+        {/* Form Error */}
+        {isError && (
+          <div className="text-[12px] mb-2 text-red-400 col-start-1 col-end-3">
+            * {isError}
+          </div>
+        )}
+
+        <button
+          onClick={onSubmit}
+          className="h-fit card-variant-2 w-fit py-[7px] px-6 rounded-md cursor-pointer text-sm ml-auto hover:scale-[1.02] transition col-start-2"
+        >
+          Login
+        </button>
+      </form>
+    </div>
+  );
 }

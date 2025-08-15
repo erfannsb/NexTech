@@ -27,6 +27,7 @@ import {
   GetComments,
 } from "../../data/products";
 import { useParams } from "react-router";
+import { fetchWithAuth } from "../../data/users";
 
 function Product() {
   const [moreDetails, setMoreDetails] = useState(false);
@@ -36,6 +37,45 @@ function Product() {
   const [images, setImages] = useState(false);
   const [details, setDetails] = useState([]);
   const [comments, setComments] = useState([]);
+  const commentRef = useRef(null);
+  const [commentError, setCommentError] = useState(false);
+
+  const onComment = async () => {
+    const commentText = commentRef.current.value;
+
+    if (!commentText) {
+      setCommentError("Comment cannot be empty");
+      return;
+    }
+
+    const res = await fetchWithAuth("/products/comment/", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        productid: productIdParam,
+        commenttext: commentText,
+      }),
+    });
+    if (res.ok) {
+      let data = await res.json();
+      setComments((prevComments) => [
+        {
+          commentnum: data.commentnum,
+          customer_name: data.customer_name,
+          commenttext: data.commenttext,
+          formatted_date: data.formatted_date,
+          rating: data.rating,
+          replies: [],
+        },
+        ...prevComments,
+      ]);
+      setCommentError("");
+    } else {
+      setCommentError(res.error || "Failed to submit comment");
+    }
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -46,7 +86,6 @@ function Product() {
       const details = await GetDetails(productIdParam);
       setDetails(details);
       const comments = await GetComments(productIdParam);
-      console.log(comments);
       setComments(comments);
     };
     fetchData();
@@ -155,12 +194,20 @@ function Product() {
         </div>
         <div className="flex flex-col items-end">
           <textarea
+            ref={commentRef}
             placeholder="Write Your Comment"
             className="card-variant-1 p-2 w-full rounded-lg font-light text-sm resize-none min-h-[100px]"
             draggable="false"
           />
-          <ButtonVariant1 text="Submit" className="text-[13px] mt-2" />
+          <ButtonVariant1
+            text="Submit"
+            className="text-[13px] mt-2"
+            onClick={onComment}
+          />
         </div>
+        {commentError && (
+          <div className="text-red-500 text-sm mt-2">{commentError}</div>
+        )}
 
         <div className="flex flex-col">
           {Array.isArray(comments) || comments.length > 0 ? (
@@ -359,18 +406,6 @@ export function TableFooter({ averageRate, ratedNum, price, shop }) {
   const ratingRef = useRef(null);
   const [rating, setRating] = useState(0);
 
-  useEffect(() => {
-    const handleOutsideClick = (event) => {
-      if (!ratingRef.current.contains(event.target)) {
-        setRating(0);
-      }
-    };
-
-    document.addEventListener("click", handleOutsideClick);
-    return () => {
-      document.removeEventListener("click", handleOutsideClick);
-    };
-  }, []);
   return (
     <div>
       {/* Review */}

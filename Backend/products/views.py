@@ -1,9 +1,10 @@
 from rest_framework import viewsets, filters
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from django_filters.rest_framework import DjangoFilterBackend
 from .models import Product, Category, ProductCategory, Details, ImageurlProduct, Comment
 from .serializers import *
 from .filters import ProductFilter 
-from django.db.models import Sum
+from .permissions import IsCommentOwnerOrReadOnly
 
 class ProductViewSet(viewsets.ModelViewSet):
     queryset = Product.objects.all()
@@ -41,3 +42,7 @@ class CommentViewSet(viewsets.ModelViewSet):
     serializer_class = CommentSerializer
     filter_backends = [DjangoFilterBackend, filters.SearchFilter]
     filterset_fields = ['productid']
+    permission_classes = [IsCommentOwnerOrReadOnly, IsAuthenticatedOrReadOnly]  # Custom permission to restrict write access
+
+    def perform_create(self, serializer):
+        serializer.save(customerid=self.request.user)

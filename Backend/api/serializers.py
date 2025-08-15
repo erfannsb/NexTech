@@ -1,12 +1,11 @@
 from rest_framework import serializers
 from users.models import Customer
-import hashlib
+from django.contrib.auth.hashers import check_password
 
 
 def verify_password(plain_password: str, customer: Customer) -> bool:
-    # TODO: Replace with your real password check (PBKDF2/BCrypt). This is a placeholder.
-    # Example placeholder: compare plain password to stored hash (dev only!)
-    return plain_password == customer.passwordhash
+    # Use Django's built-in password verification
+    return check_password(plain_password, customer.password)
 
 
 class CustomerLoginSerializer(serializers.Serializer):
@@ -15,6 +14,12 @@ class CustomerLoginSerializer(serializers.Serializer):
 
     def validate(self, attrs):
         ident = attrs["identifier"].strip()
+
+        # --- Debug prints ---
+        print(f"Identifier received from request: '{ident}'")
+        print("Customer exists by email:", Customer.objects.filter(emailaddress=ident).exists())
+        print("Customer exists by phone:", Customer.objects.filter(phonenumber=ident).exists())
+        # ---------------------
         try:
             customer = Customer.objects.get(emailaddress=ident)
         except Customer.DoesNotExist:
@@ -24,7 +29,7 @@ class CustomerLoginSerializer(serializers.Serializer):
                 raise serializers.ValidationError("Invalid credentials")
 
         if not verify_password(attrs["password"], customer):
-            raise serializers.ValidationError("Invalid credentials")
+            raise serializers.ValidationError("Invalid pass credentials")
 
         attrs["customer"] = customer
         return attrs

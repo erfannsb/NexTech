@@ -73,6 +73,7 @@ function Explore() {
         `http://127.0.0.1:8000/products/products/?${query}`
       );
       const data = await res.json();
+
       setProducts(data || []);
     };
 
@@ -86,7 +87,6 @@ function Explore() {
       let categories = [];
       let subCategories = [];
       for (let cat of data) {
-        console.log(cat);
         if (cat.parentcategory == null) {
           categories.push(cat);
         } else {
@@ -97,7 +97,6 @@ function Explore() {
           }
         }
       }
-      console.log({ categories, subCategories });
       setCategories(categories);
       setsubCategory(subCategories);
     };
@@ -108,12 +107,7 @@ function Explore() {
   return (
     <div>
       {/* Search Section */}
-      <h1
-        className="text-[#E6E9FF] font-black text-lg mb-3"
-        onClick={() => {
-          console.log(subCategories[activeCategory]);
-        }}
-      >
+      <h1 className="text-[#E6E9FF] font-black text-lg mb-3">
         Search Your Favorite Product Here!
       </h1>
       <div className="flex flex-wrap gap-2">
@@ -248,7 +242,6 @@ function Explore() {
                 defaultValue="0"
                 onChange={(e) => {
                   const d = e.target.value;
-                  console.log(d);
                   setFilters({
                     ...filters,
                     priceFrom: parseInt(d),
@@ -409,17 +402,24 @@ function Explore() {
       )}
       {/* Product Section */}
       <div className="my-4 grid  grid-cols-4 gap-3 max-xl:grid-cols-3 max-md:grid-cols-1">
-        {products.map((e, i) => (
-          <ShoppingCard
-            id={e.productid}
-            companyImg={Brands_images[e.brand.toLowerCase()]}
-            companyName={e.brand}
-            productImg={e.thumbnail}
-            title={e.name}
-            rate={e.rating}
-            price={e.price}
-          />
-        ))}
+        {products.map((e, i) => {
+          const sortedPrice = [...e.shop_products].sort(
+            (a, b) => a.price - b.price
+          );
+          const lowestPrice = sortedPrice[0]?.price || 0; // optional fallback
+
+          return (
+            <ShoppingCard
+              id={e.productid}
+              companyImg={Brands_images[e.brand.toLowerCase()]}
+              companyName={e.brand}
+              productImg={e.thumbnail}
+              title={e.name}
+              rate={e.rating}
+              price={lowestPrice}
+            />
+          );
+        })}
       </div>
     </div>
   );

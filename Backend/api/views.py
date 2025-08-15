@@ -13,7 +13,7 @@ from rest_framework.views import APIView
 from rest_framework import status, permissions
 from .serializers import CustomerLoginSerializer
 from users.serializers import CustomerSerializer as PublicCustomerSerializer
-
+from users.models import Customer
 
 @api_view(["GET"])
 def get_dominant_color(request):
@@ -54,21 +54,98 @@ def make_token(customer, minutes=60, token_type="access"):
 class CustomerLoginView(APIView):
     permission_classes = []
     authentication_classes = []
-
+    
     def post(self, request):
         ser = CustomerLoginSerializer(data=request.data)
         ser.is_valid(raise_exception=True)
         customer = ser.validated_data["customer"]
-        access = make_token(customer, minutes=60, token_type="access")
-        refresh = make_token(customer, minutes=60 * 24 * 7, token_type="refresh")
-        return Response({"access": access, "refresh": refresh}, status=status.HTTP_200_OK)
+        
+        # Create tokens with shorter access token lifetime
+        access = make_token(customer, minutes=15, token_type="access")  # 15 mins
+        refresh = make_token(customer, minutes=60 * 24 * 7, token_type="refresh")  # 7 days
+        
+        # Create response
+        response = Response({
+            "message": "Login successful",
+            "customer_id": customer.customerid,
+            # Don't return tokens in response body for security
+        }, status=status.HTTP_200_OK)
+        
+        response.set_cookie(
+            key="access_token",
+            value=access,
+            httponly=True,
+            secure=False,  # False for localhost HTTP
+            samesite="Lax",  # Required for cross-origin
+        )
 
+        response.set_cookie(
+            key="refresh_token",
+            value=refresh,
+            httponly=True,
+            secure=False,
+            samesite="Lax",
+        )
+        
+        return response
+
+class CustomerLogoutView(APIView):
+    def post(self, request):
+        response = Response({"message": "Logged out successfully"}, status=status.HTTP_200_OK)
+        response.delete_cookie('access_token')
+        response.delete_cookie('refresh_token')
+        return response
+
+class TokenRefreshView(APIView):
+    permission_classes = []
+    authentication_classes = []
+    
+    def post(self, request):
+        refresh_token = request.COOKIES.get('refresh_token')
+        
+        if not refresh_token:
+            return Response({"error": "Refresh token not found"}, status=status.HTTP_401_UNAUTHORIZED)
+        
+        try:
+            payload = jwt.decode(refresh_token, settings.SECRET_KEY, algorithms=["HS256"])
+            
+            if payload.get('typ') != 'refresh':
+                raise jwt.InvalidTokenError("Invalid token type")
+            
+            customer = Customer.objects.get(customerid=payload['customer_id'])
+            
+            # Create new access token
+            access = make_token(customer, minutes=15, token_type="access")
+            
+            response = Response({"message": "Token refreshed"}, status=status.HTTP_200_OK)
+            response.set_cookie(
+                'access_token',
+                access,
+                max_age=15 * 60,
+                httponly=True,
+                secure=False,  # False for localhost HTTP
+                samesite="Lax",
+            )
+            
+            return response
+            
+        except (jwt.InvalidTokenError, jwt.ExpiredSignatureError, Customer.DoesNotExist):
+            return Response({"error": "Invalid refresh token"}, status=status.HTTP_401_UNAUTHORIZED)
 
 class MeView(APIView):
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = []
 
     def get(self, request):
-        # request.user is a CustomerPrincipal (proxy) -> expose underlying fields
-        customer = getattr(request.user, "_customer", request.user)
+        access_token = request.COOKIES.get('access_token')
+        if not access_token:
+            return Response({"error": "Not authenticated"}, status=401)
+
+        try:
+            payload = jwt.decode(access_token, settings.SECRET_KEY, algorithms=["HS256"])
+            customer = Customer.objects.get(customerid=payload['customer_id'])
+        except (jwt.ExpiredSignatureError, jwt.InvalidTokenError, Customer.DoesNotExist):
+            return Response({"error": "Not authenticated"}, status=401)
+
         data = PublicCustomerSerializer(customer).data
         return Response(data)
+    

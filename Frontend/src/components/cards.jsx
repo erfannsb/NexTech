@@ -44,7 +44,7 @@ export function ShoppingCard({
       onClick={() => {
         navigate(`/product/${id}`);
       }}
-      className="py-3 border border-[#212121] rounded-lg cursor-pointer hover:scale-[1.01] transition hover:border-[#444444]"
+      className="flex flex-col justify-between py-3 border border-[#212121] rounded-lg cursor-pointer hover:scale-[1.01] transition hover:border-[#444444]"
     >
       {/* header */}
       <div className="flex items-center justify-between">
@@ -69,16 +69,19 @@ export function ShoppingCard({
         </div>
       </div>
       {/* middle */}
-      <img
-        className="w-full max-w-[300px] p-6 h-max-[300px] mx-auto object-contain"
-        src={productImg}
-        alt="product Image"
-      />
+      <div className=" p-6 ">
+        <img
+          className="w-full max-w-[300px]h-max-[300px] mx-auto object-contain"
+          src={productImg}
+          alt="product Image"
+        />
+
+        <h3 className="text-lg font-extrabold mt-2">{title}</h3>
+        <p className="font-medium text-lg mt-1 text-[#ededed]">${price}</p>
+      </div>
+
       {/* footer */}
       <div className="flex justify-between flex-col px-4 ">
-        <p className="font-medium text-lg mb-2 text-[#ededed]">{price}</p>
-
-        <h3 className="text-lg font-extrabold">{title}</h3>
         <div className="flex items-center justify-end mt-auto">
           <ButtonVariant3
             text="Add"

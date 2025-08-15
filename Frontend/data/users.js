@@ -1,5 +1,7 @@
 // --------- Customer API ---------
 
+import { data } from "react-router-dom";
+
 export async function GetCustomers() {
   try {
     const response = await fetch("http://127.0.0.1:8000/users/customers/", {
@@ -46,26 +48,20 @@ export async function GetCustomer(id) {
 }
 
 export async function PostCustomer(customer) {
-  try {
-    const response = await fetch("http://127.0.0.1:8000/users/customers/", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(customer),
-    });
-
-    if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`);
-    }
-
-    const data = await response.json();
-    console.log("Customer created:", data);
-    return data;
-  } catch (error) {
-    console.error("Failed to post customer:", error);
-    throw error;
-  }
+  const response = await fetch("http://127.0.0.1:8000/users/customers/", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(customer),
+  });
+  console.log(response);
+  const data = await response.json();
+  return {
+    data: data,
+    ok: response.ok,
+    status: response.status,
+  };
 }
 
 export async function UpdateCustomer(customerId, customer) {
@@ -232,11 +228,56 @@ export async function DeleteAdmin(adminId) {
 //  --- USER AUTH ---
 
 export async function isLoggedIn() {
-  const token = localStorage.getItem("access");
-  if (!token) return false;
+  try {
+    const res = await fetch("/api/auth/me/", {
+      method: "GET",
+      credentials: "include", // send HttpOnly cookies
+    });
+    let data = await res.json();
+    if (!res.ok) {
+      throw new Error(`HTTP error! Status: ${res.status}`);
+    }
+    return data; // true if user is authenticated
+  } catch (err) {
+    console.error("Error checking login:", err);
+    return false;
+  }
+}
 
-  const res = await fetch("http://127.0.0.1:8000/api/auth/me/", {
-    headers: { Authorization: `Bearer ${token}` },
+export async function logIn(Credentials) {
+  const response = await fetch(`/api/auth/login/`, {
+    method: "POST",
+    credentials: "include",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(Credentials),
   });
-  return res.ok; // true if valid token -> logged in
+  return {
+    data: await response.json(),
+    ok: response.ok,
+    status: response.status,
+  };
+}
+
+export async function fetchWithAuth(url, options) {
+  let res = await fetch(url, { ...options, credentials: "include" });
+
+  if (res.status === 401) {
+    // try refreshing token
+    const refresh = await fetch("/api/auth/refresh/", {
+      method: "POST",
+      credentials: "include",
+    });
+
+    if (refresh.ok) {
+      // Retry original request
+      res = await fetch(url, { ...options, credentials: "include" });
+    } else {
+      // Refresh failed → user needs to log in again
+      throw new Error("Session expired, please login");
+    }
+  }
+
+  return res; // parse response
 }

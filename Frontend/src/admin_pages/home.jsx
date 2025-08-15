@@ -55,12 +55,6 @@ export default function Home() {
     },
   ];
 
-  console.log([
-    RecentOrders.map((e) =>
-      OrderItems(e.customerName, e.customerName, e.status, e.dateNtime, e.price)
-    ),
-  ]);
-
   return (
     <div>
       {/* Charts */}
