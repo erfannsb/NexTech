@@ -30,12 +30,10 @@ class OrderitemViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         user = self.request.user
-        # only return items where the order belongs to the user
         if user.is_authenticated:
-            return Ordering.objects.filter(customerid=user)
+            return Orderitem.objects.filter(orderid__customerid=user)
         else:
-            # For unauthenticated users, maybe return empty or all orders depending on policy
-            return Ordering.objects.none()
+            return Orderitem.objects.all()
 
     def perform_create(self, serializer):
         order_id = self.request.data.get("orderid")

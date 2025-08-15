@@ -181,12 +181,10 @@ export async function UpdateOrderItem(orderItemId, orderItem) {
 
 export async function DeleteOrderItem(orderItemId) {
   try {
-    const response = await fetch(
-      `http://127.0.0.1:8000/orders/orderItems/${orderItemId}/`,
-      {
-        method: "DELETE",
-      }
-    );
+    const response = await fetch(`/orders/orderItems/${orderItemId}/`, {
+      credentials: "include",
+      method: "DELETE",
+    });
 
     if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
 

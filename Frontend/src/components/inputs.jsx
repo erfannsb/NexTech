@@ -66,7 +66,7 @@ export function InputVariant3({
   useClickOutside(ref, () => setOpen(false));
   return (
     <div
-      className={`h-fit text-[#C5C3CA] relative card-variant-1 flex items-center py-2 px-3 rounded-lg max-w-fit cursor-pointer ${className}`}
+      className={`h-fit text-[#C5C3CA] relative card-variant-1 flex items-center py-2 px-3 rounded-lg cursor-pointer ${className}`}
       onClick={() => setOpen((prev) => !prev)}
       ref={ref}
     >

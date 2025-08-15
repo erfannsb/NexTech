@@ -4,12 +4,7 @@ import { ButtonVariant3 } from "./buttons";
 import { useNavigate } from "react-router";
 import { fetchWithAuth } from "../../data/api";
 import useUIStore from "../ui_storage";
-import {
-  GetOrdering,
-  GetOrderings,
-  PostOrdering,
-  PostOrderItem,
-} from "../../data/orders";
+import { GetOrderings, PostOrdering, PostOrderItem } from "../../data/orders";
 export function CardVariant1({
   header,
   text,
@@ -76,11 +71,8 @@ export function ShoppingCard({
       orderID = data[0].orderid;
     }
 
-    console.log("Order ID:", orderID);
-    console.log("shops", shops);
+    let shopId = shops[0].shopid; // Assuming you want to use the first shop
 
-    let shopId = shops[0].id; // Assuming you want to use the first shop
-    console.log("product id", id);
     const resFromShopProduct = await fetch(
       `/shops/shopProduct/?shopid=${shopId}&productid=${id}`
     );
@@ -95,8 +87,8 @@ export function ShoppingCard({
     }
 
     const dataFromShopProduct = await resFromShopProduct.json();
-
-    let shopProductId = dataFromShopProduct[0].id; // this is the shopProduct PK you need
+    console.log("dataFromShopProduct", dataFromShopProduct);
+    let shopProductId = dataFromShopProduct[0].id;
 
     const resFromOrderItem = await fetchWithAuth(() =>
       PostOrderItem({
