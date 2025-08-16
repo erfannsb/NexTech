@@ -25,24 +25,16 @@ export async function GetOrdering(id) {
 }
 
 export async function PostOrdering(ordering) {
-  try {
-    const response = await fetch("/orders/orders/", {
-      method: "POST",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(ordering),
-    });
+  const response = await fetch("/orders/orders/", {
+    method: "POST",
+    credentials: "include",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(ordering),
+  });
 
-    if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
-
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    console.error("Failed to post ordering:", error);
-    throw error;
-  }
+  return response;
 }
 
 export async function UpdateOrdering(orderingId, ordering) {
@@ -354,7 +346,7 @@ export async function GetShipping(id) {
 
 export async function PostShipping(shipping) {
   try {
-    const response = await fetch("http://127.0.0.1:8000/orders/shippings/", {
+    const response = await fetch("/orders/shippings/", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

@@ -144,7 +144,10 @@ REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'api.authentication.CookieJWTAuthentication',
-    ]
+    ],
+    'DEFAULT_THROTTLE_RATES': {
+        'anon': '10/hour',
+    }
 }
 
 from datetime import timedelta

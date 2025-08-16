@@ -13,6 +13,7 @@ export default defineConfig({
       "/users": "http://localhost:8000",
       "/orders": "http://localhost:8000",
       "/shops": "http://localhost:8000",
+      "/payments": "http://localhost:8000",
     },
   },
   plugins: [react(), tailwindcss()],

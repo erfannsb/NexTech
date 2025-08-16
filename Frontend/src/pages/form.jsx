@@ -6,6 +6,11 @@ import { useNavigate } from "react-router-dom";
 import { data, useParams } from "react-router";
 import { useRef, useState } from "react";
 import { logIn, PostCustomer } from "../../data/users";
+import {
+  isValidEmail,
+  isValidName,
+  isValidPassword,
+} from "../../utils/validate";
 
 export default function Form() {
   const navigate = useNavigate();
@@ -58,21 +63,6 @@ export default function Form() {
   );
 }
 
-function isValidEmail(email) {
-  const emailRegexRFC =
-    /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
-  return emailRegexRFC.test(email);
-}
-
-function isValidPassword(password) {
-  const mediumPassword = /^(?=.*[A-Za-z])(?=.*\d).{8,}$/;
-  return mediumPassword.test(password);
-}
-
-function isValidName(name) {
-  const standardName = /^[A-Za-z\s\-']{2,50}$/;
-  return standardName.test(name);
-}
 export function Login() {
   const emailRef = useRef(null);
   const passwordRef = useRef(null);

@@ -36,3 +36,43 @@ class IsOrderItemOwnerOrReadOnly(permissions.BasePermission):
 
         # Only the customer who owns the order can edit 
         return obj.orderid.customerid == request.user
+    
+
+class IsOrderPaymentOwnerOrReadOnly(permissions.BasePermission):
+    """
+    Custom permission to allow only the owner of the order (customer) to edit OrderPayments.
+    Read access is allowed to everyone.
+    """
+
+    def has_object_permission(self, request, view, obj):
+        # Safe methods (GET, HEAD, OPTIONS) are allowed for everyone
+        if request.method in permissions.SAFE_METHODS:
+            return True
+
+        # Only the customer who owns the order can edit 
+        return obj.orderid.customerid == request.user
+    
+class IsShippingOwnerOrReadOnly(permissions.BasePermission):
+    """
+    Custom permission to allow only the owner of the order (customer) to edit Shipping.
+    """
+
+    def has_permission(self, request, view):
+        if request.method in permissions.SAFE_METHODS:
+            return True
+        return request.user and request.user.is_authenticated
+    
+    def has_object_permission(self, request, view, obj):
+        if request.method in permissions.SAFE_METHODS:
+            return True
+        
+        if not request.uesr or not request.user.is_authenticated:
+            return False
+        
+        try:
+
+            return obj.orderid.customerid == request.user
+        except AttributeError as e:
+            # Handle case where obj.orderid does not have customerid
+            print(f"Error checking permission: {e}")
+            return False

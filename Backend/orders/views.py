@@ -3,7 +3,7 @@ from .serializers import *
 from .permissions import IsOrderOwnerOrReadOnly
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.permissions import IsAuthenticated
-from .permissions import IsOrderItemOwnerOrReadOnly
+from .permissions import IsOrderItemOwnerOrReadOnly, IsShippingOwnerOrReadOnly
 from rest_framework.exceptions import PermissionDenied
 
 from api.authentication import CookieJWTAuthentication
@@ -57,7 +57,15 @@ class OrderpaymentViewSet(viewsets.ModelViewSet):
 class ShippingViewSet(viewsets.ModelViewSet):
     queryset = Shipping.objects.all()
     serializer_class = ShippingSerializer
+    permission_classes = [IsShippingOwnerOrReadOnly]
 
 class OrderShippingViewSet(viewsets.ModelViewSet):
     queryset = OrderShipping.objects.all()
     serializer_class = OrderShippingSerializer
+
+    def get_queryset(self):
+
+        if self.request.user.is_authenticated:
+            return OrderShipping.objects.filter(orderid__customerid=self.request.user)
+        
+        return OrderShipping.objects.all()

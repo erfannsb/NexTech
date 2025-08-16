@@ -1,5 +1,4 @@
 from django.db import models
-
 # Create your models here.
 
 
@@ -16,15 +15,20 @@ class Payment(models.Model):
 
 
 
+
 class Installment(models.Model):
     installmentid = models.AutoField(db_column='InstallmentID', primary_key=True)  # Field name made lowercase.
     interestrate = models.DecimalField(db_column='InterestRate', max_digits=5, decimal_places=2)  # Field name made lowercase.
     totalprice = models.DecimalField(db_column='TotalPrice', max_digits=10, decimal_places=2)  # Field name made lowercase.
     installmentstatus = models.CharField(db_column='InstallmentStatus', max_length=9)  # Field name made lowercase.
-    installmentmonths = models.PositiveIntegerField(db_column='InstallmentMonths')  # Field name made lowercase.
+    installmentmonths = models.IntegerField(db_column='InstallmentMonths')  # Field name made lowercase.
     startdate = models.DateField(db_column='StartDate')  # Field name made lowercase.
     monthspaid = models.PositiveIntegerField(db_column='MonthsPaid')  # Field name made lowercase.
-
+    orderid = models.ForeignKey(
+        "orders.Ordering", 
+        db_column="OrderID", 
+        on_delete=models.CASCADE 
+    )
     class Meta:
         managed = False
         db_table = 'installment'
@@ -39,7 +43,6 @@ class Installmentpayment(models.Model):
     class Meta:
         managed = False
         db_table = 'installmentpayment'
-
 
 
 

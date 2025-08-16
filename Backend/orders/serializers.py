@@ -33,11 +33,11 @@ class OrderpaymentSerializer(serializers.ModelSerializer):
 
 class ShippingSerializer(serializers.ModelSerializer):
     class Meta:
-        models = Shipping
+        model = Shipping
         fields = '__all__'
 
 
 class OrderShippingSerializer(serializers.ModelSerializer):
     class Meta:
-        models = OrderShipping
+        model = OrderShipping
         fields = '__all__'

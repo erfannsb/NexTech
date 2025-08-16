@@ -1,5 +1,6 @@
 from django.urls import path
 from .views import get_dominant_color, CustomerLoginView, MeView, CustomerLogoutView, TokenRefreshView
+from users.views import PasswordVerificationView
 
 urlpatterns = [
     path('dominant-color/', get_dominant_color),

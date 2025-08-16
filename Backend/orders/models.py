@@ -64,7 +64,7 @@ class Ordering(models.Model):
 class Orderitem(models.Model):
     id = models.AutoField(db_column='id', primary_key=True)  # Field name made lowercase.
     quantity = models.PositiveIntegerField(db_column='Quantity')  # Field name made lowercase.
-    orderid = models.ForeignKey(Ordering, models.DO_NOTHING, db_column='OrderID')  # Field name made lowercase.
+    orderid = models.ForeignKey(Ordering, on_delete=models.CASCADE, db_column='OrderID')  # Field name made lowercase.
     shopproductid = models.ForeignKey(ShopProduct, models.DO_NOTHING, db_column='ShopProductID')  # Field name made lowercase.
 
     class Meta:
@@ -85,11 +85,10 @@ class Orderpayment(models.Model):
 class Shipping(models.Model):
     shippingid = models.AutoField(db_column='ShippingID', primary_key=True)  # Field name made lowercase.
     shippingmethod = models.CharField(db_column='ShippingMethod', max_length=7)  # Field name made lowercase.
-    trackingnumber = models.CharField(db_column='TrackingNumber', unique=True, max_length=100)  # Field name made lowercase.
     shippingdate = models.DateTimeField(db_column='ShippingDate')  # Field name made lowercase.
     deliverydate = models.DateTimeField(db_column='DeliveryDate')  # Field name made lowercase.
     shippingstatus = models.CharField(db_column='ShippingStatus', max_length=10)  # Field name made lowercase.
-
+    orderid = models.ForeignKey(Ordering,db_column="orderID", on_delete=models.CASCADE)
     class Meta:
         managed = False
         db_table = 'shipping'
@@ -103,4 +102,5 @@ class OrderShipping(models.Model):
     class Meta:
         managed = False
         db_table = 'odershipping'
+
 

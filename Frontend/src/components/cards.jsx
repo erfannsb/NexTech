@@ -47,19 +47,24 @@ export function ShoppingCard({
   const addToBasket = async () => {
     let orderID;
 
+    // getting customer orders
     const res = await fetchWithAuth(() => GetOrderings());
     if (!res.ok) {
       console.error("Failed to add to basket:", res.statusText);
       return;
     }
-    const data = await res.json();
+    let data = await res.json();
 
+    data = data?.filter((e) => e.is_confirmed == false);
+
+    // if no order is created yet create one
     if (data.length === 0) {
       const newOrder = await fetchWithAuth(() =>
         PostOrdering({
           customerid: activeUser.customerid,
         })
       );
+
       if (!newOrder.ok) {
         console.error("Failed to create new order:", newOrder.statusText);
         return;
@@ -71,7 +76,7 @@ export function ShoppingCard({
       orderID = data[0].orderid;
     }
 
-    let shopId = shops[0].shopid; // Assuming you want to use the first shop
+    let shopId = shops[0].shopid; // first shop because it's the default (lowest price sorted before)
 
     const resFromShopProduct = await fetch(
       `/shops/shopProduct/?shopid=${shopId}&productid=${id}`

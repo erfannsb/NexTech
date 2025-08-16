@@ -64,6 +64,18 @@ export async function PostCustomer(customer) {
   };
 }
 
+export async function PatchCustomer(id, customer) {
+  const response = await fetch(`/users/customers/${id}/`, {
+    method: "PATCH",
+    credentials: "include",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(customer),
+  });
+  return response;
+}
+
 export async function UpdateCustomer(customerId, customer) {
   try {
     const response = await fetch(
@@ -92,12 +104,10 @@ export async function UpdateCustomer(customerId, customer) {
 
 export async function DeleteCustomer(customerId) {
   try {
-    const response = await fetch(
-      `http://127.0.0.1:8000/users/customers/${customerId}/`,
-      {
-        method: "DELETE",
-      }
-    );
+    const response = await fetch(`/users/customers/${customerId}/`, {
+      credentials: "include",
+      method: "DELETE",
+    });
 
     if (!response.ok) {
       throw new Error(`HTTP error! Status: ${response.status}`);

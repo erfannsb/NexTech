@@ -12,7 +12,7 @@ from django.utils import timezone
 from rest_framework.views import APIView
 from rest_framework import status, permissions
 from .serializers import CustomerLoginSerializer
-from users.serializers import CustomerSerializer as PublicCustomerSerializer
+from users.serializers import CustomerPrivateSerializer
 from users.models import Customer
 
 @api_view(["GET"])
@@ -146,6 +146,6 @@ class MeView(APIView):
         except (jwt.ExpiredSignatureError, jwt.InvalidTokenError, Customer.DoesNotExist):
             return Response({"error": "Not authenticated"}, status=401)
 
-        data = PublicCustomerSerializer(customer).data
+        data = CustomerPrivateSerializer(customer).data
         return Response(data)
     

@@ -8,6 +8,8 @@ class PaymentViewSet(viewsets.ModelViewSet):
 class InstallmentViewSet(viewsets.ModelViewSet):
     queryset = Installment.objects.all()
     serializer_class = InstallmentSerializer
+    permission_classes = [IsInstallmentOwnerOrReadOnly]
+
 
 class InstallmentPaymentViewSet(viewsets.ModelViewSet):
     queryset = Installmentpayment.objects.all()

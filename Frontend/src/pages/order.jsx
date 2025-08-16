@@ -2,8 +2,51 @@ import Table from "../components/tables";
 import { ButtonVariant2, ButtonVariant3 } from "../components/buttons";
 import { ArrowUpRight, Euro } from "lucide-react";
 import { CardVariant1 } from "../components/cards";
+import { useEffect, useState } from "react";
+import { fetchWithAuth } from "../../data/api";
+import { GetOrderings } from "../../data/orders";
 
 export default function Order() {
+  const [orders, setOrders] = useState([]);
+  const [current_order, setCurrentOrder] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const res = await fetchWithAuth(() => GetOrderings());
+      if (!res.ok) {
+        console.error("request failed");
+        return;
+      }
+      let orders = await res.json();
+      orders = orders.filter((e) => e.is_confirmed);
+      setOrders(orders);
+      let current_order = orders.filter((e) =>
+        ["Pending", "Processing", "Shipped"].includes(e.orderstatus)
+      )[0];
+      setCurrentOrder(current_order.items);
+      console.log(current_order);
+    };
+    fetchData();
+  }, []);
+
+  const wishListItems2D = current_order.map((item) => [
+    <span>{item.product.brand}</span>,
+    <span>{item.product.name}</span>,
+    <span>{item.shop_product.price}</span>,
+    <span>{item.product.rating}</span>,
+    <span>{item.product.categories_names?.join(" ")}</span>,
+    <div className="flex  items-center">
+      <div className="flex items-center mr-2 card-variant-1 p-[5px] rounded-xl w-fit">
+        <input
+          type="number"
+          value={item.quantity}
+          className="outline-0 w-7 text-center"
+          readOnly
+        />
+      </div>
+    </div>,
+  ]);
+
   return (
     <div className="md:mx-10">
       <h2 className="font-bold text-lg">Order List</h2>
@@ -22,35 +65,7 @@ export default function Order() {
           "Category",
           "Quantity",
         ]}
-        list={[
-          OrderItem(
-            "Nvidia",
-            "./nvidia.png",
-            "Cool Product",
-            "1000",
-            "4.4",
-            "Super Cool",
-            "3"
-          ),
-          OrderItem(
-            "Nvidia",
-            "./nvidia.png",
-            "Cool Product",
-            "1000",
-            "4.4",
-            "Super Cool",
-            "3"
-          ),
-          OrderItem(
-            "Nvidia",
-            "./nvidia.png",
-            "Cool Product",
-            "1000",
-            "4.4",
-            "Super Cool",
-            "3"
-          ),
-        ]}
+        list={wishListItems2D}
       />
 
       {/* Order State */}

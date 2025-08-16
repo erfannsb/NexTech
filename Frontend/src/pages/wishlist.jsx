@@ -15,9 +15,10 @@ import { CardVariant1 } from "../components/cards";
 import { ButtonVariant2, ButtonVariant4 } from "../components/buttons";
 import { useEffect } from "react";
 import { fetchWithAuth } from "../../data/api";
-import { DeleteOrderItem, GetOrderings } from "../../data/orders";
+import { DeleteOrderItem, GetOrderings, PostShipping } from "../../data/orders";
 import useUIStore from "../ui_storage";
 import { useNavigate } from "react-router-dom";
+import { PostInstallment } from "../../data/payments";
 
 export default function WishList() {
   const [paying, setPaying] = useState();
@@ -36,6 +37,7 @@ export default function WishList() {
       }
 
       let data = await response.json();
+      data = data.filter((e) => e.is_confirmed == false);
       data = data[0];
       setOrderId(data.orderid);
       let items = data.items;
@@ -190,7 +192,22 @@ export default function WishList() {
     return price.toFixed(3);
   };
 
-  const onConfirmPurchase = () => {
+  const installmentMoentsToInteger = () => {
+    switch (month) {
+      case "3 Months":
+        return 3;
+      case "6 Months":
+        return 6;
+      case "12 Months":
+        return 12;
+      case "24 Months":
+        return 24;
+      default:
+        return 0;
+    }
+  };
+
+  const onConfirmPurchase = async () => {
     if (!activeUser) {
       alert("Please log in to confirm your purchase.");
       return;
@@ -210,8 +227,32 @@ export default function WishList() {
       return;
     }
 
-    const res = fetchWithAuth(() => {
-      return fetch(`/orders/orders/${orderId}/`, {
+    // getting orders first
+    const checkOrders = await fetchWithAuth(() => GetOrderings());
+
+    if (!checkOrders.ok) {
+      window.alert("Something went wrong with the api");
+      return;
+    }
+
+    let data = await checkOrders.json();
+    // check if there is some orders which are not processed yet then user cannot make another order
+    if (
+      data.some(
+        (e) =>
+          e.is_confirmed == true &&
+          ["Pending", "Processing", "Shipped"].includes(e.orderstatus)
+      )
+    ) {
+      window.alert(
+        "You have already ordered something wait until you're order is recieved"
+      );
+      return;
+    }
+
+    // Patching Order (order is now confirmed and sent to shop admins)
+    const res = await fetchWithAuth(() =>
+      fetch(`/orders/orders/${orderId}/`, {
         method: "PATCH",
         credentials: "include",
         headers: {
@@ -222,15 +263,49 @@ export default function WishList() {
           orderstatus: "Pending",
           is_confirmed: true,
         }),
-      });
-    });
+      })
+    );
+
+    console.log(res);
 
     if (!res.ok) {
-      console.error("Failed to confirm purchase");
+      console.error("Failed to confirm order");
       return;
     }
-    console.log("Purchase confirmed successfully");
-    console.log("res", res);
+    const dataFrom = await res.json();
+
+    // check if installment is selected then link an installment instance to the order
+    if (paying == "Installment") {
+      const resFromInstall = await fetchWithAuth(() =>
+        PostInstallment({
+          interestrate: INTEREST_RATE(),
+          totalprice: parseFloat(finalprice()),
+          installmentstatus: "Pending",
+          installmentmonths: installmentMoentsToInteger(),
+          startdate: new Date().toLocaleDateString("en-CA"),
+          monthspaid: 0,
+          orderid: orderId,
+        })
+      );
+
+      console.log({ resFromInstall });
+    }
+
+    // Create shipping entry
+
+    const resFromShipping = await fetchWithAuth(() =>
+      PostShipping({
+        shippingmethod: shipping,
+        shippingdate: new Date().toISOString(),
+        deliverydate: new Date(
+          Date.now() + 10 * 24 * 60 * 60 * 1000
+        ).toISOString(), // 10 days later
+        shippingstatus: "Pending",
+        orderid: dataFrom.orderid, // Assuming data.id is the order ID
+      })
+    );
+
+    console.log(resFromShipping);
 
     // Redirect to a confirmation page or show a success message
   };
@@ -264,112 +339,119 @@ export default function WishList() {
         )}
       </div>
       {/* Purchase */}
-      <div className="flex flex-col gap-2 max-md:row-start-2 max-md:row-end-3 max-md:col-start-1 max-md:col-end-3">
-        <h3 className="mt-3 font-black text-xl">Your Information</h3>
-        <div className="grid grid-template-columns: max-content max-content; grid-template-rows: max-content max-content; gap-3">
-          <CardVariant1
-            text={
-              activeUser?.addressprovince
-                ? `${activeUser.addressprovince}, ${activeUser.addresscity}, ${activeUser.addressstreet}`
-                : "No Address"
-            }
-            header="Address Review"
-            color="bg-[#EEBF69]"
-            className="col-start-1 col-end-3"
-            hide_bg={true}
-          />
-          <CardVariant1
-            text={activeUser?.postalcode || "No Postal Code"}
-            header="Postal Code"
-            color="bg-[#EE6969]"
-            hide_bg={true}
-          />
-          <CardVariant1
-            text="10 days "
-            header="Estimated Delivery Time"
-            color="bg-[#69EE69]"
-            hide_bg={true}
-          />
+      {orderId && (
+        <div className="flex flex-col gap-2 max-md:row-start-2 max-md:row-end-3 max-md:col-start-1 max-md:col-end-3">
+          <h3 className="mt-3 font-black text-xl">Your Information</h3>
+          <div className="grid grid-template-columns: max-content max-content; grid-template-rows: max-content max-content; gap-3">
+            <CardVariant1
+              text={
+                activeUser?.addressprovince
+                  ? `${activeUser.addressprovince}, ${activeUser.addresscity}, ${activeUser.addressstreet}`
+                  : "No Address"
+              }
+              header="Address Review"
+              color="bg-[#EEBF69]"
+              className="col-start-1 col-end-3"
+              hide_bg={true}
+            />
+            <CardVariant1
+              text={activeUser?.postalcode || "No Postal Code"}
+              header="Postal Code"
+              color="bg-[#EE6969]"
+              hide_bg={true}
+            />
+            <CardVariant1
+              text="10 days "
+              header="Estimated Delivery Time"
+              color="bg-[#69EE69]"
+              hide_bg={true}
+            />
 
-          <button
-            className="underline text-[#6274F7] cursor-pointer w-fit text-sm mb-3"
-            onClick={() => navigate("/settings")}
-          >
-            Edit Your Information
-          </button>
+            <button
+              className="underline text-[#6274F7] cursor-pointer w-fit text-sm mb-3"
+              onClick={() => navigate("/settings")}
+            >
+              Edit Your Information
+            </button>
+          </div>
         </div>
-      </div>
+      )}
+
       {/* Confirm */}
 
-      <div className="md:self-end max-md:row-start-3 max-md:row-end-4 max-md:col-start-1 max-md:col-end-3">
-        <h3 className="text-xl font-bold mt-3 mb-1">Purchase</h3>
-        <div className="flex flex-col gap-2">
-          <InputVariant1
-            placeholder="Apply Coupan"
-            img={<TicketPercent size={17} />}
-            className="p-2 md:w-[250px] max-md:w-full mt-2"
-          />
-          <InputVariant3
-            placeholder="Choosing Paying Option"
-            img={<CirclePoundSterling size={17} />}
-            className="p-2 text-sm md:w-[250px] max-md:w-full max-md:max-w-full"
-            selected={paying}
-            onSelect={setPaying}
-            options={["Credit Card", "Installment", "Cash On Delivery"]}
-          />
-          {paying === "Installment" && (
-            <InputVariant3
-              placeholder="Choose Paying Month"
-              img={<Calendar size={17} />}
-              className="p-2 text-sm md:w-[250px] max-md:w-full max-md:max-w-full"
-              selected={month}
-              onSelect={setMonth}
-              options={["3 Months", "6 Months", "12 Months", "24 Months"]}
+      {orderId && (
+        <div className="md:self-end max-md:row-start-3 max-md:row-end-4 max-md:col-start-1 max-md:col-end-3">
+          <h3 className="text-xl font-bold mt-3 mb-1">Purchase</h3>
+          <div className="flex flex-col gap-2">
+            <InputVariant1
+              placeholder="Apply Coupan"
+              img={<TicketPercent size={17} />}
+              className="p-2 md:w-[250px] max-md:w-full mt-2"
             />
-          )}
-          <InputVariant3
-            placeholder="Choosing Shipping Option"
-            img={<Truck size={17} />}
-            className="p-2 text-sm md:w-[250px] max-md:w-full max-md:max-w-full"
-            selected={shipping}
-            onSelect={setShipping}
-            options={["Express", "Economic"]}
-          />
-        </div>
-        <div className=" p-4 text-white mt-4  rounded-md">
-          <h2 className="text-xl font-black mb-4">
-            {totalItems} Items Selected
-          </h2>
-          <div className="flex flex-col">
+            <InputVariant3
+              placeholder="Choosing Paying Option"
+              img={<CirclePoundSterling size={17} />}
+              className="p-2 text-sm md:w-[250px] max-md:w-full max-md:max-w-full"
+              selected={paying}
+              onSelect={setPaying}
+              options={["Credit Card", "Installment", "Cash On Delivery"]}
+            />
             {paying === "Installment" && (
-              <div className="flex justify-between my-2">
-                <h3 className="font-bold text-md">Interest Rate:</h3>
-                <h4 className="text-[#BEC4F4] font-bold">{INTEREST_RATE()}%</h4>
-              </div>
+              <InputVariant3
+                placeholder="Choose Paying Month"
+                img={<Calendar size={17} />}
+                className="p-2 text-sm md:w-[250px] max-md:w-full max-md:max-w-full"
+                selected={month}
+                onSelect={setMonth}
+                options={["3 Months", "6 Months", "12 Months", "24 Months"]}
+              />
             )}
-            <div className="flex justify-between my-2">
-              <h3 className="font-bold text-md">Products Total Price::</h3>
-              <h4 className="text-[#BEC4F4] font-bold">${totalprice}</h4>
-            </div>
-            <div className="flex justify-between my-2">
-              <h3 className="font-bold text-md">Delivery Price:</h3>
-              <h4 className="text-[#BEC4F4] font-bold">${DELIVERY_PRICE}</h4>
-            </div>
-            <div className="flex justify-between border-t border-[#26262B] py-2 mt-2">
-              <h3 className="font-bold text-md">Total Price: </h3>
-              <h4 className="text-[#BEC4F4] font-bold text-lg">
-                ${finalprice()}
-              </h4>
-            </div>
+            <InputVariant3
+              placeholder="Choosing Shipping Option"
+              img={<Truck size={17} />}
+              className="p-2 text-sm md:w-[250px] max-md:w-full max-md:max-w-full"
+              selected={shipping}
+              onSelect={setShipping}
+              options={["Express", "Economic"]}
+            />
           </div>
-          <ButtonVariant4
-            className="ml-auto mt-2"
-            text="Confirm And Purchase"
-            img={<ShoppingCart size={16} />}
-            onClick={onConfirmPurchase}
-          />
+          <div className=" p-4 text-white mt-4  rounded-md">
+            <h2 className="text-xl font-black mb-4">
+              {totalItems} Items Selected
+            </h2>
+            <div className="flex flex-col">
+              {paying === "Installment" && (
+                <div className="flex justify-between my-2">
+                  <h3 className="font-bold text-md">Interest Rate:</h3>
+                  <h4 className="text-[#BEC4F4] font-bold">
+                    {INTEREST_RATE()}%
+                  </h4>
+                </div>
+              )}
+              <div className="flex justify-between my-2">
+                <h3 className="font-bold text-md">Products Total Price::</h3>
+                <h4 className="text-[#BEC4F4] font-bold">${totalprice}</h4>
+              </div>
+              <div className="flex justify-between my-2">
+                <h3 className="font-bold text-md">Delivery Price:</h3>
+                <h4 className="text-[#BEC4F4] font-bold">${DELIVERY_PRICE}</h4>
+              </div>
+              <div className="flex justify-between border-t border-[#26262B] py-2 mt-2">
+                <h3 className="font-bold text-md">Total Price: </h3>
+                <h4 className="text-[#BEC4F4] font-bold text-lg">
+                  ${finalprice()}
+                </h4>
+              </div>
+            </div>
+            <ButtonVariant4
+              className="ml-auto mt-2"
+              text="Confirm And Purchase"
+              img={<ShoppingCart size={16} />}
+              onClick={onConfirmPurchase}
+            />
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }
