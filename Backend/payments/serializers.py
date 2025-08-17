@@ -13,6 +13,8 @@ class InstallmentSerializer(serializers.ModelSerializer):
         model = Installment
         fields = '__all__'
 
+        
+
 class InstallmentpaymentSerializer(serializers.ModelSerializer):
 
     class Meta:

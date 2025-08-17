@@ -88,7 +88,7 @@ class Shipping(models.Model):
     shippingdate = models.DateTimeField(db_column='ShippingDate')  # Field name made lowercase.
     deliverydate = models.DateTimeField(db_column='DeliveryDate')  # Field name made lowercase.
     shippingstatus = models.CharField(db_column='ShippingStatus', max_length=10)  # Field name made lowercase.
-    orderid = models.ForeignKey(Ordering,db_column="orderID", on_delete=models.CASCADE)
+    orderid = models.ForeignKey(Ordering,db_column="orderID", on_delete=models.CASCADE, related_name='shipping')
     class Meta:
         managed = False
         db_table = 'shipping'

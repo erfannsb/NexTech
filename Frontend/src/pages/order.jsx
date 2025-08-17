@@ -7,9 +7,10 @@ import { fetchWithAuth } from "../../data/api";
 import { GetOrderings } from "../../data/orders";
 
 export default function Order() {
-  const [orders, setOrders] = useState([]);
-  const [current_order, setCurrentOrder] = useState([]);
-
+  const [ordersHistory, setOrdersHistory] = useState([]);
+  const [currentOrderItems, setCurrentOrderItems] = useState([]); // Renamed for clarity
+  const [currentOrderData, setCurrentOrderData] = useState(null); // Added for order info
+  const [installment, setInstallment] = useState(null);
   useEffect(() => {
     const fetchData = async () => {
       const res = await fetchWithAuth(() => GetOrderings());
@@ -19,17 +20,32 @@ export default function Order() {
       }
       let orders = await res.json();
       orders = orders.filter((e) => e.is_confirmed);
-      setOrders(orders);
+
       let current_order = orders.filter((e) =>
         ["Pending", "Processing", "Shipped"].includes(e.orderstatus)
       )[0];
-      setCurrentOrder(current_order.items);
-      console.log(current_order);
+
+      // fetching history of orders
+
+      let history_orders = orders.filter((e) =>
+        ["Delivered", "Cancelled"].includes(e.orderstatus)
+      );
+
+      setOrdersHistory(history_orders);
+      if (current_order) {
+        // Store both the items and the full order data
+        setCurrentOrderItems(current_order.items || []);
+        setCurrentOrderData(current_order); // Store the full order object
+        console.log({ current_order });
+
+        // checking if current order has any installment
+        setInstallment(current_order.installment);
+      }
     };
     fetchData();
   }, []);
 
-  const wishListItems2D = current_order.map((item) => [
+  const wishListItems2D = [...currentOrderItems].map((item) => [
     <span>{item.product.brand}</span>,
     <span>{item.product.name}</span>,
     <span>{item.shop_product.price}</span>,
@@ -47,6 +63,20 @@ export default function Order() {
     </div>,
   ]);
 
+  const historyList = [...ordersHistory].map((item) => [
+    <span>{item.orderid}</span>,
+    <span>
+      {item.items
+        .slice(0, 3)
+        .map((e) => e.product.name)
+        .join(", ")}
+    </span>,
+    <span>{item.orderdate}</span>,
+    <span>{item.orderstatus}</span>,
+  ]);
+
+  console.log(historyList);
+
   return (
     <div className="md:mx-10">
       <h2 className="font-bold text-lg">Order List</h2>
@@ -54,81 +84,96 @@ export default function Order() {
         List of things you ordered recently
       </p>
 
-      <Table
-        className="max-h-[60vh]"
-        py={1}
-        headerItems={[
-          "Company",
-          "Product",
-          "Price",
-          "Rate",
-          "Category",
-          "Quantity",
-        ]}
-        list={wishListItems2D}
-      />
-
+      {currentOrderItems?.length != 0 ? (
+        <Table
+          className="max-h-[60vh]"
+          py={2}
+          headerItems={[
+            "Company",
+            "Product",
+            "Price",
+            "Rate",
+            "Category",
+            "Quantity",
+          ]}
+          list={wishListItems2D}
+        />
+      ) : (
+        <p className="bg-red-400 p-2 w-fit rounded-md font-bold text-black">
+          No order yet
+        </p>
+      )}
       {/* Order State */}
-      <h2 className="font-bold text-lg my-3">Order State</h2>
-      <div className="flex max-sm:flex-col">
-        {/* Order Info */}
-        <div className="flex flex-col max-sm:mb-3">
-          <CardVariant1
-            text={"something"}
-            header={"Order ID"}
-            color={"bg-red-300"}
-            hide_bg={true}
-          />
-          <CardVariant1
-            text={"something"}
-            header={"Estimated Delivery Time"}
-            color={"bg-red-300"}
-            hide_bg={true}
-          />
-          <CardVariant1
-            text={"something"}
-            header={"Shipping Method"}
-            color={"bg-red-300"}
-            hide_bg={true}
-          />
-          <CardVariant1
-            text={"something"}
-            header={"Payment Method"}
-            color={"bg-red-300"}
-            hide_bg={true}
-          />
-        </div>
-        {/* State of Order */}
-        <div className="card-variant-1 flex flex-col items-center sm:mx-4 justify-center rounded-lg p-3 sm:max-w-[300px] max-sm:mb-3">
-          <h3 className="font-bold ">Pending ⏳</h3>
-          <p className="font-light text-sm my-2 text-[#C4C2C2] text-center">
-            Lorem ipsum dolor sit amet komm tanzen ich will nicht komm
-            spatzirieren ich will nicht stoppen sie jetzt
-          </p>
-        </div>
+      {currentOrderItems?.length != 0 && (
+        <>
+          <h2 className="font-bold text-lg my-3">Order State</h2>
+          <div className="flex max-sm:flex-col">
+            {/* Order Info */}
+            <div className="flex flex-col max-sm:mb-3">
+              <CardVariant1
+                text={currentOrderData?.orderid}
+                header={"Order ID"}
+                color={"bg-red-300"}
+                hide_bg={true}
+              />
+              <CardVariant1
+                text={"10 Days"}
+                header={"Estimated Delivery Time"}
+                color={"bg-red-300"}
+                hide_bg={true}
+              />
+              <CardVariant1
+                text={currentOrderData?.shipping.shippingmethod}
+                header={"Shipping Method"}
+                color={"bg-red-300"}
+                hide_bg={true}
+              />
+              <CardVariant1
+                text={"-"}
+                header={"Payment Method"}
+                color={"bg-red-300"}
+                hide_bg={true}
+              />
+            </div>
+            {/* State of Order */}
+            <div className="card-variant-1 flex flex-col items-center sm:mx-4 justify-center rounded-lg p-3 sm:max-w-[300px] max-sm:mb-3">
+              <h3 className="font-bold ">{currentOrderData?.orderstatus} ⏳</h3>
+              <p className="font-light text-sm my-2 text-[#C4C2C2] text-center">
+                Lorem ipsum dolor sit amet komm tanzen ich will nicht komm
+                spatzirieren ich will nicht stoppen sie jetzt
+              </p>
+            </div>
 
-        {/* Installment Status */}
-        <div className="flex flex-col sm:w-[300px] bg-[rgba(24,23,27,0.69)] p-4 text-white border border-[#26262B] rounded-md">
-          <h3 className="font-bold text-lg">Installment Status</h3>
-          <div className="flex justify-between w-full mt-3">
-            <p className="text-[#898989] text-sm">Paid Months</p>
-            <h3 className="text-sm">0</h3>
+            {/* Installment Status */}
+            {installment && (
+              <div className="flex flex-col sm:w-[300px] bg-[rgba(24,23,27,0.69)] p-4 text-white border border-[#26262B] rounded-md">
+                <h3 className="font-bold text-lg">Installment Status</h3>
+                <div className="flex justify-between w-full mt-3">
+                  <p className="text-[#898989] text-sm">Total Price</p>
+                  <h3 className="text-sm">{installment?.totalprice}</h3>
+                </div>
+                <div className="flex justify-between w-full mt-3">
+                  <p className="text-[#898989] text-sm">Paid Months</p>
+                  <h3 className="text-sm">{installment?.monthspaid}</h3>
+                </div>{" "}
+                <div className="flex justify-between w-full mt-3">
+                  <p className="text-[#898989] text-sm">Total Months</p>
+                  <h3 className="text-sm">{installment?.installmentmonths}</h3>
+                </div>
+                <div className="flex justify-between w-full mt-3">
+                  <p className="text-[#898989] text-sm">Installment Status</p>
+                  <h3 className="text-sm">{installment?.installmentstatus}</h3>
+                </div>
+                <ButtonVariant3
+                  text={"Pay Now"}
+                  img={<Euro />}
+                  className={"ml-auto mt-auto"}
+                />
+              </div>
+            )}
           </div>
-          <div className="flex justify-between w-full mt-3">
-            <p className="text-[#898989] text-sm">Paid Months</p>
-            <h3 className="text-sm">0</h3>
-          </div>{" "}
-          <div className="flex justify-between w-full mt-3">
-            <p className="text-[#898989] text-sm">Paid Months</p>
-            <h3 className="text-sm">0</h3>
-          </div>
-          <ButtonVariant3
-            text={"Pay Now"}
-            img={<Euro />}
-            className={"ml-auto mt-auto"}
-          />
-        </div>
-      </div>
+        </>
+      )}
 
       {/* Order History */}
       <h2 className="font-bold text-lg mt-8">Order History</h2>
@@ -137,22 +182,9 @@ export default function Order() {
       </p>
 
       <Table
-        py={1}
-        headerItems={["OrderID", "Order Items", "Date", "Total Price", ""]}
-        list={[
-          OrderHistoryItem(
-            "123123123",
-            ["p1", "p2", "p3", "p4"],
-            "12/21/12",
-            "1200"
-          ),
-          OrderHistoryItem(
-            "123123123",
-            ["p1", "p2", "p3", "p4"],
-            "12/21/12",
-            "1200"
-          ),
-        ]}
+        py={2}
+        headerItems={["OrderID", "Order Items", "Date", "Order Status"]}
+        list={historyList}
       />
     </div>
   );
