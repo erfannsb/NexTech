@@ -1,15 +1,12 @@
 from django.db import models
 from products.models import Product
+from users.models import Customer
 
 class Shop(models.Model):
     shopname = models.CharField(db_column='ShopName', unique=True, max_length=512)  # Field name made lowercase.
     shopid = models.AutoField(db_column='ShopID', primary_key=True)  # Field name made lowercase.
-    rating = models.DecimalField(db_column='Rating', max_digits=3, decimal_places=2)  # Field name made lowercase.
+    rating = models.DecimalField(db_column='Rating', max_digits=3, decimal_places=2, blank=True)  # Field name made lowercase.
     postalcode = models.CharField(db_column='PostalCode', max_length=10)  # Field name made lowercase.
-    addressprovince = models.CharField(db_column='AddressProvince', max_length=256, blank=True, null=True)  # Field name made lowercase.
-    addresscity = models.CharField(db_column='AddressCity', max_length=256, blank=True, null=True)  # Field name made lowercase.
-    addressstreet = models.CharField(db_column='AddressStreet', max_length=256, blank=True, null=True)  # Field name made lowercase.
-    addressdetails = models.TextField(db_column='AddressDetails', blank=True, null=True)  # Field name made lowercase.
 
     class Meta:
         managed = False
@@ -53,16 +50,9 @@ class Discountproduct(models.Model):
 
 
 class ShopAdmin(models.Model):
-    adminid = models.AutoField(db_column='AdminID', primary_key=True)  # Field name made lowercase.
-    phonenumber = models.CharField(db_column='PhoneNumber', unique=True, max_length=20)  # Field name made lowercase.
-    firstname = models.CharField(db_column='FirstName', max_length=50)  # Field name made lowercase.
-    lastname = models.CharField(db_column='LastName', max_length=50)  # Field name made lowercase.
-    shopadminrole = models.CharField(db_column='ShopAdminRole', max_length=20)  # Field name made lowercase.
-    emailaddress = models.CharField(db_column='EmailAddress', unique=True, max_length=255)  # Field name made lowercase.
-    passwordsalt = models.CharField(db_column='PasswordSalt', max_length=64)  # Field name made lowercase.
-    passwordhash = models.CharField(db_column='PasswordHash', max_length=64)  # Field name made lowercase.
-    createdat = models.DateTimeField(db_column='CreatedAt')  # Field name made lowercase.
-    shopid = models.ForeignKey(Shop, models.DO_NOTHING, db_column='ShopID')  # Field name made lowercase.
+    id = models.AutoField(db_column="id", primary_key=True)
+    adminid = models.ForeignKey(Customer,models.DO_NOTHING, db_column='AdminID') 
+    shopid = models.ForeignKey(Shop, models.DO_NOTHING, db_column='ShopID')
 
     class Meta:
         managed = False

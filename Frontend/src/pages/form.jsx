@@ -4,13 +4,17 @@ import Header from "../components/header";
 import { Input, InputVariant1 } from "../components/inputs";
 import { useNavigate } from "react-router-dom";
 import { data, useParams } from "react-router";
-import { useRef, useState } from "react";
+import { use, useRef, useState } from "react";
 import { logIn, PostCustomer } from "../../data/users";
+import { fetchWithAuth } from "../../data/api";
 import {
   isValidEmail,
   isValidName,
   isValidPassword,
+  isOnlyDigits,
 } from "../../utils/validate";
+import { PostShop } from "../../data/shops";
+import useUIStore from "../ui_storage";
 
 export default function Form() {
   const navigate = useNavigate();
@@ -53,6 +57,8 @@ export default function Form() {
           <Login />
         ) : typeParam.toLocaleLowerCase() === "signup" ? (
           <SignUp />
+        ) : typeParam.toLocaleLowerCase() === "createshop" ? (
+          <CreateShop />
         ) : (
           <div className="text-white">
             Form type: {typeParam || "No type specified"}
@@ -109,6 +115,7 @@ export function Login() {
           type={"password"}
           className="mb-3"
         />
+
         {/* Form Error */}
         {isError && (
           <div className="text-[12px] mb-2 text-red-400">* {isError}</div>
@@ -134,6 +141,7 @@ export function SignUp() {
   const emailRef = useRef(null);
   const passwordRef = useRef(null);
   const ConfirmPassRef = useRef(null);
+  const isShopAdmin = useRef(null);
   const [isError, setError] = useState(false);
   const [inputError, setInputError] = useState({
     Err_firstN: false,
@@ -154,6 +162,7 @@ export function SignUp() {
       email: emailRef.current.value.trim(),
       password: passwordRef.current.value,
       confirmPass: ConfirmPassRef.current.value,
+      isShopAdmin: isShopAdmin.current.value,
     };
 
     // Validation rules with error messages
@@ -238,6 +247,7 @@ export function SignUp() {
         lastname: formData.lastName,
         emailaddress: formData.email,
         password: formData.password,
+        isshopadmin: formData.isShopAdmin,
       });
 
       if (!response.ok) {
@@ -320,6 +330,10 @@ export function SignUp() {
           required
           alert={inputError.Err_ConfPass}
         />
+        <div className="flex mb-3 ml-1 h-fit">
+          <h3 className="text-sm mr-2">Are you a shop admin?</h3>
+          <input type="checkbox" ref={isShopAdmin} />
+        </div>
         {/* Form Error */}
         {isError && (
           <div className="text-[12px] mb-2 text-red-400 col-start-1 col-end-3">
@@ -331,7 +345,74 @@ export function SignUp() {
           onClick={onSubmit}
           className="h-fit card-variant-2 w-fit py-[7px] px-6 rounded-md cursor-pointer text-sm ml-auto hover:scale-[1.02] transition col-start-2"
         >
-          Login
+          Sign Up
+        </button>
+      </form>
+    </div>
+  );
+}
+
+export function CreateShop() {
+  const shopName = useRef(null);
+  const postalCode = useRef(null);
+  const [isError, setError] = useState(false);
+  const activeUser = useUIStore((state) => state.active_user);
+
+  const onSubmit = async (e) => {
+    e.preventDefault();
+    const shop_name = shopName.current.value;
+    const postal_code = postalCode.current.value;
+
+    if (!shop_name || !postal_code) {
+      setError("all fields are required");
+      return;
+    }
+    if (!isOnlyDigits(postal_code)) {
+      setError("Postal Code is not valid");
+      return;
+    }
+
+    const res = await fetchWithAuth(() =>
+      PostShop({
+        shopname: shop_name,
+        postalcode: postal_code,
+      })
+    );
+
+    if (!res.ok) {
+      console.error("posting shop was not successful");
+    }
+  };
+
+  return (
+    <div className="flex flex-1 w-full h-full justify-center items-center">
+      {/* Form */}
+      <form className="card-variant-3 p-10 rounded-md flex flex-col">
+        {/* Title */}
+        <h3 className="font-black text-xl mb-3">Create A Shop</h3>
+        <Input
+          label={"Shop Name"}
+          ref={shopName}
+          placeholder="Enter Shop Name"
+          className="mb-3 min-w-[300px]"
+        />
+        <Input
+          ref={postalCode}
+          label={"Shop Postal Code"}
+          placeholder="Enter Postal Code"
+          type={"number"}
+          className="mb-3"
+        />
+        {isError && (
+          <div className="text-[12px] mb-2 text-red-400 col-start-1 col-end-3">
+            * {isError}
+          </div>
+        )}
+        <button
+          className=" card-variant-2 w-fit py-[7px] px-6 rounded-md cursor-pointer text-sm ml-auto hover:scale-[1.02] transition"
+          onClick={onSubmit}
+        >
+          Create
         </button>
       </form>
     </div>

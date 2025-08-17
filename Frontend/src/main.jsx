@@ -4,6 +4,13 @@ import App from "./App.jsx";
 import { createBrowserRouter, RouterProvider } from "react-router";
 import AdminApp from "./AdminApp.jsx";
 import Form from "./pages/form.jsx";
+import ProtectedAdminRoute from "./admin_pages/admin.jsx";
+
+const AdminAppProtected = () => (
+  <ProtectedAdminRoute>
+    <AdminApp />
+  </ProtectedAdminRoute>
+);
 
 let router = createBrowserRouter([
   {
@@ -24,12 +31,12 @@ let router = createBrowserRouter([
     path: "/admin/dashboard",
     Component: AdminApp,
   },
-  { path: "/admin/dashboard/home", Component: AdminApp },
-  { path: "/admin/dashboard/inventory", Component: AdminApp },
-  { path: "/admin/dashboard/orders", Component: AdminApp },
-  { path: "/admin/dashboard/discounts", Component: AdminApp },
-  { path: "/admin/dashboard/finance", Component: AdminApp },
-  { path: "/admin/dashboard/settings", Component: AdminApp },
+  { path: "/admin/dashboard/home", Component: AdminAppProtected },
+  { path: "/admin/dashboard/inventory", Component: AdminAppProtected },
+  { path: "/admin/dashboard/orders", Component: AdminAppProtected },
+  { path: "/admin/dashboard/discounts", Component: AdminAppProtected },
+  { path: "/admin/dashboard/finance", Component: AdminAppProtected },
+  { path: "/admin/dashboard/settings", Component: AdminAppProtected },
 ]);
 
 createRoot(document.getElementById("root")).render(

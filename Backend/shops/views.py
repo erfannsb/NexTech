@@ -2,10 +2,11 @@ from rest_framework import viewsets
 from .serializers import *
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters
-
+from .permissions import IsShopOwnerOrReadOnly
 class ShopViewSet(viewsets.ModelViewSet):
     queryset = Shop.objects.all()
     serializer_class = ShopSerializer
+    permission_classes = [IsShopOwnerOrReadOnly]
 
 class ShopProductViewSet(viewsets.ModelViewSet):
     queryset = ShopProduct.objects.all()

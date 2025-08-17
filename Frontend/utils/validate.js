@@ -18,3 +18,8 @@ export function isValidPhoneNumber(phoneNumber) {
   const phoneRegex = /^\+?[0-9]{10,15}$/;
   return phoneRegex.test(phoneNumber);
 }
+
+export function isOnlyDigits(str) {
+  const digitPattern = /^\d+$/;
+  return digitPattern.test(str);
+}

@@ -8,7 +8,6 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.contrib.auth.hashers import check_password
 
-
 class CustomerViewSet(viewsets.ModelViewSet):
     queryset = Customer.objects.all()
     
@@ -51,6 +50,7 @@ class CustomerViewSet(viewsets.ModelViewSet):
                 return Customer.objects.filter(pk=self.request.user.pk)
             return Customer.objects.none()
         return Customer.objects.all()
+    
 
 class AdminsViewSet(viewsets.ModelViewSet):
     queryset = Admins.objects.all()

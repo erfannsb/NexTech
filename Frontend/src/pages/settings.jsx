@@ -1,4 +1,4 @@
-import { KeyRound, RedoDot, Trash } from "lucide-react";
+import { KeyRound, LogOut, RedoDot, Trash } from "lucide-react";
 import { ButtonVariant3 } from "../components/buttons";
 import { Input } from "../components/inputs";
 import useUIStore from "../ui_storage";
@@ -206,6 +206,17 @@ export default function Settings() {
     });
   };
 
+  const onLogOut = async () => {
+    const res = await fetch("/api/auth/logout/", {
+      method: "POST",
+      credentials: "include",
+    });
+    console.log(res);
+    if (res.ok) {
+      location.reload();
+    }
+  };
+
   const onAccountDelete = () => {
     if (window.confirm("Are you sure you want to delete your account?")) {
       fetchWithAuth(() => DeleteCustomer(activeUser.customerid, "delete"))
@@ -347,6 +358,18 @@ export default function Settings() {
             img={<Trash />}
             className={"mt-3"}
             onClick={onAccountDelete}
+          />
+        </div>
+        <div className="mt-10 flex flex-col justify-center items-center border-[#26262B] border p-2 rounded-lg h-[200px]">
+          <h3 className="font-bold text-xl mb-3">Log out</h3>
+          <p className="text-center text-sm text-[#B6B6B6] font-light">
+            If you wish to log out this is the place
+          </p>
+          <ButtonVariant3
+            text={"Log Out"}
+            img={<LogOut />}
+            className={"mt-3"}
+            onClick={onLogOut}
           />
         </div>
       </div>

@@ -14,6 +14,7 @@ class Customer(AbstractBaseUser, PermissionsMixin):
     addresscity = models.CharField(db_column='AddressCity', max_length=256, blank=True, null=True)  # Field name made lowercase.
     addressstreet = models.CharField(db_column='AddressStreet', max_length=256, blank=True, null=True)  # Field name made lowercase.
     addressdetails = models.TextField(db_column='AddressDetails', blank=True, null=True)  # Field name made lowercase.
+    isshopadmin = models.BooleanField(db_column="isShopAdmin")
 
     USERNAME_FIELD = "emailaddress"
     REQUIRED_FIELDS = ["firstname"]

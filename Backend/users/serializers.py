@@ -8,17 +8,18 @@ class CustomerRegistrationSerializer(serializers.ModelSerializer):
 
     class Meta:
          model = Customer
-         fields = ['email', 'password', 'firstname', 'lastname']
+         fields = ['emailaddress', 'password', 'firstname', 'lastname', 'isshopadmin']
          extra_kwargs = {
-             'email': {'required': True, 'allow_blank': False},
+             'emailaddress': {'required': True, 'allow_blank': False},
              'password': {'write_only': True, 'required': True, 'allow_blank': False},
              'firstname': {'required': True, 'allow_blank': False},
-             'lastname': {'required': True, 'allow_blank': False}
+             'lastname': {'required': True, 'allow_blank': False},
+             'isshopadmin': {'required': True}
          }
 
     def validate(self, attr):
         # Custom validation logic can be added here
-        if not attr.get('email'):
+        if not attr.get('emailaddress'):
             raise serializers.ValidationError("Email is required")
         if not attr.get('password'):
             raise serializers.ValidationError("Password is required")
