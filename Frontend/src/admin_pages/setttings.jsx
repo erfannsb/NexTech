@@ -2,18 +2,32 @@ import { Pencil, Trash } from "lucide-react";
 import { ButtonVariant2 } from "../components/buttons";
 import { Input } from "../components/inputs";
 import Table from "../components/tables";
-
+import { useState, useEffect } from "react";
+import { fetchWithAuth } from "./../../data/api";
+import useUIStore from "./../ui_storage";
+import { useNavigate } from "react-router-dom";
 export default function Settigns() {
-  //fetch admins
-
-  const admins = [
-    {
-      name: "John Doe",
-      email: "johndoe@gmail.com",
-      role: "Full Admin",
-      actions: "Can do everything",
-    },
-  ];
+  const [hasShop, setHasShop] = useState(null);
+  const activeUser = useUIStore((state) => state.active_user);
+  const navigate = useNavigate();
+  useEffect(() => {
+    const fetchData = async () => {
+      let res = await fetchWithAuth(() =>
+        fetch(`/shops/shopAdmin/?adminid=${activeUser.customerid}`)
+      );
+      if (!res.ok) {
+        console.error("fetching from shopAdmin failed");
+        return;
+      }
+      res = await res.json();
+      if (res.length == 0) {
+        setHasShop(false);
+      } else {
+        setHasShop(true);
+      }
+    };
+    fetchData();
+  });
 
   return (
     <div className="px-10">
@@ -21,12 +35,23 @@ export default function Settigns() {
         {/* Store settings */}
         <div className="md:w-[40%] w-full">
           <h3 className="font-bold text-lg">Store Information</h3>
-          <p className="text-gray-300 text-sm">
-            Click On Each Field You Wish To Update
-          </p>
+          {hasShop ? (
+            <>
+              <p className="text-gray-300 text-sm">
+                Click On Each Field You Wish To Update
+              </p>
 
-          <Input label="Store name" className="my-2" />
-          <Input label="Store description" />
+              <Input label="Store name" className="my-2" />
+              <Input label="Store description" />
+            </>
+          ) : (
+            <p
+              className="text-sm font-bold text-blue-400 underline cursor-pointer"
+              onClick={() => navigate("/form/createshop")}
+            >
+              Please create a shop first
+            </p>
+          )}
         </div>
 
         {/* Payment Gateways method */}
@@ -57,9 +82,9 @@ export default function Settigns() {
         <Table
           className="mt-4"
           headerItems={["Name", "Email", "Role", "Actions", ""]}
-          list={admins.map((admin) =>
-            AdminItem(admin.name, admin.email, admin.role, admin.actions)
-          )}
+          // list={.map((admin) =>
+          //   AdminItem(admin.name, admin.email, admin.role, admin.actions)
+          // )}
         />
       </div>
     </div>

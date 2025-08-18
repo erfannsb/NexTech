@@ -6,6 +6,12 @@ class IsShopOwnerOrReadOnly(permissions.BasePermission):
     Read-only for everyone.
     Write access only for shop admins.
     """
+
+    def has_permission(self, request, view):
+        if request.method in permissions.SAFE_METHODS:
+            return True
+        return False
+
     def has_object_permission(self, request, view, obj):
         # If the request method is safe (GET, HEAD, OPTIONS), allow access
         if request.method in permissions.SAFE_METHODS:

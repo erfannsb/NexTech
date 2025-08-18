@@ -26,6 +26,7 @@ export default function Settings() {
   const newPasswordRef = useRef(null);
   const confirmNewPasswordRef = useRef(null);
   const activeUser = useUIStore((state) => state.active_user);
+  const setActiveUser = useUIStore((state) => state.setActiveUser);
   const [errros, setErrors] = useState({
     firstName: false,
     lastName: false,
@@ -213,6 +214,7 @@ export default function Settings() {
     });
     console.log(res);
     if (res.ok) {
+      setActiveUser(false);
       location.reload();
     }
   };

@@ -43,27 +43,15 @@ export async function GetShop(id) {
 }
 
 export async function PostShop(shop) {
-  try {
-    const response = await fetch("/shops/shops/", {
-      method: "POST",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(shop),
-    });
-
-    if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`);
-    }
-
-    const data = await response.json();
-    console.log("Shop created:", data);
-    return data;
-  } catch (error) {
-    console.error("Failed to post shop:", error);
-    throw error;
-  }
+  const response = await fetch("/shops/shops/", {
+    method: "POST",
+    credentials: "include",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(shop),
+  });
+  return response;
 }
 
 export async function UpdateShop(shopId, shop) {

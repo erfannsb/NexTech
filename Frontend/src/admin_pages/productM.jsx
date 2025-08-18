@@ -6,19 +6,40 @@ import {
 } from "../components/buttons";
 import { InputVariant1 } from "../components/inputs";
 import Table from "../components/tables";
-
+import useUIStore from "../ui_storage";
+import { useEffect, useState } from "react";
+import { fetchWithAuth } from "../../data/api";
 export default function ProductManageMent() {
-  //fetching products
+  const shop_products = useUIStore((state) => state.shop_products);
+  const setShopProducts = useUIStore((state) => state.setShopProducts);
+  const active_shop = useUIStore((state) => state.active_shop);
+  const [products, setProducts] = useState([]);
 
-  const products = [
-    {
-      productName: "Something in you and Me",
-      productCompany: "Nvidia",
-      price: "1000",
-      installable: true,
-      inventoryStock: "100",
-    },
-  ];
+  useEffect(() => {
+    const fetchData = async () => {
+      console.log({ shop_products, active_shop });
+      let resFromProducts = await fetchWithAuth(
+        () => fetch(`/shops/shops/${active_shop.shopid}/products/`),
+        {
+          method: "GET",
+          credentials: "include",
+        }
+      );
+
+      if (!resFromProducts.ok) {
+        console.error("Fetching Products Failed");
+        return;
+      }
+      resFromProducts = await resFromProducts.json();
+      setShopProducts(resFromProducts);
+      setProducts(resFromProducts);
+      console.log({ resFromProducts });
+    };
+    fetchData();
+  }, []);
+
+  console.log(shop_products);
+  //fetching products
 
   return (
     <div>
@@ -29,9 +50,6 @@ export default function ProductManageMent() {
           img={<Search size={15} />}
           className={"py-1 px-2 w-[200px] text-sm"}
         />
-        {["Pending", "Shipped", "Delivered"].map((e) => (
-          <ButtonVariant1 text={e} color={"bg-red-300"} className={"text-sm"} />
-        ))}
 
         <ButtonVariant4
           className={"ml-auto"}
@@ -46,16 +64,17 @@ export default function ProductManageMent() {
           "Product Name",
           "Product Company",
           "Price",
-          "Installable",
+          "Rate",
           "Inventory stock",
+          "Sells",
         ]}
-        list={products.map((e) =>
+        list={products?.map((e) =>
           ProductItem(
-            e.productName,
-            e.productCompany,
-            e.price,
-            e.installable,
-            e.inventoryStock
+            e.name,
+            e.brand,
+            e.shop_products,
+            e.rating,
+            active_shop.shopid
           )
         )}
       />
@@ -66,18 +85,21 @@ export default function ProductManageMent() {
 export function ProductItem(
   productName,
   productCompany,
-  price,
-  installable,
-  inventoryStock
+  shop_products,
+  rate,
+  shopid
 ) {
+  const shopproduct = shop_products.filter((e) => e.shopid == shopid)[0];
+  console.log(shopproduct);
   return [
     <h2>{productName}</h2>,
     <h2>{productCompany}</h2>,
-    <h2>{price}</h2>,
-    <h2>{installable ? <Check size={17} /> : <X size={17} />}</h2>,
+    <h2>{shopproduct.price}</h2>,
+    <h2>{rate}</h2>,
     <div className="flex items-center">
-      <h2>{inventoryStock}</h2>
+      <h2>{shopproduct.stockquantity}</h2>
     </div>,
+    <div>{shopproduct.sells}</div>,
     <div className="flex">
       <ButtonVariant2 img={<Pencil size={12} />} />
       <ButtonVariant2 img={<Trash size={12} />} className={"ml-2"} />

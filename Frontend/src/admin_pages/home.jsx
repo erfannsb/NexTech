@@ -1,10 +1,4 @@
-import {
-  ArrowUpRight,
-  Columns3Cog,
-  Database,
-  Icon,
-  Search,
-} from "lucide-react";
+import { ArrowUpRight, Database, Search } from "lucide-react";
 import { InputVariant1 } from "../components/inputs";
 import { ButtonVariant1, ButtonVariant2 } from "../components/buttons";
 import Table from "../components/tables";
@@ -21,8 +15,97 @@ import {
   Bar,
   Rectangle,
 } from "recharts";
-
+import { useEffect, useState } from "react";
+import { fetchWithAuth } from "../../data/api";
+import useUIStore from "./../ui_storage";
 export default function Home() {
+  const [shop_orders, set_shop_orders] = useState([]);
+  const shop_products = useUIStore((state) => state.shop_products);
+  const shop_orders_UIStore = useUIStore((state) => state.shop_orders);
+  const activeUser = useUIStore((state) => state.active_user);
+  const active_shop = useUIStore((state) => state.active_shop);
+  const setActiveShop = useUIStore((state) => state.setActiveShop);
+  const setShopOrders = useUIStore((state) => state.setShopOrders);
+  const setShopProducts = useUIStore((state) => state.setShopProducts);
+  const [currentOrderFilter, setOrderFilter] = useState(false);
+
+  const DELIVERY_PRICE = (shipping) =>
+    shipping.toLowerCase() === "express" ? 20 : 10; // Fixed delivery price
+
+  const totalprice = (orderItems) =>
+    orderItems.reduce(
+      (acc, item) => acc + parseFloat(item.shop_product.price) * item.quantity,
+      0
+    );
+
+  const totalItems = (orderItem) =>
+    orderItem.reduce((acc, item) => acc + item.quantity, 0);
+
+  const finalprice = (totalPrice, shipping) => {
+    let price = totalPrice + DELIVERY_PRICE(shipping);
+    return price;
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      let res = await fetchWithAuth(() =>
+        fetch(`/shops/shops/?adminid=${activeUser.customerid}`)
+      );
+      if (!res.ok) {
+        console.error("fetching from shopAdmin failed");
+        return;
+      }
+      res = await res.json();
+      if (res.length == 0) {
+        setActiveShop(false);
+      } else {
+        setActiveShop(res[0]);
+      }
+      console.log(res[0]);
+      let resFromOrders = await fetchWithAuth(() =>
+        fetch(`/shops/shops/${res[0].shopid}/orders/`, {
+          method: "GET",
+          credentials: "include",
+        })
+      );
+      if (!resFromOrders.ok) {
+        console.error("Fetching orders failed");
+        return;
+      }
+      resFromOrders = await resFromOrders.json();
+      let newOrders = resFromOrders;
+      for (let order of newOrders) {
+        if (order.paymentmethod == "Installment") {
+          continue;
+        }
+        let ordertotalprice = totalprice(order.items);
+        order["final_price"] = finalprice(
+          ordertotalprice,
+          order.shipping.shippingmethod
+        );
+      }
+      setShopOrders(newOrders);
+      set_shop_orders(newOrders);
+      console.log({ resFromOrders, newOrders });
+
+      let resFromProducts = await fetchWithAuth(
+        () => fetch(`/shops/shops/${res[0].shopid}/products/`),
+        {
+          method: "GET",
+          credentials: "include",
+        }
+      );
+
+      if (!resFromProducts.ok) {
+        console.error("Fetching Products Failed");
+        return;
+      }
+      resFromProducts = await resFromProducts.json();
+      setShopProducts(resFromProducts);
+      console.log({ resFromProducts });
+    };
+    fetchData();
+  }, []);
   // fetching Recent Orders
   const RecentOrders = [
     {
@@ -55,6 +138,42 @@ export default function Home() {
     },
   ];
 
+  useEffect(() => {
+    const fetchData = async () => {
+      if (currentOrderFilter == "All") {
+        set_shop_orders(shop_orders_UIStore);
+      } else {
+        let resFromOrders = await fetchWithAuth(() =>
+          fetch(
+            `/shops/shops/${active_shop.shopid}/orders/?status=${currentOrderFilter}`,
+            {
+              method: "GET",
+              credentials: "include",
+            }
+          )
+        );
+        if (!resFromOrders.ok) {
+          console.error("Fetching orders failed");
+          return;
+        }
+        resFromOrders = await resFromOrders.json();
+        let newOrders = resFromOrders;
+        for (let order of newOrders) {
+          if (order.paymentmethod == "Installment") {
+            continue;
+          }
+          let ordertotalprice = totalprice(order.items);
+          order["final_price"] = finalprice(
+            ordertotalprice,
+            order.shipping.shippingmethod
+          );
+        }
+        set_shop_orders(newOrders);
+      }
+    };
+    fetchData();
+  }, [currentOrderFilter]);
+
   return (
     <div>
       {/* Charts */}
@@ -62,58 +181,86 @@ export default function Home() {
         {/* Sales overview */}
         <SalesOverview className="md:w-min-[300px] md:w-[40%] max-md:w-full h-[300px]" />
         {/* customer satisfaction */}
-        <SatisfactionMeter />
+        <SatisfactionMeter shop_rate={active_shop?.rating} />
         {/* Trending Products */}
         <TrendingProduct className={"max-md:w-[100%]"} />
       </div>
       <h3 className="mt-3 font-black text-xl mb-2">Recent Orders</h3>
       <div className="flex flex-wrap gap-2">
-        <InputVariant1
-          placeholder="Search"
-          img={<Search size={15} />}
-          className={"py-1 px-2 w-[200px] text-sm"}
-        />
-        {["Pending", "Shipped", "Delivered"].map((e) => (
-          <ButtonVariant1 text={e} color={"bg-red-300"} className={"text-sm"} />
+        {["All", "Pending", "Shipped", "Delivered"].map((e) => (
+          <ButtonVariant1
+            text={e}
+            color={"bg-red-300"}
+            className={`text-sm ${
+              currentOrderFilter == e ? "card-active" : ""
+            }`}
+            onClick={() => setOrderFilter(e)}
+          />
         ))}
       </div>
-      <Table
-        className="mt-3"
-        headerItems={[
-          "Order Number",
-          "Customer Name",
-          "Status",
-          "Date & Time",
-          "Total Price",
-        ]}
-        list={RecentOrders.map((e) =>
-          OrderItems(
-            e.orderNumber,
-            e.customerName,
-            e.status,
-            e.dateNtime,
-            e.price
-          )
-        )}
-      />
+      {shop_orders.length > 0 ? (
+        <Table
+          className="mt-3"
+          headerItems={[
+            "Order Number",
+            "Customer Name",
+            "Status",
+            "Date & Time",
+            "Total Price",
+          ]}
+          list={shop_orders?.map((e) =>
+            OrderItems(
+              e.orderid,
+              `${e.customer.firstname} ${e.customer.lastname}`,
+              e.orderstatus,
+              e.orderdate,
+              e.paymentmethod == "Installment"
+                ? e.installment.totalprice
+                : e.final_price
+            )
+          )}
+        />
+      ) : (
+        <p className="font-bold text-sm mt-3">Nothing found</p>
+      )}
     </div>
   );
 }
 
-export function SatisfactionMeter({ className }) {
-  const percentage = 95;
+export function SatisfactionMeter({ shop_rate = 0, className }) {
+  // Map 0–5 -> 0–100
+  const percentage = Math.min(Math.max((shop_rate / 5) * 100, 0), 100);
+
   const radius = 60;
   const stroke = 10;
-  const startAngle = -135;
-  const endAngle = 135;
+  const startAngle = -155;
+  const endAngle = 155;
   const arcAngle = endAngle - startAngle;
   const circumference = (Math.PI * radius * arcAngle) / 180;
   const strokeDashoffset = circumference * (1 - percentage / 100);
 
+  // Dynamic mood/label
+  let mood = "😐";
+  let label = "Average";
+  if (shop_rate >= 4.5) {
+    mood = "🤩";
+    label = "Excellent";
+  } else if (shop_rate >= 3.5) {
+    mood = "😊";
+    label = "Good";
+  } else if (shop_rate >= 2.5) {
+    mood = "😐";
+    label = "Okay";
+  } else if (shop_rate >= 1.5) {
+    mood = "😟";
+    label = "Poor";
+  } else {
+    mood = "😡";
+    label = "Terrible";
+  }
+
   return (
-    <div
-      className={` text-white p-6 rounded-xl w-72 text-center  ${className}`}
-    >
+    <div className={`text-white p-6 rounded-xl w-72 text-center ${className}`}>
       <h2 className="text-lg font-semibold">Customer Satisfaction</h2>
       <p className="text-sm text-gray-400 mb-4">
         How much people love your shop
@@ -151,11 +298,11 @@ export function SatisfactionMeter({ className }) {
         </svg>
         {/* Emoji in center */}
         <div className="absolute inset-0 flex items-center justify-center text-3xl">
-          😊
+          {mood}
         </div>
       </div>
-      <div className="text-xl font-bold">{percentage}%</div>
-      <div className="text-sm text-purple-400">Exelenet</div>
+      <div className="text-xl font-bold">{percentage.toFixed(0)}%</div>
+      <div className="text-sm text-purple-400">{label}</div>
     </div>
   );
 }
@@ -273,7 +420,7 @@ export function SalesOverview({ className }) {
   );
 }
 
-export function TrendingProduct({ className }) {
+export function TrendingProduct({ className, sales, orders }) {
   const data = [
     {
       name: "Page A",
@@ -341,12 +488,12 @@ export function TrendingProduct({ className }) {
       {/* statistics */}
       <div className="flex justify-between gap-5 mt-6">
         {["Sales", "Orders", "Top tags", "Mood Insights"].map((e) => (
-          <div>
+          <div className=" self-end">
             <div className="flex items-center">
               <div className="bg-gray-600 h-5 flex justify-center items-center rounded-sm aspect-square mr-1">
                 <Database size={14} />
               </div>
-              <p className="text-gray-400 text-[13px] font-bold">{e}</p>
+              <p className="text-gray-400 text-[12px] font-bold">{e}</p>
             </div>
             <h3 className="font-bold mt-[2px] border-b-3 border-[#0A2348]">
               32,984
@@ -374,16 +521,24 @@ export function OrderItems(
       </div>
     );
   } else if (status == "Shipped") {
-    statusComp = <div className="text-cyan-600 bg-cyan-50">{status}</div>;
-  } else if (status == "Pening") {
-    statusComp = <div className="text-orange-600 bg-orange-50">{status}</div>;
+    statusComp = (
+      <div className="text-cyan-600 bg-cyan-50  w-fit px-2 pys-[2px] rounded-xl">
+        {status}
+      </div>
+    );
+  } else if (status == "Pending") {
+    statusComp = (
+      <div className="text-orange-600 bg-orange-50  w-fit px-2 pys-[2px] rounded-xl">
+        {status}
+      </div>
+    );
   }
   return [
     <h3>{orderNumber}</h3>,
     <h3>{customerName}</h3>,
     statusComp,
     <h3>{dateNtime}</h3>,
-    <h3>{price}</h3>,
+    <h3>${price}</h3>,
     <ButtonVariant2 img={<ArrowUpRight size={13} />} />,
   ];
 }

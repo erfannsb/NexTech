@@ -5,7 +5,7 @@ import { Input, InputVariant1 } from "../components/inputs";
 import { useNavigate } from "react-router-dom";
 import { data, useParams } from "react-router";
 import { use, useRef, useState } from "react";
-import { logIn, PostCustomer } from "../../data/users";
+import { logIn, PostCustomer, isLoggedIn } from "../../data/users";
 import { fetchWithAuth } from "../../data/api";
 import {
   isValidEmail,
@@ -26,7 +26,7 @@ export default function Form() {
       <header className="border-r border-b border-[#26262B] text-white p-4 col-start-1 col-end-2 max-sm:col-end-4 row-start-1 row-end-2 flex items-center justify-between">
         <ButtonVariant2
           img={<ArrowLeft size={17} />}
-          onClick={() => navigate("/")}
+          onClick={() => navigate(-1)}
           className={" mr-3"}
         />
         <h1 className="text-2xl font-bold text-[#6274F7]">NexTech</h1>
@@ -74,6 +74,8 @@ export function Login() {
   const passwordRef = useRef(null);
   const [isError, setError] = useState(false);
   const navigate = useNavigate();
+  const setActiveUser = useUIStore((state) => state.setActiveUser);
+  const setActiveShop = useUIStore((state) => state.setActiveShop);
 
   const onSubmit = async (e) => {
     const email = emailRef.current.value;
@@ -88,6 +90,28 @@ export function Login() {
 
       if (!tokenJson.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+
+      const response = await isLoggedIn();
+      if (response) {
+        setActiveUser(response);
+        if (response.isshopadmin) {
+          let res = await fetchWithAuth(() =>
+            fetch(`/shops/shops/?adminid=${response.customerid}`)
+          );
+          if (!res.ok) {
+            console.error("fetching from shopAdmin failed");
+            return;
+          }
+          res = await res.json();
+          if (res.length == 0) {
+            setActiveShop(false);
+          } else {
+            setActiveShop(res[0]);
+          }
+        }
+      } else {
+        setActiveUser(false);
       }
 
       navigate("/");
@@ -371,17 +395,34 @@ export function CreateShop() {
       setError("Postal Code is not valid");
       return;
     }
+    let resFromIsthereAShop = await fetchWithAuth(() =>
+      fetch(`/shops/shopAdmin/?adminid=${activeUser.customerid}`)
+    );
+    if (!res.ok) {
+      console.error("fetching from shopAdmin failed");
+      return;
+    }
+    resFromIsthereAShop = await resFromIsthereAShop.json();
+    if (!resFromIsthereAShop.length == 0) {
+      setError("You already have a shop");
+      return;
+    }
 
-    const res = await fetchWithAuth(() =>
+    let res = await fetchWithAuth(() =>
       PostShop({
         shopname: shop_name,
         postalcode: postal_code,
+        adminid: activeUser.customerid,
       })
     );
 
     if (!res.ok) {
+      res = await res.json();
       console.error("posting shop was not successful");
+      setError(`Creating Shop Failed ${res.message}`);
+      return;
     }
+    navigate("/admin/dashboard/home/");
   };
 
   return (

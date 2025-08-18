@@ -4,6 +4,8 @@ from products.serializers import ProductSerializer
 from shops.serializers import ShopProductSerializer
 from payments.models import Installment
 from payments.serializers import InstallmentSerializer
+from users.models import Customer
+from users.serializers import CustomerPublicSerializer
 
 class ShippingSerializer(serializers.ModelSerializer):
     class Meta:
@@ -17,6 +19,7 @@ class OrderingSerializer(serializers.ModelSerializer):
 
     installment = serializers.SerializerMethodField()
 
+    customer = serializers.SerializerMethodField()
 
     class Meta:
         model = Ordering
@@ -40,6 +43,11 @@ class OrderingSerializer(serializers.ModelSerializer):
             return InstallmentSerializer(installment).data
         except Installment.DoesNotExist:
             return None
+            
+    def get_customer(self, obj):
+        if obj.customerid:
+            return CustomerPublicSerializer(obj.customerid).data
+        return None
 
 
 class OrderitemSerializer(serializers.ModelSerializer):
