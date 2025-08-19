@@ -162,3 +162,6 @@ SIMPLE_JWT = {
 
 
 AUTH_USER_MODEL = 'users.Customer'
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'

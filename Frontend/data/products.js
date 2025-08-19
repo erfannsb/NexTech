@@ -45,53 +45,43 @@ export async function GetProduct(id) {
   }
 }
 
-export async function PostProducts(product) {
-  try {
-    const response = await fetch("http://127.0.0.1:8000/products/products/", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(product),
-    });
+export async function PostProduct(product) {
+  const formData = new FormData();
+  formData.append("name", product.name);
+  formData.append("description", product.descriptoin);
+  formData.append("thumbnail", product.thumbnail);
+  formData.append("brand", product.brand);
+  formData.append("shopid", product.shopid);
+  formData.append("price", product.price);
+  formData.append("stockquantity", product.stock);
+  const res = await fetch("/products/products/", {
+    method: "POST",
+    credentials: "include",
+    body: formData,
+  });
 
-    if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`);
-    }
-
-    const data = await response.json();
-    console.log("Product created:", data);
-    return data;
-  } catch (error) {
-    console.error("Failed to post product:", error);
-    throw error;
-  }
+  return res;
 }
 
 export async function UpdateProduct(productId, product) {
-  try {
-    const response = await fetch(
-      `http://127.0.0.1:8000/products/products/${productId}/`,
-      {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(product),
-      }
-    );
+  const formData = new FormData();
 
-    if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`);
-    }
+  if (product.name) formData.append("name", product.name);
+  if (product.description) formData.append("description", product.description);
+  if (product.thumbnail) formData.append("thumbnail", product.thumbnail);
+  if (product.brand) formData.append("brand", product.brand);
+  if (product.shopid) formData.append("shopid", product.shopid);
+  if (product.price) formData.append("price", product.price);
+  if (product.stockquantity)
+    formData.append("stockquantity", product.stockquantity);
 
-    const data = await response.json();
-    console.log(`Product ${productId} updated:`, data);
-    return data;
-  } catch (error) {
-    console.error(`Failed to update product ${productId}:`, error);
-    return false;
-  }
+  const res = await fetch(`/products/products/${productId}/`, {
+    method: "PATCH",
+    credentials: "include",
+    body: formData,
+  });
+
+  return res.json();
 }
 
 export async function DeleteProduct(productId) {
@@ -536,29 +526,20 @@ export async function GetImageurlProductId(id) {
 }
 
 export async function PostImageurlProduct(imageurlProduct) {
-  try {
-    const response = await fetch(
-      "http://127.0.0.1:8000/products/imageurlProduct/",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(imageurlProduct),
-      }
-    );
+  const formData = new FormData();
 
-    if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`);
-    }
+  if (imageurlProduct.image_url)
+    formData.append("image_url", imageurlProduct.image_url);
+  if (imageurlProduct.productid)
+    formData.append("productid", imageurlProduct.productid);
 
-    const data = await response.json();
-    console.log("Image url Product created:", data);
-    return data;
-  } catch (error) {
-    console.error("Failed to post imageurlProduct:", error);
-    throw error;
-  }
+  const res = await fetch("/products/imageurlProduct/", {
+    method: "POST",
+    credentials: "include",
+    body: formData,
+  });
+
+  return res.json();
 }
 
 export async function UpdateImageurlProduct(

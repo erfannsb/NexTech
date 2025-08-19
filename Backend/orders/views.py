@@ -10,15 +10,14 @@ from api.authentication import CookieJWTAuthentication
 class OrderingViewSet(viewsets.ModelViewSet):
     queryset = Ordering.objects.all()
     serializer_class = OrderingSerializer
-    permission_classes = [IsOrderOwnerOrReadOnly]
     
     def get_queryset(self):
         user = self.request.user
-        if user.is_authenticated:
-            return Ordering.objects.filter(customerid=user)
-        else:
-            # For unauthenticated users, maybe return empty or all orders depending on policy
-            return Ordering.objects.none()
+        # if user.is_authenticated:
+        #     return Ordering.objects.filter(customerid=user)
+        # else:
+        #     # For unauthenticated users, maybe return empty or all orders depending on policy
+        return Ordering.objects.all()
 
     def perform_create(self, serializer):
         serializer.save(customerid=self.request.user)

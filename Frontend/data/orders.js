@@ -13,7 +13,7 @@ export async function GetOrderings() {
 }
 
 export async function GetOrdering(id) {
-  const response = await fetch(`http://127.0.0.1:8000/orders/orders/${id}`, {
+  const response = await fetch(`/orders/orders/${id}`, {
     method: "GET",
     credentials: "include",
     headers: {
@@ -38,29 +38,17 @@ export async function PostOrdering(ordering) {
 }
 
 export async function UpdateOrdering(orderingId, ordering) {
-  try {
-    const response = await fetch(
-      `http://127.0.0.1:8000/orders/orders/${orderingId}/`,
-      {
-        method: "PUT",
-        credentials: "include",
+  const response = await fetch(`/orders/orders/${orderingId}/`, {
+    method: "PATCH",
+    credentials: "include",
 
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(ordering),
-      }
-    );
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(ordering),
+  });
 
-    if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
-
-    const data = await response.json();
-    console.log(`Ordering ${orderingId} updated:`, data);
-    return data;
-  } catch (error) {
-    console.error(`Failed to update ordering ${orderingId}:`, error);
-    return false;
-  }
+  return response;
 }
 
 export async function DeleteOrdering(orderingId) {

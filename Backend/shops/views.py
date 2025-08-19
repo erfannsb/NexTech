@@ -43,6 +43,12 @@ class ShopViewSet(viewsets.ModelViewSet):
     def products(self, request, pk=None):
         shop = self.get_object()
         products = Product.objects.filter(shops__shopid=shop.shopid).distinct()
+
+        # Get "name" param from query string (?name=...)
+        name_query = request.query_params.get("name")
+        if name_query:
+            products = products.filter(name__icontains=name_query)
+
         serializer = ProductSerializer(products, many=True)
         return Response(serializer.data)
     

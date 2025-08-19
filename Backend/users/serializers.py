@@ -33,7 +33,7 @@ class CustomerPublicSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Customer
-        fields = ['customerid', 'firstname', 'lastname']
+        fields = ['customerid', 'firstname', 'lastname','phonenumber', 'addressprovince', 'addresscity', 'addressstreet', 'addressdetails', 'postalcode']
         
 class CustomerPrivateSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True, required=False)

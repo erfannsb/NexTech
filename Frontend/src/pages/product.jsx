@@ -48,16 +48,18 @@ function Product() {
       return;
     }
 
-    const res = await fetchWithAuth("/products/comment/", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        productid: productIdParam,
-        commenttext: commentText,
-      }),
-    });
+    const res = await fetchWithAuth(() =>
+      fetch("/products/comment/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          productid: productIdParam,
+          commenttext: commentText,
+        }),
+      })
+    );
     if (res.ok) {
       let data = await res.json();
       setComments((prevComments) => [

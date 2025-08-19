@@ -2,6 +2,7 @@ from rest_framework import serializers
 from .models import Product, Category, ProductCategory, Details, ImageurlProduct, Comment
 from shops.serializers import ShopProductSerializer
 from users.models import Customer
+from shops.models import ShopProduct
 
 class CustomerSerializer(serializers.ModelSerializer):
     class Meta:
@@ -12,13 +13,15 @@ class ProductSerializer(serializers.ModelSerializer):
     shop_products = serializers.SerializerMethodField()
     categories_names = serializers.SerializerMethodField()
     is_available = serializers.SerializerMethodField()  
-
+    shopid = serializers.IntegerField(write_only=True)
+    stockquantity = serializers.IntegerField(write_only=True, required=False, default=0)
+    price = serializers.DecimalField(write_only=True, max_digits=20, decimal_places=2, required=True)
     class Meta:
         model = Product
         fields = [
             'productid', 'name', 'description', 'createdat', 'rating', 
             'thumbnail', 'brand', 'countedrates', 'categories', 'shops',
-            'shop_products', 'categories_names', 'is_available'
+            'shop_products', 'categories_names', 'is_available', 'price', 'stockquantity', 'shopid'
         ]
 
     def get_shop_products(self, obj):
@@ -39,6 +42,23 @@ class ProductSerializer(serializers.ModelSerializer):
         if related_qs is None:
             return False
         return related_qs.filter(stockquantity__gt=0).exists()
+    
+    def create(self, validated_data):
+        shop_id = validated_data.pop("shopid")
+        stockquantity = validated_data.pop("stockquantity", 0)
+        price = validated_data.pop("price", 0.0)
+
+        product = Product.objects.create(**validated_data)
+
+        ShopProduct.objects.create(
+            shopid_id=shop_id,
+            productid=product,
+            stockquantity=stockquantity,
+            sells=0,
+            price=price,
+        )
+
+        return product
 
 
 class CategorySerializer(serializers.ModelSerializer):

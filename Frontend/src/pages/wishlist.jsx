@@ -307,6 +307,8 @@ export default function WishList() {
 
     console.log(resFromShipping);
 
+    window.alert("Success");
+
     // Redirect to a confirmation page or show a success message
   };
 

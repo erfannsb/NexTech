@@ -2,7 +2,7 @@ import { ArrowLeft, Bell, PanelLeft, Search, Settings } from "lucide-react";
 import { ButtonVariant2, ButtonVariant4 } from "../components/buttons";
 import Header from "../components/header";
 import { Input, InputVariant1 } from "../components/inputs";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { data, useParams } from "react-router";
 import { use, useRef, useState } from "react";
 import { logIn, PostCustomer, isLoggedIn } from "../../data/users";
@@ -15,6 +15,12 @@ import {
 } from "../../utils/validate";
 import { PostShop } from "../../data/shops";
 import useUIStore from "../ui_storage";
+import {
+  PostImageurlProduct,
+  PostProduct,
+  UpdateImageurlProduct,
+  UpdateProduct,
+} from "../../data/products";
 
 export default function Form() {
   const navigate = useNavigate();
@@ -59,6 +65,8 @@ export default function Form() {
           <SignUp />
         ) : typeParam.toLocaleLowerCase() === "createshop" ? (
           <CreateShop />
+        ) : typeParam.toLocaleLowerCase() === "createproduct" ? (
+          <CreateProduct />
         ) : (
           <div className="text-white">
             Form type: {typeParam || "No type specified"}
@@ -454,6 +462,185 @@ export function CreateShop() {
           onClick={onSubmit}
         >
           Create
+        </button>
+      </form>
+    </div>
+  );
+}
+
+export function CreateProduct() {
+  const [searchParams] = useSearchParams();
+
+  const titleRef = useRef(null);
+  const descRef = useRef(null);
+  const brandRef = useRef(null);
+  const detailRef = useRef(null);
+  const thumbRef = useRef(null);
+  const imagesRef = useRef(null);
+  const priceRef = useRef(null);
+  const stockRef = useRef(null);
+  const active_shop = useUIStore((state) => state.active_shop);
+
+  const [isError, setError] = useState(false);
+
+  const onSubmit = async (e) => {
+    const productParam = searchParams.get("productid");
+
+    e.preventDefault();
+    const title = titleRef.current.value;
+    const desc = descRef.current.value;
+    const brand = brandRef.current.value;
+    const detail = detailRef.current.value;
+    const thumb = thumbRef.current.files[0];
+    const images = imagesRef.current.files;
+    const price = priceRef.current.value;
+    const stock = stockRef.current.value;
+
+    if ((!title || !desc || !thumb || !brand) && !productParam) {
+      setError("Title, Description, Thumbnail and Brand Are Required");
+      return;
+    }
+
+    const request_data = {
+      name: title,
+      descriptoin: desc,
+      thumbnail: thumb,
+      brand: brand,
+      price: parseFloat(price),
+      stock: parseInt(stock),
+      shopid: active_shop.shopid,
+    };
+    console.log({ request_data });
+
+    let res;
+
+    if (productParam == undefined) {
+      res = await fetchWithAuth(() => PostProduct(request_data));
+    } else {
+      res = await fetchWithAuth(() =>
+        UpdateProduct(productParam, request_data)
+      );
+    }
+
+    if (!res.ok) {
+      setError("Something went wrong!");
+      console.log(res);
+      return;
+    }
+
+    res = await res.json();
+    console.log(res);
+    const productid = res.productid;
+
+    for (let file of images) {
+      let resImgURL;
+      if (productParam == undefined) {
+        resImgURL = await fetchWithAuth(() =>
+          PostImageurlProduct({
+            image_url: file,
+            productid: productid,
+          })
+        );
+      } else {
+        resImgURL = await fetchWithAuth(() =>
+          UpdateImageurlProduct({
+            image_url: file,
+            productid: productid,
+          })
+        );
+      }
+
+      if (!res.ok) {
+        setError("Something went wrong");
+        return;
+      }
+      console.log(res);
+    }
+  };
+
+  return (
+    <div className="flex flex-1 w-full h-full justify-center items-center">
+      {/* Form */}
+      <form className="h-fit card-variant-3 p-6 rounded-md grid grid-rows-6 grid-cols-2 gap-3">
+        {/* Title */}
+        <h3 className="font-black text-xl mb-3 self-end">Create A Product</h3>
+        <Input
+          label={"Title"}
+          ref={titleRef}
+          placeholder="Enter product title"
+          className=" w-full col-start-1 col-end-2"
+          required
+        />
+        <Input
+          ref={descRef}
+          label={"Description"}
+          placeholder="Describe your product"
+          className=" w-full col-start-2 col-end-3"
+        />
+        <Input
+          label={"Brand"}
+          ref={brandRef}
+          placeholder="Enter brand name"
+          className="min-w-[300px] col-start-1 col-end-2"
+          required
+        />
+        <Input
+          label={"Details"}
+          ref={detailRef}
+          placeholder="Additional product details"
+          className="min-w-[300px] col-start-2 col-end-3"
+          required
+        />
+        <Input
+          label={"Price"}
+          ref={priceRef}
+          placeholder="0.00"
+          type="number"
+          step="0.01"
+          min="0"
+          className="min-w-[300px] col-start-1 col-end-2"
+          required
+        />
+        <Input
+          label={"Stock Quantity"}
+          ref={stockRef}
+          placeholder="0"
+          type="number"
+          min="0"
+          className="min-w-[300px] col-start-2 col-end-3"
+          required
+        />
+
+        <Input
+          ref={thumbRef}
+          label={"Thumbnail"}
+          placeholder="Choose thumbnail image"
+          type={"file"}
+          accept="image/*"
+          required
+        />
+        <Input
+          ref={imagesRef}
+          label={"Additional Images"}
+          placeholder="Choose additional images"
+          type={"file"}
+          accept="image/*"
+          multiple
+          required
+        />
+
+        {/* Form Error */}
+        {isError && (
+          <div className="text-[12px] mb-2 text-red-400 col-start-1 col-end-3">
+            * {isError}
+          </div>
+        )}
+
+        <button
+          onClick={onSubmit}
+          className="h-fit card-variant-2 w-fit py-[7px] px-6 rounded-md cursor-pointer text-sm ml-auto hover:scale-[1.02] transition col-start-2"
+        >
+          Create Product
         </button>
       </form>
     </div>

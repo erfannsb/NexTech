@@ -16,11 +16,11 @@ class Product(models.Model):
     productid = models.AutoField(db_column='ProductID', primary_key=True)  # Field name made lowercase.
     name = models.CharField(db_column='Name', max_length=512)  # Field name made lowercase.
     description = models.TextField(db_column='Description', blank=True, null=True)  # Field name made lowercase.
-    createdat = models.DateTimeField(db_column='CreatedAt')  # Field name made lowercase.
+    createdat = models.DateTimeField(db_column='CreatedAt', blank=True, auto_now_add=True)  # Field name made lowercase.
     rating = models.DecimalField(db_column='Rating', max_digits=3, decimal_places=2, blank=True, null=True)  # Field name made lowercase.
-    thumbnail = models.CharField(db_column="Thumbnail", null=True, max_length=500)
+    thumbnail = models.ImageField(upload_to="products/thumbnails/", null=True)   
     brand = models.CharField(db_column="Brand", null=True, max_length=100)
-    countedrates = models.IntegerField(db_column="CountedRates", null=True, blank=True)
+    countedrates = models.IntegerField(db_column="CountedRates", null=True, blank=True, default=0)
     categories = models.ManyToManyField(Category, related_name='products', through='ProductCategory')
     
     shops = models.ManyToManyField(
@@ -59,7 +59,7 @@ class Details(models.Model):
 
 class ImageurlProduct(models.Model):
     pk = models.CompositePrimaryKey("image_url", "productid")
-    image_url = models.CharField(db_column='Image_URL', max_length=512)  # Field name made lowercase.
+    image_url = models.ImageField(db_column='Image_URL', upload_to="products/images/")  # Field name made lowercase.
     productid = models.ForeignKey(Product, models.DO_NOTHING, db_column='ProductID')  # Field name made lowercase.
 
     class Meta:

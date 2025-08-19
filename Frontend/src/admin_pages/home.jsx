@@ -539,6 +539,5 @@ export function OrderItems(
     statusComp,
     <h3>{dateNtime}</h3>,
     <h3>${price}</h3>,
-    <ButtonVariant2 img={<ArrowUpRight size={13} />} />,
   ];
 }
