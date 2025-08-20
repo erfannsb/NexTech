@@ -32,20 +32,11 @@ class Discount(models.Model):
     discountvalue = models.DecimalField(db_column='discountValue', max_digits=5, decimal_places=2)  # Field name made lowercase.
     discountstarttime = models.DateTimeField(db_column='DiscountStartTime')  # Field name made lowercase.
     discountendtime = models.DateTimeField(db_column='DiscountEndTime')  # Field name made lowercase.
-
+    shopid = models.ForeignKey(Shop, db_column="ShopID", on_delete=models.CASCADE)
+    discountname = models.CharField(db_column="discountName", max_length=100)
     class Meta:
         managed = False
         db_table = 'discount'
-
-
-class Discountproduct(models.Model):
-    pk = models.CompositePrimaryKey("productid", "discountid")
-    productid = models.ForeignKey(Product, models.DO_NOTHING, db_column='ProductID')  # Field name made lowercase.
-    discountid = models.ForeignKey(Discount, models.DO_NOTHING, db_column='DiscountID')  # Field name made lowercase.
-
-    class Meta:
-        managed = False
-        db_table = 'discountproduct'
 
 
 class ShopAdmin(models.Model):

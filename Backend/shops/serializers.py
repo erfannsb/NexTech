@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Shop, ShopAdmin, ShopProduct, Discount, Discountproduct
+from .models import Shop, ShopAdmin, ShopProduct, Discount
 from users.serializers import CustomerPublicSerializer
 
 
@@ -7,8 +7,6 @@ class ShopAdminSerializer(serializers.ModelSerializer):
     class Meta:
         model = ShopAdmin
         fields = '__all__'
-
-        
 
 
 class ShopSerializer(serializers.ModelSerializer):
@@ -52,11 +50,3 @@ class DiscountSerializer(serializers.ModelSerializer):
     class Meta:
         model = Discount
         fields = '__all__'
-
-class DiscountproductSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Discountproduct
-        fields = '__all__'
-
-
-        

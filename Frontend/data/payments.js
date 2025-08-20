@@ -1,24 +1,15 @@
 // --------- Payment API ---------
 
 export async function GetPayments() {
-  try {
-    const response = await fetch("http://127.0.0.1:8000/payments/payments/", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+  const response = await fetch("/payments/payments/", {
+    method: "GET",
+    credentials: "include",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
 
-    if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`);
-    }
-
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    console.error("Failed to fetch payments:", error);
-    return false;
-  }
+  return response;
 }
 
 export async function GetPayment(id) {
@@ -118,51 +109,28 @@ export async function DeletePayment(paymentId) {
 // --------- Installment API ---------
 
 export async function GetInstallments() {
-  try {
-    const response = await fetch(
-      "http://127.0.0.1:8000/payments/installments/",
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
-
-    if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`);
-    }
-
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    console.error("Failed to fetch installments:", error);
-    return false;
-  }
+  const response = await fetch("/payments/installments/", {
+    method: "GET",
+    credentials: "include",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  return response;
 }
 
 export async function GetInstallment(id) {
-  try {
-    const response = await fetch(
-      `http://127.0.0.1:8000/payments/installments/${id}`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
-
-    if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`);
+  const response = await fetch(
+    `http://127.0.0.1:8000/payments/installments/${id}`,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
     }
+  );
 
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    console.error("Failed to fetch installment:", error);
-    return false;
-  }
+  return response;
 }
 
 export async function PostInstallment(installment) {

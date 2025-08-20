@@ -8,6 +8,7 @@ class Payment(models.Model):
     paymentstatus = models.CharField(db_column='PaymentStatus', max_length=9)  # Field name made lowercase.
     paymentgateway = models.CharField(db_column='PaymentGateway', max_length=8)  # Field name made lowercase.
     paymentdate = models.DateTimeField(db_column='PaymentDate')  # Field name made lowercase.
+    orderid = models.ForeignKey("orders.Ordering", on_delete=models.DO_NOTHING, db_column="orderid")
 
     class Meta:
         managed = False

@@ -220,25 +220,16 @@ export async function DeleteShopProduct(shopProductId) {
 
 // --------- Discount API ---------
 
-export async function GetDiscounts() {
-  try {
-    const response = await fetch("http://127.0.0.1:8000/shops/discounts/", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+export async function GetDiscounts(shopid) {
+  const response = await fetch(`/shops/discounts/?shopid=${shopid}`, {
+    method: "GET",
+    credentials: "include",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
 
-    if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`);
-    }
-
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    console.error("Failed to fetch discounts:", error);
-    return false;
-  }
+  return response;
 }
 
 export async function GetDiscount(id) {
@@ -266,26 +257,14 @@ export async function GetDiscount(id) {
 }
 
 export async function PostDiscount(discount) {
-  try {
-    const response = await fetch("http://127.0.0.1:8000/shops/discounts/", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(discount),
-    });
-
-    if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`);
-    }
-
-    const data = await response.json();
-    console.log("Discount created:", data);
-    return data;
-  } catch (error) {
-    console.error("Failed to post discount:", error);
-    throw error;
-  }
+  const response = await fetch("/shops/discounts/", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(discount),
+  });
+  return response;
 }
 
 export async function UpdateDiscount(discountId, discount) {
@@ -315,24 +294,11 @@ export async function UpdateDiscount(discountId, discount) {
 }
 
 export async function DeleteDiscount(discountId) {
-  try {
-    const response = await fetch(
-      `http://127.0.0.1:8000/shops/discounts/${discountId}/`,
-      {
-        method: "DELETE",
-      }
-    );
-
-    if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`);
-    }
-
-    console.log(`Discount ${discountId} deleted successfully`);
-    return true;
-  } catch (error) {
-    console.error(`Failed to delete discount ${discountId}:`, error);
-    return false;
-  }
+  const response = await fetch(`/shops/discounts/${discountId}/`, {
+    method: "DELETE",
+    credentials: "include",
+  });
+  return response;
 }
 
 // --------- DiscountProduct API ---------

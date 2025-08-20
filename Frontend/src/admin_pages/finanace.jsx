@@ -1,18 +1,70 @@
-import {
-  Pie,
-  PieChart,
-  ResponsiveContainer,
-  Cell,
-  Label,
-  Legend,
-} from "recharts";
+import { Pie, PieChart, ResponsiveContainer, Cell } from "recharts";
 import { InputVariant1 } from "../components/inputs";
 import { Plus, Search } from "lucide-react";
-import { ButtonVariant1, ButtonVariant4 } from "../components/buttons";
+import { ButtonVariant1 } from "../components/buttons";
 import Table from "../components/tables";
+import { useEffect, useState } from "react";
+import { fetchWithAuth } from "./../../data/api";
+import { GetInstallments, GetPayments } from "../../data/payments";
 
 export default function Finance() {
   //fetch top products
+
+  const [payments, setPayments] = useState([]);
+  const [installments, setInstallments] = useState([]);
+  const [currentFilter, setFilter] = useState("All");
+
+  useEffect(() => {
+    const fetchData = async () => {
+      // fetching payments
+      let res = await fetchWithAuth(() => GetPayments());
+      if (!res.ok) {
+        console.error("failed to fetch payments");
+        return;
+      }
+      res = await res.json();
+      console.log(res);
+      setPayments(res);
+
+      //fetch installments
+      let instRes = await fetchWithAuth(() => GetInstallments());
+      if (!instRes.ok) {
+        console.error("failed to fetch installments");
+        return;
+      }
+      instRes = await instRes.json();
+      console.log(instRes);
+      setInstallments(instRes);
+    };
+
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    const onFilter = async () => {
+      let url = "/payments/installments/";
+      if (currentFilter == "Pending") {
+        url += "?installmentstatus=Pending";
+      } else if (currentFilter == "Active") {
+        url += "?installmentstatus=Active";
+      } else if (currentFilter == "Overdue") {
+        url += "?installmentstatus=Overdue";
+      } else if (currentFilter == "Paid") {
+        url += "?installmentstatus=Paid";
+      }
+      let res = await fetchWithAuth(() =>
+        fetch(url, { method: "GET", credentials: "include" })
+      );
+      if (!res.ok) {
+        console.error("failed to fetch", url);
+        return;
+      }
+      res = await res.json();
+      console.log(res);
+      setInstallments(res);
+    };
+    onFilter();
+  }, [currentFilter]);
 
   const topProducts = [
     {
@@ -87,35 +139,6 @@ export default function Finance() {
       category: "Mouse",
       price: "1000",
       percentage: 50,
-    },
-  ];
-
-  //fetch installments
-
-  const installments = [
-    {
-      installmentNumber: 12312312331,
-      customerName: "Mehrnoosh",
-      loanType: "One-Year",
-      totalAmount: 12000,
-      interestRate: 5.5,
-      startDate: "12/12/12",
-      endDate: "12/2/2",
-      monthlyPayment: 5,
-      status: "Active",
-    },
-  ];
-
-  // fetch payments
-
-  const payments = [
-    {
-      paymentID: "2113312",
-      customer: "Mehrnoosh",
-      amount: 12000,
-      type: "Online",
-      method: "Paypal",
-      status: "Success",
     },
   ];
 
@@ -200,7 +223,7 @@ export default function Finance() {
 
       <div className="flex mt-10 gap-10 justify-around max-lg:flex-col">
         {/* Overview Payment */}
-        <div className="">
+        {/* <div className="">
           <h4 className="font-bold text-xl ">Overview KPIs</h4>
           <p className="text-gray-400 mb-6 font-medium">
             For all payment types
@@ -234,32 +257,36 @@ export default function Finance() {
               </div>
             ))}
           </div>
-        </div>
+        </div> */}
 
         {/* Payment Table */}
-        <div>
-          <h4 className="font-bold text-xl ">Recent Payments</h4>
-          <Table
-            className="mt-3"
-            headerItems={[
-              "Payment ID",
-              "Customer",
-              "Amount",
-              "Type",
-              "Method",
-              "Status",
-            ]}
-            list={payments.map((e) =>
-              PaymentItem(
-                e.paymentID,
-                e.customer,
-                e.amount,
-                e.type,
-                e.method,
-                e.status
-              )
-            )}
-          />
+        <div className="w-full">
+          <h4 className="font-bold text-xl">Recent Payments</h4>
+          {payments.length > 0 ? (
+            <Table
+              className="mt-3"
+              headerItems={[
+                "Payment ID",
+                "Customer",
+                "Order ID",
+                "Status",
+                "Method",
+                "Date",
+              ]}
+              list={payments?.map((e) =>
+                PaymentItem(
+                  e.paymentid,
+                  `${e.customer.firstname} ${e.customer.lastname}`,
+                  e.orderid,
+                  e.paymentstatus,
+                  e.paymentgateway,
+                  e.paymentdate
+                )
+              )}
+            />
+          ) : (
+            <p className="font-bold text-sm mt-3">Nothing found</p>
+          )}
         </div>
       </div>
 
@@ -267,50 +294,46 @@ export default function Finance() {
       <div className="mt-10">
         <h3 className="mt-1 font-black text-xl mb-2">Installment Overview</h3>
         <div className="flex flex-wrap gap-2">
-          <InputVariant1
-            placeholder="Search"
-            img={<Search size={15} />}
-            className={"py-1 px-2 w-[200px] text-sm"}
-          />
-          {["Active", "Overdue", "Paid"].map((e) => (
+          {["All", "Pending", "Active", "Overdue", "Paid"].map((e) => (
             <ButtonVariant1
               text={e}
               color={"bg-red-300"}
-              className={"text-sm"}
+              className={`text-sm ${currentFilter == e ? "card-active" : ""}`}
+              onClick={() => setFilter(e)}
             />
           ))}
         </div>
-
-        <Table
-          headerFontSize="sm"
-          className="mt-5"
-          headerItems={[
-            "Installment Number",
-            "Customer Name",
-            "Loan Type",
-            "Total Amount",
-            "Interest Rate",
-            "Start Date",
-            "End Date",
-            "Monthly Payment",
-            "Status",
-            "",
-          ]}
-          px={3}
-          list={installments.map((e) =>
-            InstallmentItem(
-              e.installmentNumber,
-              e.customerName,
-              e.loanType,
-              e.totalAmount,
-              e.interestRate,
-              e.startDate,
-              e.endDate,
-              e.monthlyPayment,
-              e.status
-            )
-          )}
-        />
+        {installments.length > 0 ? (
+          <Table
+            headerFontSize="sm"
+            className="mt-5"
+            headerItems={[
+              "Installment Number",
+              "Customer Name",
+              "Total Amount",
+              "Interest Rate",
+              "Start Date",
+              "Months Paid",
+              "Total Months",
+              "Status",
+            ]}
+            px={3}
+            list={installments?.map((e) =>
+              InstallmentItem(
+                e.installmentid,
+                `${e.customer.firstname} ${e.customer.lastname}`,
+                e.totalprice,
+                e.interestrate,
+                e.startdate,
+                e.monthspaid,
+                e.installmentmonths,
+                e.installmentstatus
+              )
+            )}
+          />
+        ) : (
+          <p className="font-bold text-sm mt-3">Nothing found</p>
+        )}
       </div>
     </div>
   );
@@ -406,17 +429,21 @@ export function TopCategory({ title, category, price, img_src, percentage }) {
 export function InstallmentItem(
   installmentNumber,
   customerName,
-  loanType,
   totalAmount,
   interestRate,
   startDate,
-  endDate,
-  monthlyPayment,
+  monthspaid,
+  totalmonths,
   status
 ) {
   let statusComp;
-
-  if (status == "Active") {
+  if (status == "Pending") {
+    statusComp = (
+      <div className="text-yellow-600 bg-green-50 w-fit px-2 pys-[2px] rounded-xl">
+        {status}
+      </div>
+    );
+  } else if (status == "Active") {
     statusComp = (
       <div className="text-green-600 bg-green-50 w-fit px-2 pys-[2px] rounded-xl">
         {status}
@@ -431,12 +458,11 @@ export function InstallmentItem(
   return [
     <h3>{installmentNumber}</h3>,
     <h3>{customerName}</h3>,
-    <h3>{loanType}</h3>,
     <h3>{totalAmount}</h3>,
     <h3>{interestRate}</h3>,
     <h3>{startDate}</h3>,
-    <h3>{endDate}</h3>,
-    <h3>{monthlyPayment}</h3>,
+    <h3>{monthspaid}</h3>,
+    <h3>{totalmonths}</h3>,
     statusComp,
   ];
 }
@@ -460,6 +486,7 @@ export function PaymentItem(paymentID, customer, amount, type, method, status) {
     <h3>{amount}</h3>,
     <h3>{type}</h3>,
     <h3>{method}</h3>,
+    <h3>{status}</h3>,
     statusComp,
   ];
 }

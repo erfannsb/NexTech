@@ -63,10 +63,8 @@ class ShopProductViewSet(viewsets.ModelViewSet):
 class DiscountViewSet(viewsets.ModelViewSet):
     queryset = Discount.objects.all()
     serializer_class = DiscountSerializer
+    filterset_fields = ['shopid']
 
-class DiscountProductViewSet(viewsets.ModelViewSet):
-    queryset = Discountproduct.objects.all()
-    serializer_class = DiscountproductSerializer
 
 class ShopAdminViewSet(viewsets.ModelViewSet):
     queryset = ShopAdmin.objects.all()
