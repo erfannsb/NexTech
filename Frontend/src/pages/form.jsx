@@ -1,10 +1,9 @@
-import { ArrowLeft, Bell, PanelLeft, Search, Settings } from "lucide-react";
-import { ButtonVariant2, ButtonVariant4 } from "../components/buttons";
-import Header from "../components/header";
+import { ArrowLeft, Bell, Search, Settings } from "lucide-react";
+import { ButtonVariant2 } from "../components/buttons";
 import { Input, InputVariant1 } from "../components/inputs";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { data, useParams } from "react-router";
-import { use, useRef, useState } from "react";
+import { useParams } from "react-router";
+import { useRef, useState } from "react";
 import { logIn, PostCustomer, isLoggedIn } from "../../data/users";
 import { fetchWithAuth } from "../../data/api";
 import {

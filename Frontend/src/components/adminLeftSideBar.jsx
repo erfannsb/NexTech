@@ -7,6 +7,7 @@ import {
   CirclePoundSterling,
   Home,
   LifeBuoy,
+  MessageCircle,
   Package,
   Percent,
   Settings,

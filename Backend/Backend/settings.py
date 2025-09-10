@@ -45,8 +45,12 @@ INSTALLED_APPS = [
     'products',
     'shops',
     'payments',
-    'django_extensions'
+    'chat',
+    'django_extensions',
+    'channels',
 ]
+
+ASGI_APPLICATION = 'Backend.asgi.application'
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
@@ -80,6 +84,12 @@ TEMPLATES = [
         },
     },
 ]
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels.layers.InMemoryChannelLayer"
+    }
+}
 
 WSGI_APPLICATION = 'Backend.wsgi.application'
 

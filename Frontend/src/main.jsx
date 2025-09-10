@@ -5,6 +5,7 @@ import { createBrowserRouter, RouterProvider } from "react-router";
 import AdminApp from "./AdminApp.jsx";
 import Form from "./pages/form.jsx";
 import ProtectedAdminRoute from "./admin_pages/admin.jsx";
+import SupportChat from "./admin_pages/chat_support.jsx";
 
 const AdminAppProtected = () => (
   <ProtectedAdminRoute>
@@ -37,6 +38,7 @@ let router = createBrowserRouter([
   { path: "/admin/dashboard/discounts", Component: AdminAppProtected },
   { path: "/admin/dashboard/finance", Component: AdminAppProtected },
   { path: "/admin/dashboard/settings", Component: AdminAppProtected },
+  { path: "/chat", Component: SupportChat },
 ]);
 
 createRoot(document.getElementById("root")).render(

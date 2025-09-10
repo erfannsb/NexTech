@@ -1,0 +1,17 @@
+- [x] Implement Chat Support
+- [ ] Populate DataBase with Reasonable Data
+- [ ] Sorting Search Items are not yet implemented
+- [ ] Price Range Is Broken Again
+- [ ] Header For Admin should not contain shopping item and search
+- [ ] User Role and admin permissions are not defined
+- [ ] Header Buttons Does Not Work
+- [ ] Shopping Wish List without having an account should be possible
+- [ ] Check if ER matches the database structure.
+- [ ] Fix Cookie Timeout
+- [ ] Check if Discount Works
+- [ ] Implement Charts Data if possible
+- [ ] Admin Setting Is Not Complete
+- [ ] Brand Images Are Not Implemented
+- [ ] maybe use docker?
+- [ ] adding to shopping list button number does not work
+- [ ] add pagination if possible

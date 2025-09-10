@@ -20,6 +20,7 @@ const Finance = lazy(() => import("../admin_pages/finanace.jsx"));
 const OrderMangement = lazy(() => import("../admin_pages/orderM.jsx"));
 const Discounts = lazy(() => import("../admin_pages/discount.jsx"));
 const AdminSettings = lazy(() => import("../admin_pages/setttings.jsx"));
+const ChatSupport = lazy(() => import("../admin_pages/chat_support.jsx"));
 const pagesByRoute = {
   "/": ExplorePage,
   "/help": Help,
@@ -69,7 +70,7 @@ export default function Pager() {
         isLeftSidebarOpen && !screenIsSmall ? "col-start-2 " : "col-start-1"
       } ${
         isRightSidebarOpen ? "col-end-3" : "col-end-4"
-      } row-start-2 row-end-3 p-4 overflow-y-auto
+      } row-start-2 p-4 row-end-3 overflow-y-auto
       ${bothSideBarClosed ? "w-full md:px-[10%] max-md:px-[3%]" : ""}`}
     >
       {/* Chat floating component */}

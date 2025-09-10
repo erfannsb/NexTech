@@ -14,6 +14,12 @@ export default defineConfig({
       "/orders": "http://localhost:8000",
       "/shops": "http://localhost:8000",
       "/payments": "http://localhost:8000",
+      // WebSocket proxy
+      "/ws": {
+        target: "http://localhost:8000",
+        ws: true,
+        changeOrigin: true,
+      },
     },
   },
   plugins: [react(), tailwindcss()],
