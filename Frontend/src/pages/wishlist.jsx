@@ -256,7 +256,7 @@ export default function WishList() {
       )
     ) {
       window.alert(
-        "You have already ordered something wait until you're order is recieved"
+        "You have already ordered something wait until your order is recieved"
       );
       return;
     }
@@ -318,7 +318,7 @@ export default function WishList() {
 
     console.log(resFromShipping);
 
-    window.alert("Success");
+    navigate("/order");
 
     // Redirect to a confirmation page or show a success message
   };

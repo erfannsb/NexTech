@@ -123,7 +123,7 @@ export default function Order() {
                 hide_bg={true}
               />
               <CardVariant1
-                text={currentOrderData?.shipping.shippingmethod}
+                text={currentOrderData?.shipping?.shippingmethod || ""}
                 header={"Shipping Method"}
                 color={"bg-red-300"}
                 hide_bg={true}
@@ -180,12 +180,17 @@ export default function Order() {
       <p className="font-light text-sm text-[#B6B6B6] mb-4">
         List of things you ordered recently
       </p>
-
-      <Table
-        py={2}
-        headerItems={["OrderID", "Order Items", "Date", "Order Status"]}
-        list={historyList}
-      />
+      {historyList.length === 0 ? (
+        <p className="bg-red-400 p-2 w-fit rounded-md font-bold text-black">
+          No order history yet
+        </p>
+      ) : (
+        <Table
+          py={2}
+          headerItems={["OrderID", "Order Items", "Date", "Order Status"]}
+          list={historyList}
+        />
+      )}
     </div>
   );
 }
