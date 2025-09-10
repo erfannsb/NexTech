@@ -3,6 +3,7 @@ from .models import Product, Category, ProductCategory, Details, ImageurlProduct
 from shops.serializers import ShopProductSerializer
 from users.models import Customer
 from shops.models import ShopProduct
+from django.utils import timezone
 
 class CustomerSerializer(serializers.ModelSerializer):
     class Meta:
@@ -99,8 +100,11 @@ class CommentSerializer(serializers.ModelSerializer):
     
     def get_formatted_date(self, obj):
         if obj.commentdate:
-            from django.utils import timezone
-            comment_time = timezone.localtime(obj.commentdate)
+            comment_time = obj.commentdate
+            if timezone.is_naive(comment_time):
+                comment_time = timezone.make_aware(comment_time, timezone.get_current_timezone())
+            
+            comment_time = timezone.localtime(comment_time)
             now = timezone.localtime(timezone.now())
             diff = now - comment_time
 
@@ -127,7 +131,6 @@ class CommentSerializer(serializers.ModelSerializer):
                 years = diff.days // 365
                 return f"{years} year{'s' if years != 1 else ''} ago"
         return "Unknown date"
-
 
     
     def get_replies(self, obj):

@@ -40,9 +40,6 @@ function Product() {
   const [comments, setComments] = useState([]);
   const commentRef = useRef(null);
   const [commentError, setCommentError] = useState(false);
-  const activeUser = useUIStore((state) => state.active_user);
-  const setBasketNumber = useUIStore((state) => state.setBasketNumber);
-  const basketNumber = useUIStore((state) => state.basketNumber);
 
   const onComment = async () => {
     const commentText = commentRef.current.value;
@@ -131,6 +128,7 @@ function Product() {
         <LeftColumn
           images={images}
           rating={product.rating}
+          product={product}
           shops={product.shop_products}
           countedrates={product.countedrates}
         />
@@ -244,7 +242,10 @@ function Product() {
 }
 
 // Images and Shops
-export function LeftColumn({ images, rating, shops, countedrates }) {
+export function LeftColumn({ images, rating, product, shops, countedrates }) {
+  const activeUser = useUIStore((state) => state.active_user);
+  const setBasketNumber = useUIStore((state) => state.setBasketNumber);
+  const basketNumber = useUIStore((state) => state.basketNumber);
   const addToBasket = async (shopid) => {
     let orderID;
 
@@ -252,9 +253,6 @@ export function LeftColumn({ images, rating, shops, countedrates }) {
       navigate("/form/login");
     }
 
-    console.log({ activeUser, product });
-
-    return;
     // getting customer orders
     const res = await fetchWithAuth(() => GetOrderings());
     if (!res.ok) {
@@ -284,10 +282,10 @@ export function LeftColumn({ images, rating, shops, countedrates }) {
       orderID = data[0].orderid;
     }
 
-    let shopId = shops[0].shopid; // first shop because it's the default (lowest price sorted before)
+    let shopId = shopid;
 
     const resFromShopProduct = await fetch(
-      `/shops/shopProduct/?shopid=${shopId}&productid=${id}`
+      `/shops/shopProduct/?shopid=${shopId}&productid=${product.productid}`
     );
 
     console.log("resFromShopProduct", resFromShopProduct);
@@ -415,6 +413,7 @@ export function LeftColumn({ images, rating, shops, countedrates }) {
                 ratedNum={countedrates}
                 price={shops[0]?.price}
                 shop={shops[0]?.shop}
+                addToBasket={addToBasket}
               />
             }
             headerItems={[
@@ -428,7 +427,13 @@ export function LeftColumn({ images, rating, shops, countedrates }) {
             px={3}
             py={3}
             list={(Array.isArray(shops) ? shops : []).map((sp) =>
-              ShopItemGenerator(sp?.shop?.shopname, sp?.shop?.rating, sp?.price)
+              ShopItemGenerator(
+                sp?.shop?.shopname,
+                sp?.shop?.rating,
+                sp?.shop?.shopid,
+                sp?.price,
+                addToBasket
+              )
             )}
           />
         </div>
@@ -489,7 +494,13 @@ export function Comment({ replies, name, text, date, stars }) {
 }
 
 // generate each list item
-export function ShopItemGenerator(shopName, performance, price) {
+export function ShopItemGenerator(
+  shopName,
+  performance,
+  shopid,
+  price,
+  onBasketClick
+) {
   const performances = {
     "Very good": "#96C8A7",
     Good: "#96C8A7",
@@ -512,13 +523,20 @@ export function ShopItemGenerator(shopName, performance, price) {
     <div style={{ color: performances[performance] }}>{performance}</div>,
     <p>${price}</p>,
     <ButtonVariant2
+      onClick={() => onBasketClick(shopid)}
       img={<ShoppingBasket size={14} />}
       className="rounded-xl"
     />,
   ];
 }
 
-export function TableFooter({ averageRate, ratedNum, price, shop }) {
+export function TableFooter({
+  averageRate,
+  ratedNum,
+  price,
+  shop,
+  addToBasket,
+}) {
   const ratingRef = useRef(null);
   const [rating, setRating] = useState(0);
 
@@ -543,7 +561,12 @@ export function TableFooter({ averageRate, ratedNum, price, shop }) {
           <h1 className="font-bold text-2xl">${price}</h1>
           <h5>Selected From {shop?.shopname}</h5>
         </div>
-        <ButtonVariant4 text="Add" img={<ShoppingBasket />} className="h-fit" />
+        <ButtonVariant4
+          onClick={() => addToBasket(shop?.shopid)}
+          text="Add"
+          img={<ShoppingBasket />}
+          className="h-fit"
+        />
       </div>
     </div>
   );
