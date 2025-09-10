@@ -5,7 +5,7 @@ from users.models import Customer
 class Shop(models.Model):
     shopname = models.CharField(db_column='ShopName', unique=True, max_length=512)  # Field name made lowercase.
     shopid = models.AutoField(db_column='ShopID', primary_key=True)  # Field name made lowercase.
-    rating = models.DecimalField(db_column='Rating', max_digits=3, decimal_places=2,null=False, default=0.00)  # Field name made lowercase.
+    rating = models.DecimalField(db_column='Rating', max_digits=3, decimal_places=2,null=False, default=0.00)  # type: ignore # Field name made lowercase.
     postalcode = models.CharField(db_column='PostalCode', max_length=10)  # Field name made lowercase.
 
     class Meta:

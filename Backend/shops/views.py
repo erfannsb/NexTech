@@ -13,7 +13,6 @@ from products.serializers import ProductSerializer
 class ShopViewSet(viewsets.ModelViewSet):
     queryset = Shop.objects.all()
     serializer_class = ShopSerializer
-    permission_classes = [IsShopOwnerOrReadOnly]
 
     def get_queryset(self):
         queryset = super().get_queryset()

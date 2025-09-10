@@ -20,6 +20,7 @@ export default function Header() {
   const basketNumber = useUIStore((state) => state.basketNumber);
   const setBasketNumber = useUIStore((state) => state.setBasketNumber);
   const setActiveUser = useUIStore((state) => state.setActiveUser);
+  const [isAdmin, setAdmin] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -28,6 +29,7 @@ export default function Header() {
       if (response) {
         setLogged(response);
         setActiveUser(response);
+        setAdmin(response.isshopadmin);
       } else {
         setLogged(false);
       }
@@ -95,22 +97,25 @@ export default function Header() {
 
         {/* Header Search Buttons and other Actions */}
         <div className="flex items-center gap-2 ml-auto">
-          <ButtonVariant2
-            className="relative"
-            onClick={() => {
-              navigate("/wishlist");
-            }}
-            img={
-              <>
-                <ShoppingBasket strokeWidth={1.5} size={17} />
-                {basketNumber > 0 && (
-                  <div className="bg-[#6274F7] w-5 h-5 rounded-full flex justify-center items-center text-sm absolute top-[-8px] right-[-8px]">
-                    {basketNumber}
-                  </div>
-                )}
-              </>
-            }
-          />
+          {!isAdmin && (
+            <ButtonVariant2
+              className="relative"
+              onClick={() => {
+                navigate("/wishlist");
+              }}
+              img={
+                <>
+                  <ShoppingBasket strokeWidth={1.5} size={17} />
+                  {basketNumber > 0 && (
+                    <div className="bg-[#6274F7] w-5 h-5 rounded-full flex justify-center items-center text-sm absolute top-[-8px] right-[-8px]">
+                      {basketNumber}
+                    </div>
+                  )}
+                </>
+              }
+            />
+          )}
+
           <ButtonVariant2
             onClick={() => navigate("/settings")}
             img={<Settings strokeWidth={1.5} size={17} />}

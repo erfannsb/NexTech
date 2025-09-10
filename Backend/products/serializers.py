@@ -16,13 +16,14 @@ class ProductSerializer(serializers.ModelSerializer):
     is_available = serializers.SerializerMethodField()  
     shopid = serializers.IntegerField(write_only=True)
     stockquantity = serializers.IntegerField(write_only=True, required=False, default=0)
-    price = serializers.DecimalField(write_only=True, max_digits=20, decimal_places=2, required=True)
+    price = serializers.SerializerMethodField()
+    total_sells = serializers.SerializerMethodField()
     class Meta:
         model = Product
         fields = [
             'productid', 'name', 'description', 'createdat', 'rating', 
             'thumbnail', 'brand', 'countedrates', 'categories', 'shops',
-            'shop_products', 'categories_names', 'is_available', 'price', 'stockquantity', 'shopid'
+            'shop_products', 'categories_names', 'is_available', 'price', 'total_sells', 'stockquantity', 'shopid'
         ]
 
     def get_shop_products(self, obj):
@@ -43,6 +44,18 @@ class ProductSerializer(serializers.ModelSerializer):
         if related_qs is None:
             return False
         return related_qs.filter(stockquantity__gt=0).exists()
+    
+    def get_price(self, obj):
+        """
+        Returns the minimum price across all shops for this product
+        """
+        return getattr(obj, 'price', None)
+    
+    def get_total_sells(self, obj):
+        """
+        Returns the total sales across all shops for this product
+        """
+        return getattr(obj, 'total_sells', None)
     
     def create(self, validated_data):
         shop_id = validated_data.pop("shopid")

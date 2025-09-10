@@ -22,24 +22,14 @@ export async function GetShops() {
 }
 
 export async function GetShop(id) {
-  try {
-    const response = await fetch(`http://127.0.0.1:8000/shops/shops/${id}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-
-    if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`);
-    }
-
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    console.error("Failed to fetch shop:", error);
-    return false;
-  }
+  const response = await fetch(`/shops/shops/${id}`, {
+    method: "GET",
+    credentials: "include",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  return response;
 }
 
 export async function PostShop(shop) {
@@ -55,29 +45,15 @@ export async function PostShop(shop) {
 }
 
 export async function UpdateShop(shopId, shop) {
-  try {
-    const response = await fetch(
-      `http://127.0.0.1:8000/shops/shops/${shopId}/`,
-      {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(shop),
-      }
-    );
-
-    if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`);
-    }
-
-    const data = await response.json();
-    console.log(`Shop ${shopId} updated:`, data);
-    return data;
-  } catch (error) {
-    console.error(`Failed to update shop ${shopId}:`, error);
-    return false;
-  }
+  const response = await fetch(`/shops/shops/${shopId}/`, {
+    method: "PUT",
+    credentials: "include",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(shop),
+  });
+  return response;
 }
 
 export async function DeleteShop(shopId) {

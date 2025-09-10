@@ -1,8 +1,8 @@
 - [x] Implement Chat Support
 - [x] Populate DataBase with Reasonable Data
-- [ ] Sorting Search Items are not yet implemented
-- [ ] Price Range Is Broken Again
-- [ ] Header For Admin should not contain shopping item and search
+- [x] Sorting Search Items are not yet implemented
+- [x] Price Range Is Broken Again (fixed)
+- [x] Header For Admin should not contain shopping item and search
 - [ ] User Role and admin permissions are not defined
 - [x] Header Buttons Does Not Work (fixed)
 - [x] Shopping Wish List without having an account should be possible

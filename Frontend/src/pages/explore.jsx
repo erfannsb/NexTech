@@ -131,7 +131,10 @@ function Explore() {
           className={`text-[12px]  ${
             activeFilterButton == "mostRelevant" ? "card-active" : ""
           }`}
-          onClick={() => setActiveFilterButton("mostRelevant")}
+          onClick={() => {
+            setActiveFilterButton("mostRelevant");
+            setFilters({ ...filters, sortBy: "mostRelevant" });
+          }}
           py={"2"}
         />
         <ButtonVariant1
@@ -140,7 +143,10 @@ function Explore() {
           className={`text-[12px]  ${
             activeFilterButton == "mostViewed" ? "card-active" : ""
           }`}
-          onClick={() => setActiveFilterButton("mostViewed")}
+          onClick={() => {
+            setActiveFilterButton("mostViewed");
+            setFilters({ ...filters, sortBy: "mostViewed" });
+          }}
           py={"2"}
         />{" "}
         <ButtonVariant1
@@ -149,7 +155,10 @@ function Explore() {
           className={`text-[12px] ${
             activeFilterButton == "newest" ? "card-active" : ""
           }`}
-          onClick={() => setActiveFilterButton("newest")}
+          onClick={() => {
+            setActiveFilterButton("newest");
+            setFilters({ ...filters, sortBy: "newest" });
+          }}
           py={"2"}
         />{" "}
         <ButtonVariant1
@@ -158,7 +167,10 @@ function Explore() {
           className={`text-[12px]  ${
             activeFilterButton == "mostSelles" ? "card-active" : ""
           }`}
-          onClick={() => setActiveFilterButton("mostSelles")}
+          onClick={() => {
+            setActiveFilterButton("mostSelles");
+            setFilters({ ...filters, sortBy: "mostSelles" });
+          }}
           py={"2"}
         />{" "}
         <ButtonVariant1
@@ -167,7 +179,10 @@ function Explore() {
           className={`text-[12px]  ${
             activeFilterButton == "cheapest" ? "card-active" : ""
           }`}
-          onClick={() => setActiveFilterButton("cheapest")}
+          onClick={() => {
+            setActiveFilterButton("cheapest");
+            setFilters({ ...filters, sortBy: "cheapest" });
+          }}
           py={"2"}
         />
         <ButtonVariant1
@@ -176,7 +191,10 @@ function Explore() {
           className={`text-[12px]  ${
             activeFilterButton == "mostExpensive" ? "card-active" : ""
           }`}
-          onClick={() => setActiveFilterButton("mostExpensive")}
+          onClick={() => {
+            setActiveFilterButton("mostExpensive");
+            setFilters({ ...filters, sortBy: "mostExpensive" });
+          }}
           py={"2"}
         />
         <ButtonVariant1

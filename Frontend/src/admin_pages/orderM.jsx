@@ -1,23 +1,6 @@
-import {
-  ArrowUp,
-  ArrowUpRight,
-  Check,
-  Pencil,
-  Plus,
-  Search,
-  Trash,
-  X,
-} from "lucide-react";
-import {
-  ButtonVariant1,
-  ButtonVariant2,
-  ButtonVariant4,
-} from "../components/buttons";
-import {
-  InputVariant1,
-  InputVariant2,
-  InputVariant3,
-} from "../components/inputs";
+import { ArrowUpRight, X } from "lucide-react";
+import { ButtonVariant1, ButtonVariant2 } from "../components/buttons";
+import { InputVariant3 } from "../components/inputs";
 import Table from "../components/tables";
 import useUIStore from "../ui_storage";
 import { useEffect, useState } from "react";
@@ -310,6 +293,12 @@ export function OrderItems(
   } else if (status == "Pending") {
     statusComp = (
       <div className="text-orange-600 bg-orange-50  w-fit px-2 pys-[2px] rounded-xl">
+        {status}
+      </div>
+    );
+  } else if (status == "Processing") {
+    statusComp = (
+      <div className="text-yellow-600 bg-yellow-50  w-fit px-2 pys-[2px] rounded-xl">
         {status}
       </div>
     );
