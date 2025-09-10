@@ -95,11 +95,6 @@ export default function Header() {
 
         {/* Header Search Buttons and other Actions */}
         <div className="flex items-center gap-2 ml-auto">
-          <InputVariant1
-            placeholder="Search Here..."
-            className="w-[200px] p-2 "
-            img={<Search strokeWidth={1.5} size={17} />}
-          />
           <ButtonVariant2
             className="relative"
             onClick={() => {
@@ -116,7 +111,10 @@ export default function Header() {
               </>
             }
           />
-          <ButtonVariant2 img={<Settings strokeWidth={1.5} size={17} />} />
+          <ButtonVariant2
+            onClick={() => navigate("/settings")}
+            img={<Settings strokeWidth={1.5} size={17} />}
+          />
         </div>
       </header>
     </>

@@ -160,20 +160,11 @@ export async function UpdateOrderItem(orderItemId, orderItem) {
 }
 
 export async function DeleteOrderItem(orderItemId) {
-  try {
-    const response = await fetch(`/orders/orderItems/${orderItemId}/`, {
-      credentials: "include",
-      method: "DELETE",
-    });
-
-    if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
-
-    console.log(`OrderItem ${orderItemId} deleted successfully`);
-    return true;
-  } catch (error) {
-    console.error(`Failed to delete orderItem ${orderItemId}:`, error);
-    return false;
-  }
+  const response = await fetch(`/orders/orderItems/${orderItemId}/`, {
+    credentials: "include",
+    method: "DELETE",
+  });
+  return response;
 }
 
 // --------- OrderPayment API ---------

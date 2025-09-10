@@ -28,7 +28,8 @@ import {
 } from "../../data/products";
 import { useParams } from "react-router";
 import { fetchWithAuth } from "../../data/api";
-
+import { GetOrderings, PostOrdering, PostOrderItem } from "../../data/orders";
+import useUIStore from "./../ui_storage";
 function Product() {
   const [moreDetails, setMoreDetails] = useState(false);
   const [screenIsSmall, setScreenIsSmall] = useState(window.innerWidth < 768);
@@ -39,6 +40,9 @@ function Product() {
   const [comments, setComments] = useState([]);
   const commentRef = useRef(null);
   const [commentError, setCommentError] = useState(false);
+  const activeUser = useUIStore((state) => state.active_user);
+  const setBasketNumber = useUIStore((state) => state.setBasketNumber);
+  const basketNumber = useUIStore((state) => state.basketNumber);
 
   const onComment = async () => {
     const commentText = commentRef.current.value;
@@ -241,6 +245,116 @@ function Product() {
 
 // Images and Shops
 export function LeftColumn({ images, rating, shops, countedrates }) {
+  const addToBasket = async (shopid) => {
+    let orderID;
+
+    if (!activeUser) {
+      navigate("/form/login");
+    }
+
+    console.log({ activeUser, product });
+
+    return;
+    // getting customer orders
+    const res = await fetchWithAuth(() => GetOrderings());
+    if (!res.ok) {
+      console.error("Failed to add to basket:", res.statusText);
+      return;
+    }
+    let data = await res.json();
+
+    data = data?.filter((e) => e.is_confirmed == false);
+
+    // if no order is created yet create one
+    if (data.length === 0) {
+      const newOrder = await fetchWithAuth(() =>
+        PostOrdering({
+          customerid: activeUser.customerid,
+        })
+      );
+
+      if (!newOrder.ok) {
+        console.error("Failed to create new order:", newOrder.statusText);
+        return;
+      }
+      const orderData = await newOrder.json();
+
+      orderID = orderData.orderid;
+    } else {
+      orderID = data[0].orderid;
+    }
+
+    let shopId = shops[0].shopid; // first shop because it's the default (lowest price sorted before)
+
+    const resFromShopProduct = await fetch(
+      `/shops/shopProduct/?shopid=${shopId}&productid=${id}`
+    );
+
+    console.log("resFromShopProduct", resFromShopProduct);
+    if (!resFromShopProduct.ok) {
+      console.error(
+        "Failed to fetch shop product:",
+        resFromShopProduct.statusText
+      );
+      return;
+    }
+
+    const dataFromShopProduct = await resFromShopProduct.json();
+    console.log("dataFromShopProduct", dataFromShopProduct);
+    let shopProductId = dataFromShopProduct[0].id;
+
+    let resFromIFThereWasAnOrderItem = await fetchWithAuth(() =>
+      GetOrderings()
+    );
+    let dataFromOrder = await resFromIFThereWasAnOrderItem.json();
+
+    dataFromOrder = dataFromOrder?.filter((e) => e.is_confirmed == false);
+
+    if (dataFromOrder.length > 0) {
+      let items = dataFromOrder[0].items;
+      let existingItem = items.find(
+        (item) => item.shopproductid === shopProductId
+      );
+      if (existingItem) {
+        // If the item already exists in the order, increment its quantity
+        const updatedQuantity = existingItem.quantity + 1;
+        const resUpdate = await fetchWithAuth(() =>
+          fetch(`/orders/orderItems/${existingItem.id}/`, {
+            method: "PUT",
+            credentials: "include",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              quantity: updatedQuantity,
+              orderid: orderID,
+              shopproductid: shopProductId,
+            }),
+          })
+        );
+        if (!resUpdate.ok) {
+          console.error("Failed to update order item:", resUpdate.statusText);
+          return;
+        } else {
+          setBasketNumber(basketNumber + 1);
+          return;
+        }
+      }
+    }
+
+    const resFromOrderItem = await fetchWithAuth(() =>
+      PostOrderItem({
+        quantity: 1,
+        shopproductid: shopProductId,
+        orderid: orderID,
+      })
+    );
+
+    console.log("resFromOrderItem", resFromOrderItem);
+
+    setBasketNumber(basketNumber + 1);
+  };
+
   const [thumbsSwiper, setThumbsSwiper] = useState(null);
   shops = shops?.sort((a, b) => a.price - b.price);
   return (

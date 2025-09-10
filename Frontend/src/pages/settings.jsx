@@ -273,7 +273,7 @@ export default function Settings() {
           <Input label="Province" ref={provinceRef} alert={errros.province} />
           <Input label="City" ref={cityRef} alert={errros.city} />
           <Input
-            label="Streat"
+            label="Street"
             className="col-start-1 col-end-3"
             ref={streetRef}
             alert={errros.street}

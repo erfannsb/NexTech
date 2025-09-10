@@ -100,6 +100,45 @@ export function ShoppingCard({
     console.log("dataFromShopProduct", dataFromShopProduct);
     let shopProductId = dataFromShopProduct[0].id;
 
+    let resFromIFThereWasAnOrderItem = await fetchWithAuth(() =>
+      GetOrderings()
+    );
+    let dataFromOrder = await resFromIFThereWasAnOrderItem.json();
+
+    dataFromOrder = dataFromOrder?.filter((e) => e.is_confirmed == false);
+
+    if (dataFromOrder.length > 0) {
+      let items = dataFromOrder[0].items;
+      let existingItem = items.find(
+        (item) => item.shopproductid === shopProductId
+      );
+      if (existingItem) {
+        // If the item already exists in the order, increment its quantity
+        const updatedQuantity = existingItem.quantity + 1;
+        const resUpdate = await fetchWithAuth(() =>
+          fetch(`/orders/orderItems/${existingItem.id}/`, {
+            method: "PUT",
+            credentials: "include",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              quantity: updatedQuantity,
+              orderid: orderID,
+              shopproductid: shopProductId,
+            }),
+          })
+        );
+        if (!resUpdate.ok) {
+          console.error("Failed to update order item:", resUpdate.statusText);
+          return;
+        } else {
+          setBasketNumber(basketNumber + 1);
+          return;
+        }
+      }
+    }
+
     const resFromOrderItem = await fetchWithAuth(() =>
       PostOrderItem({
         quantity: 1,
@@ -110,7 +149,7 @@ export function ShoppingCard({
 
     console.log("resFromOrderItem", resFromOrderItem);
 
-    setBasketNumber(setBasketNumber + 1);
+    setBasketNumber(basketNumber + 1);
   };
 
   return (

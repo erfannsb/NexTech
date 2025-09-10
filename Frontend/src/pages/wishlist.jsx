@@ -28,6 +28,8 @@ export default function WishList() {
   const [quantities, setQuantities] = useState({});
   const [orderId, setOrderId] = useState(null);
   const activeUser = useUIStore((state) => state.active_user);
+  const setBasketNumber = useUIStore((state) => state.setBasketNumber);
+  const basketNumber = useUIStore((state) => state.basketNumber);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -60,6 +62,8 @@ export default function WishList() {
           quantity: quantity,
         });
       }
+
+      console.log({ info });
 
       setProductInfo(info);
       setQuantities(info.reduce((acc, i) => ({ ...acc, [i.id]: i.quantity })));
@@ -108,6 +112,8 @@ export default function WishList() {
               1,
               (quantities[item.id] ?? item.quantity) - 1
             );
+            setBasketNumber(basketNumber - 1);
+
             setQuantities((prev) => ({ ...prev, [item.id]: newQty }));
             updateQuantity(item.id, newQty);
           }}
@@ -126,6 +132,7 @@ export default function WishList() {
           color="#ddd"
           onClick={() => {
             const newQty = (quantities[item.id] ?? item.quantity) + 1;
+            setBasketNumber(basketNumber + 1);
             setQuantities((prev) => ({ ...prev, [item.id]: newQty }));
             updateQuantity(item.id, newQty);
           }}
@@ -147,6 +154,10 @@ export default function WishList() {
             console.error("Failed to delete item");
             return;
           }
+          console.log(item);
+          setBasketNumber(
+            item.quantity > 0 ? basketNumber - item.quantity : basketNumber - 1
+          );
           console.log("Item deleted successfully");
         }}
       />
@@ -312,6 +323,11 @@ export default function WishList() {
     // Redirect to a confirmation page or show a success message
   };
 
+  useEffect(() => {
+    console.log({ productInfo });
+    console.log(productInfo.length != 0);
+  }, [productInfo]);
+
   return (
     <div className="mb-10 grid grid-cols-2  md:grid-template-rows: max-content max-content;  max-md:grid-template-rows: max-content max-content max-content; md:mx-10 gap-5">
       {/* Wish List table */}
@@ -340,8 +356,9 @@ export default function WishList() {
           />
         )}
       </div>
+
       {/* Purchase */}
-      {orderId && (
+      {orderId && productInfo.length != 0 ? (
         <div className="flex flex-col gap-2 max-md:row-start-2 max-md:row-end-3 max-md:col-start-1 max-md:col-end-3">
           <h3 className="mt-3 font-black text-xl">Your Information</h3>
           <div className="grid grid-template-columns: max-content max-content; grid-template-rows: max-content max-content; gap-3">
@@ -377,11 +394,13 @@ export default function WishList() {
             </button>
           </div>
         </div>
+      ) : (
+        <></>
       )}
 
       {/* Confirm */}
 
-      {orderId && (
+      {orderId && productInfo.length !== 0 ? (
         <div className="md:self-end max-md:row-start-3 max-md:row-end-4 max-md:col-start-1 max-md:col-end-3">
           <h3 className="text-xl font-bold mt-3 mb-1">Purchase</h3>
           <div className="flex flex-col gap-2">
@@ -453,6 +472,8 @@ export default function WishList() {
             />
           </div>
         </div>
+      ) : (
+        <></>
       )}
     </div>
   );
