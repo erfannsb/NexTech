@@ -388,11 +388,13 @@ export function CreateShop() {
   const postalCode = useRef(null);
   const [isError, setError] = useState(false);
   const activeUser = useUIStore((state) => state.active_user);
-
+  const navigate = useNavigate();
   const onSubmit = async (e) => {
     e.preventDefault();
     const shop_name = shopName.current.value;
     const postal_code = postalCode.current.value;
+
+    console.log({ shop_name, postal_code, activeUser });
 
     if (!shop_name || !postal_code) {
       setError("all fields are required");
@@ -405,7 +407,7 @@ export function CreateShop() {
     let resFromIsthereAShop = await fetchWithAuth(() =>
       fetch(`/shops/shopAdmin/?adminid=${activeUser.customerid}`)
     );
-    if (!res.ok) {
+    if (!resFromIsthereAShop.ok) {
       console.error("fetching from shopAdmin failed");
       return;
     }
@@ -426,10 +428,11 @@ export function CreateShop() {
     if (!res.ok) {
       res = await res.json();
       console.error("posting shop was not successful");
-      setError(`Creating Shop Failed ${res.message}`);
+      setError(`Creating Shop Failed`);
+      window.alert(`Creating Shop Failed: ${JSON.stringify(res)}`);
       return;
     }
-    navigate("/admin/dashboard/home/");
+    navigate("/admin/dashboard/home");
   };
 
   return (
@@ -448,7 +451,7 @@ export function CreateShop() {
           ref={postalCode}
           label={"Shop Postal Code"}
           placeholder="Enter Postal Code"
-          type={"number"}
+          type={"text"}
           className="mb-3"
         />
         {isError && (
@@ -521,6 +524,8 @@ export function CreateProduct() {
       );
     }
 
+    console.log("res is theere: ", res);
+
     if (!res.ok) {
       setError("Something went wrong!");
       console.log(res);
@@ -549,12 +554,18 @@ export function CreateProduct() {
         );
       }
 
-      if (!res.ok) {
-        setError("Something went wrong");
+      console.log("what the shittttttttttttttttttttt", resImgURL);
+
+      if (!resImgURL.ok) {
+        setError("Something went wrong with image urls ");
         return;
       }
       console.log(res);
     }
+
+    window.alert(
+      `Product ${productParam ? "Updated" : "Created"} Successfully`
+    );
   };
 
   return (

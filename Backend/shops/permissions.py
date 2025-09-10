@@ -4,26 +4,28 @@ from shops.models import ShopAdmin
 class IsShopOwnerOrReadOnly(permissions.BasePermission):
     """
     Read-only for everyone.
-    Write access only for shop admins.
+    Write access for shop admins.
+    Creation allowed for authenticated users.
     """
 
     def has_permission(self, request, view):
+        # Always allow safe methods
         if request.method in permissions.SAFE_METHODS:
             return True
-        return False
+
+        # For other write ops (PUT, PATCH, DELETE), defer to object-level
+        return True
 
     def has_object_permission(self, request, view, obj):
-        # If the request method is safe (GET, HEAD, OPTIONS), allow access
+        # Safe methods are always allowed
         if request.method in permissions.SAFE_METHODS:
             return True
-       
-        # For write operations, check if the user is an admin of this shop
+
+        # Only shop admins can modify existing shops
         try:
-            # Check if there's a ShopAdmin record linking this user to this shop
             return ShopAdmin.objects.filter(
                 shopid=obj,
                 adminid=request.user.customer
             ).exists()
         except AttributeError:
-            # If request.user doesn't have a customer attribute, deny access
             return False

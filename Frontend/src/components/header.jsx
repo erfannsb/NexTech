@@ -1,7 +1,6 @@
 import {
   PanelLeft,
   Search,
-  Bell,
   Settings,
   LogIn,
   ShoppingBasket,
@@ -12,10 +11,14 @@ import useUIStore from "../ui_storage";
 import { isLoggedIn } from "../../data/users";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { GetOrderings } from "../../data/orders";
+import { fetchWithAuth } from "../../data/api";
 export default function Header() {
   const isLeftSidebarOpen = useUIStore((state) => state.leftSidebarOpen);
   const toggleLeftSideBar = useUIStore((state) => state.setLeftSidebarOpen);
   const [loggedIn, setLogged] = useState(false);
+  const basketNumber = useUIStore((state) => state.basketNumber);
+  const setBasketNumber = useUIStore((state) => state.setBasketNumber);
   const setActiveUser = useUIStore((state) => state.setActiveUser);
   const navigate = useNavigate();
 
@@ -28,6 +31,17 @@ export default function Header() {
       } else {
         setLogged(false);
       }
+
+      const res = await fetchWithAuth(() => GetOrderings());
+      if (!res.ok) {
+        setBasketNumber(0);
+        return;
+      }
+
+      let data = await res.json();
+      data = data.filter((e) => e.is_confirmed == false);
+      data = data[0].items;
+      setBasketNumber(data.length);
     };
     fetchdata();
   }, []);
@@ -88,12 +102,17 @@ export default function Header() {
           />
           <ButtonVariant2
             className="relative"
+            onClick={() => {
+              navigate("/wishlist");
+            }}
             img={
               <>
                 <ShoppingBasket strokeWidth={1.5} size={17} />
-                <div className="bg-[#6274F7] w-5 h-5 rounded-full flex justify-center items-center text-sm absolute top-[-8px] right-[-8px]">
-                  1
-                </div>
+                {basketNumber > 0 && (
+                  <div className="bg-[#6274F7] w-5 h-5 rounded-full flex justify-center items-center text-sm absolute top-[-8px] right-[-8px]">
+                    {basketNumber}
+                  </div>
+                )}
               </>
             }
           />

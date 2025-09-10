@@ -43,10 +43,15 @@ export function ShoppingCard({
   const [colorBGForCompany, setColorBGForCompany] = useState("");
   const navigate = useNavigate();
   const activeUser = useUIStore((state) => state.active_user);
+  const setBasketNumber = useUIStore((state) => state.setBasketNumber);
+  const basketNumber = useUIStore((state) => state.basketNumber);
 
   const addToBasket = async () => {
     let orderID;
 
+    if (!activeUser) {
+      navigate("/form/login");
+    }
     // getting customer orders
     const res = await fetchWithAuth(() => GetOrderings());
     if (!res.ok) {
@@ -104,6 +109,8 @@ export function ShoppingCard({
     );
 
     console.log("resFromOrderItem", resFromOrderItem);
+
+    setBasketNumber(setBasketNumber + 1);
   };
 
   return (

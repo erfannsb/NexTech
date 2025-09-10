@@ -10,6 +10,9 @@ const useUIStore = create(
       rightSidebarOpen: false,
       setRightSidebarOpen: (open) => set({ rightSidebarOpen: open }),
 
+      basketNumber: 0,
+      setBasketNumber: (num) => set({ basketNumber: num }),
+
       isChatOpen: false,
       setChatOpen: (open) => set({ isChatOpen: open }),
 

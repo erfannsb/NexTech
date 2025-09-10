@@ -100,9 +100,12 @@ class CommentSerializer(serializers.ModelSerializer):
     def get_formatted_date(self, obj):
         if obj.commentdate:
             from django.utils import timezone
-            now = timezone.now()
-            diff = now - obj.commentdate
-            
+            comment_time = timezone.localtime(obj.commentdate)
+            now = timezone.localtime(timezone.now())
+            diff = now - comment_time
+
+            if diff.total_seconds() < 60:
+                return "Just now"
             if diff.days == 0:
                 if diff.seconds < 3600:
                     minutes = diff.seconds // 60
@@ -124,6 +127,8 @@ class CommentSerializer(serializers.ModelSerializer):
                 years = diff.days // 365
                 return f"{years} year{'s' if years != 1 else ''} ago"
         return "Unknown date"
+
+
     
     def get_replies(self, obj):
         # Get all replies to this comment (comments that have this comment as parent)

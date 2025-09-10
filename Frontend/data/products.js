@@ -539,39 +539,24 @@ export async function PostImageurlProduct(imageurlProduct) {
     body: formData,
   });
 
-  return res.json();
+  return res;
 }
 
 export async function UpdateImageurlProduct(
   imageurlProductId,
   imageurlProduct
 ) {
-  try {
-    const response = await fetch(
-      `http://127.0.0.1:8000/products/imageurlProduct/${imageurlProductId}/`,
-      {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(imageurlProduct),
-      }
-    );
-
-    if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`);
+  const response = await fetch(
+    `http://127.0.0.1:8000/products/imageurlProduct/${imageurlProductId}/`,
+    {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(imageurlProduct),
     }
-
-    const data = await response.json();
-    console.log(`ImageurlProduct ${imageurlProductId} updated:`, data);
-    return data;
-  } catch (error) {
-    console.error(
-      `Failed to update imageurlProduct ${imageurlProductId}:`,
-      error
-    );
-    return false;
-  }
+  );
+  return response;
 }
 
 export async function DeleteImageurlProduct(imageurlProductId) {
