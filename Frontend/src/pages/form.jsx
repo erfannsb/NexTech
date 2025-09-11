@@ -193,7 +193,7 @@ export function SignUp() {
       email: emailRef.current.value.trim(),
       password: passwordRef.current.value,
       confirmPass: ConfirmPassRef.current.value,
-      isShopAdmin: isShopAdmin.current.value,
+      isShopAdmin: isShopAdmin.current.checked,
     };
 
     // Validation rules with error messages
@@ -281,6 +281,8 @@ export function SignUp() {
         isshopadmin: formData.isShopAdmin,
       });
 
+      console.log({ response });
+
       if (!response.ok) {
         // Map server errors to form errors
         const serverErrorMap = {
@@ -306,6 +308,7 @@ export function SignUp() {
           Err_Pass: false,
           Err_ConfPass: false,
         });
+        retrun;
         // Navigate to login page or any other page
         navigate("/");
       }
@@ -363,7 +366,12 @@ export function SignUp() {
         />
         <div className="flex mb-3 ml-1 h-fit">
           <h3 className="text-sm mr-2">Are you a shop admin?</h3>
-          <input type="checkbox" ref={isShopAdmin} />
+          <input
+            type="checkbox"
+            name="isadmin"
+            id="isadmin"
+            ref={isShopAdmin}
+          />
         </div>
         {/* Form Error */}
         {isError && (
