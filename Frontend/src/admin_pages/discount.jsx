@@ -140,7 +140,7 @@ export default function Discount() {
                 e.discountstarttime,
                 e.discountendtime,
                 e.discountid,
-                onDiscountDelete``
+                onDiscountDelete
               )
             )}
           />

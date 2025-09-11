@@ -308,7 +308,6 @@ export function SignUp() {
           Err_Pass: false,
           Err_ConfPass: false,
         });
-        retrun;
         // Navigate to login page or any other page
         navigate("/");
       }
