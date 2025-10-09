@@ -5,19 +5,20 @@ from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.permissions import IsAuthenticated
 from .permissions import IsOrderItemOwnerOrReadOnly, IsShippingOwnerOrReadOnly
 from rest_framework.exceptions import PermissionDenied
+from .models import Ordering, Orderitem, Orderpayment, Shipping, OrderShipping
 
 from api.authentication import CookieJWTAuthentication
 class OrderingViewSet(viewsets.ModelViewSet):
     queryset = Ordering.objects.all()
     serializer_class = OrderingSerializer
+    permission_classes = [IsAuthenticated]
     
     def get_queryset(self):
         user = self.request.user
-        # if user.is_authenticated:
-        #     return Ordering.objects.filter(customerid=user)
-        # else:
-        #     # For unauthenticated users, maybe return empty or all orders depending on policy
-        return Ordering.objects.all()
+        if user and user.is_authenticated:
+            return Ordering.objects.filter(customerid=user)
+        # For unauthenticated users, do not expose any orders
+        return Ordering.objects.none()
 
     def perform_create(self, serializer):
         serializer.save(customerid=self.request.user)
@@ -29,10 +30,10 @@ class OrderitemViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         user = self.request.user
-        if user.is_authenticated:
+        if user and user.is_authenticated:
             return Orderitem.objects.filter(orderid__customerid=user)
-        else:
-            return Orderitem.objects.all()
+        # Do not expose any order items to unauthenticated users
+        return Orderitem.objects.none()
 
     def perform_create(self, serializer):
         order_id = self.request.data.get("orderid")

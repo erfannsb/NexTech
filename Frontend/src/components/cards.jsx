@@ -51,6 +51,7 @@ export function ShoppingCard({
 
     if (!activeUser) {
       navigate("/form/login");
+      return; // ensure we stop execution for unauthenticated users
     }
     // getting customer orders
     const res = await fetchWithAuth(() => GetOrderings());
