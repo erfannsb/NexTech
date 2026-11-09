@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import { fetchWithAuth } from "../../data/api";
 import { GetOrdering, UpdateOrdering } from "../../data/orders";
 import { GlassCard } from "../components/cards";
+import { totalprice, finalprice } from "../../data/pricing";
 
 export default function ProductManageMent() {
   const [shop_orders, setOrders] = useState([]);

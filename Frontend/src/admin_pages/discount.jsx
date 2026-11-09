@@ -32,7 +32,7 @@ export default function Discount() {
 
     if (!name || !code || !percentage || !startDate || !endDate) {
       setError("All Fields Are Required");
-      retrun;
+      return;
     }
 
     let res = await fetchWithAuth(() =>

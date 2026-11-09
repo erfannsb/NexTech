@@ -69,9 +69,7 @@ function Explore() {
   useEffect(() => {
     const fetchProducts = async () => {
       const query = buildQueryString(filters);
-      const res = await fetch(
-        `http://127.0.0.1:8000/products/products/?${query}`
-      );
+      const res = await fetch(`/products/products/?${query}`);
       const data = await res.json();
       console.log(data);
       setProducts(data || []);

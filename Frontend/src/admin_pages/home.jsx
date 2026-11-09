@@ -17,6 +17,12 @@ import {
 } from "recharts";
 import { useEffect, useState } from "react";
 import { fetchWithAuth } from "../../data/api";
+import {
+  DELIVERY_PRICE,
+  totalprice,
+  totalItems,
+  finalprice,
+} from "../../data/pricing";
 import useUIStore from "./../ui_storage";
 export default function Home() {
   const [shop_orders, set_shop_orders] = useState([]);
@@ -28,23 +34,6 @@ export default function Home() {
   const setShopOrders = useUIStore((state) => state.setShopOrders);
   const setShopProducts = useUIStore((state) => state.setShopProducts);
   const [currentOrderFilter, setOrderFilter] = useState(false);
-
-  const DELIVERY_PRICE = (shipping) =>
-    shipping.toLowerCase() === "express" ? 20 : 10; // Fixed delivery price
-
-  const totalprice = (orderItems) =>
-    orderItems.reduce(
-      (acc, item) => acc + parseFloat(item.shop_product.price) * item.quantity,
-      0
-    );
-
-  const totalItems = (orderItem) =>
-    orderItem.reduce((acc, item) => acc + item.quantity, 0);
-
-  const finalprice = (totalPrice, shipping) => {
-    let price = totalPrice + DELIVERY_PRICE(shipping);
-    return price;
-  };
 
   useEffect(() => {
     const fetchData = async () => {

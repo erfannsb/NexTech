@@ -26,7 +26,7 @@ import {
   GetProduct,
   GetComments,
 } from "../../data/products";
-import { useParams } from "react-router";
+import { useParams, useNavigate } from "react-router";
 import { fetchWithAuth } from "../../data/api";
 import { GetOrderings, PostOrdering, PostOrderItem } from "../../data/orders";
 import useUIStore from "./../ui_storage";
@@ -243,6 +243,7 @@ function Product() {
 
 // Images and Shops
 export function LeftColumn({ images, rating, product, shops, countedrates }) {
+  const navigate = useNavigate();
   const activeUser = useUIStore((state) => state.active_user);
   const setBasketNumber = useUIStore((state) => state.setBasketNumber);
   const basketNumber = useUIStore((state) => state.basketNumber);
@@ -251,6 +252,7 @@ export function LeftColumn({ images, rating, product, shops, countedrates }) {
 
     if (!activeUser) {
       navigate("/form/login");
+      return;
     }
 
     // getting customer orders

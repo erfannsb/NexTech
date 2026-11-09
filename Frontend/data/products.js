@@ -304,7 +304,7 @@ export async function UpdateProductCategory(
 ) {
   try {
     const response = await fetch(
-      `http://127.0.0.1:8000/products/productCategory/${categoryId}/`,
+      `http://127.0.0.1:8000/products/productCategory/${productCategoryId}/`,
 
       {
         method: "PUT",
